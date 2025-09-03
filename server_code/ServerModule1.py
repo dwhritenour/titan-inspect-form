@@ -14,16 +14,17 @@ import anvil.server
 #   return 42
 #
 
-def send_feedback(name, email, feedback):
+@anvil.server.callable
+def show_record(idate, ponumb, relnumb, series):
   # Send yourself an email each time feedback is submitted
   anvil.email.send(#to="noreply@anvil.works", # Change this to your email address and remove the #!
-    subject=f"Feedback from {name}",
+    subject=f"Feedback from {ponumb}",
     text=f"""
                    
   A new person has filled out the feedback form!
 
-  Name: {name}
-  Email address: {email}
-  Feedback:
-  {feedback}
+  Date: {idate}
+  PO Number: {ponumb}
+  Rel Number: {relnumb}
+  Series: {series}
   """)
