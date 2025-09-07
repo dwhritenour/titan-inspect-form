@@ -1,4 +1,25 @@
 allow_embedding: false
+db_schema:
+  inspections:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: ins_date
+      type: date
+    - admin_ui: {order: 1, width: 200}
+      name: po_numb
+      type: string
+    - admin_ui: {order: 2, width: 200}
+      name: rel_numb
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: series
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: add_datetime
+      type: datetime
+    server: full
+    title: inspections
 dependencies: []
 metadata: {description: Incoming Inspection for YS58 Strainers, title: YS58 - Incoming Inspection}
 name: YS58_Inspect
@@ -16,4 +37,5 @@ services:
 - client_config: {}
   server_config: {test_mode: true}
   source: /runtime/services/anvil/email.yml
-startup_form: Form1
+startup: {module: Inspect_1, type: form}
+startup_form: null

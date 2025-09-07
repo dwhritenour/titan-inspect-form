@@ -1,8 +1,12 @@
-from ._anvil_designer import Form1Template
+from ._anvil_designer import Inspect_1Template
 from anvil import *
+import plotly.graph_objects as go
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
 import anvil.server
 
-class Form1(Form1Template):
+class Inspect_1(Inspect_1Template):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
