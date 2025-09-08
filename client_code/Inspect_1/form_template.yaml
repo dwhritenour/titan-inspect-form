@@ -59,7 +59,7 @@ components:
       type: TextBox
     - layout_properties: {grid_position: 'ZBPVAE,ULOAFM'}
       name: countTitle_lbl
-      properties: {bold: true, role: title, text: Lot and Sample Size}
+      properties: {bold: true, role: input-prompt, text: Lot and Sample Size}
       type: Label
     - layout_properties: {grid_position: 'EZCIMK,RENHNY NIQBVA,GTBSMG'}
       name: ordqty_lbl
