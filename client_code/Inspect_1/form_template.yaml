@@ -1,5 +1,9 @@
 components:
 - components:
+  - layout_properties: {grid_position: 'HRIHBK,HZXUWH'}
+    name: title_lbl
+    properties: {bold: true, role: headline, text: Incoming Inspection Form}
+    type: Label
   - components:
     - layout_properties: {grid_position: 'PWNSVE,AUUEVL'}
       name: head_lbl
@@ -13,19 +17,19 @@ components:
       name: inspect_date
       properties: {}
       type: DatePicker
-    - layout_properties: {grid_position: 'OSGOYU,AJBDYH'}
+    - layout_properties: {grid_position: 'OSGOYU,HLNTGW'}
       name: po_lbl
       properties: {text: 'PO Number:'}
       type: Label
-    - layout_properties: {grid_position: 'OSGOYU,KXRBCJ'}
+    - layout_properties: {grid_position: 'OSGOYU,TXTCXY'}
       name: po_box
       properties: {}
       type: TextBox
-    - layout_properties: {grid_position: 'JLWKRY,AFJYMZ'}
+    - layout_properties: {grid_position: 'OSGOYU,VTFDBG'}
       name: rel_lbl
       properties: {text: 'Release Number:'}
       type: Label
-    - layout_properties: {grid_position: 'JLWKRY,XDEPBM'}
+    - layout_properties: {grid_position: 'OSGOYU,NWJLNJ'}
       name: rel_box
       properties: {}
       type: TextBox
@@ -37,14 +41,75 @@ components:
       name: series_box
       properties: {}
       type: TextBox
+    - layout_properties: {grid_position: 'GHGTHT,VOZNKH'}
+      name: code_lbl
+      properties: {text: 'Product Code:'}
+      type: Label
+    - layout_properties: {grid_position: 'GHGTHT,FQWTPY'}
+      name: code_box
+      properties: {}
+      type: TextBox
     layout_properties: {grid_position: 'OXSKKR,CJLNVT'}
     name: outlined_card_1
+    properties: {role: outlined-card}
+    type: ColumnPanel
+  - components:
+    - layout_properties: {grid_position: 'MALCHH,UVLLAN'}
+      name: countTitle_lbl
+      properties: {bold: true, role: title, text: Lot and Sample Size}
+      type: Label
+    - layout_properties: {grid_position: 'HMDRRV,IORKDA'}
+      name: ordqty_lbl
+      properties: {text: 'PO Order Quantity:'}
+      type: Label
+    - layout_properties: {grid_position: 'HMDRRV,PGZSQG'}
+      name: ordqty_box
+      properties: {}
+      type: TextBox
+    - layout_properties: {grid_position: 'HMDRRV,EMOJST'}
+      name: lotqty_lbl
+      properties: {text: 'Lot Size Quantity:'}
+      type: Label
+    - layout_properties: {grid_position: 'HMDRRV,VAJZNA'}
+      name: lotqty_box
+      properties: {}
+      type: TextBox
+    - layout_properties: {grid_position: 'HMDRRV,RYRZYU'}
+      name: sampqty_lbl
+      properties: {text: 'Sample Quantity:'}
+      type: Label
+    - layout_properties: {grid_position: 'HMDRRV,XNEELS RVGBVE,DXBAOS'}
+      name: sampqty_box
+      properties: {}
+      type: TextBox
+    - layout_properties: {grid_position: 'HMDRRV,XNEELS YMTZAM,XCXYXV'}
+      name: savehead_btn
+      properties: {role: elevated-button, text: Save Header}
+      type: Button
+    layout_properties: {grid_position: 'PFQWOK,WNKALH'}
+    name: outlined_card_3
     properties: {role: outlined-card}
     type: ColumnPanel
   - components:
     - layout_properties: {grid_position: 'HKYVUH,IURZKL'}
       name: dochead_lbl
       properties: {bold: true, role: title, text: Documentation Check}
+      type: Label
+    - layout_properties: {grid_position: 'SKIDPN,SZKWAR'}
+      name: samp_qty_vw
+      properties: {text: Lot Quantity (i.e. 10), visible: true}
+      type: Label
+    - layout_properties: {grid_position: 'SKIDPN,HDJUZL'}
+      name: unitaccept_vw
+      properties: {text: Total Units Accepted (i.e. 8)}
+      type: Label
+    - layout_properties: {grid_position: 'SKIDPN,IYTQTE'}
+      name: unitregject_vw
+      properties: {text: Total Units Rejected (i.e. 2)}
+      type: Label
+    - layout_properties: {grid_position: 'SKIDPN,IJVRWL FACYFB,XNRLXA'}
+      name: totrejects_vw
+      properties: {text: Total Number of Rejects (i.e. 4)}
       type: Label
     - layout_properties: {grid_position: 'JXAFVQ,SBINLZ'}
       name: mtr_lbl
@@ -143,14 +208,22 @@ components:
       name: spacer_4_copy_3_copy_3
       properties: {height: 32}
       type: Spacer
-    - layout_properties: {grid_position: 'YBIDVN,CLOHZZ'}
+    - layout_properties: {grid_position: 'YBIDVN,CLOHZZ PCPZOE,IUIEBZ'}
       name: counta_rad
       properties: {group_name: radioCount, text: Accept}
       type: RadioButton
-    - layout_properties: {grid_position: 'YBIDVN,UJYUAW'}
+    - layout_properties: {grid_position: 'YBIDVN,CLOHZZ EYXOKD,GDHOEL'}
+      name: next_btn
+      properties: {role: elevated-button, text: Next Piece}
+      type: Button
+    - layout_properties: {grid_position: 'YBIDVN,UJYUAW TVMPGE,NYJSUZ'}
       name: countr_rad
       properties: {group_name: radioCount, text: Reject}
       type: RadioButton
+    - layout_properties: {grid_position: 'YBIDVN,UJYUAW TWCEHK,VDPTGP'}
+      name: comp_btn
+      properties: {role: elevated-button, text: Complete Lot}
+      type: Button
     layout_properties: {grid_position: 'RPVYLN,TSOZYI'}
     name: outlined_card_2
     properties: {role: outlined-card}
@@ -168,10 +241,6 @@ components:
   name: navbar_links
   properties: {}
   type: FlowPanel
-- layout_properties: {slot: title}
-  name: title_lbl
-  properties: {bold: true, role: headline, text: Incoming Inspection Form}
-  type: Label
 container:
   properties: {html: '@theme:standard-page.html'}
   type: HtmlTemplate
