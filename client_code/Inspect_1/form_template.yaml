@@ -14,23 +14,23 @@ components:
       properties: {text: 'Inspection Date:'}
       type: Label
     - layout_properties: {grid_position: 'UZVKEU,YEDDKL'}
-      name: inspect_date
+      name: ins_date_box
       properties: {}
       type: DatePicker
     - layout_properties: {grid_position: 'UZVKEU,OVAQMG'}
       name: autoid_lbl
       properties: {text: 'ID Number:'}
       type: Label
-    - layout_properties: {grid_position: 'UZVKEU,CECOFO'}
-      name: id_box
-      properties: {}
+    - layout_properties: {grid_position: 'UZVKEU,QYPZJY'}
+      name: id_head_box
+      properties: {enabled: false}
       type: TextBox
     - layout_properties: {grid_position: 'OSGOYU,HLNTGW'}
       name: po_lbl
       properties: {text: 'PO Number:'}
       type: Label
     - layout_properties: {grid_position: 'OSGOYU,TXTCXY'}
-      name: po_box
+      name: po_numb_box
       properties: {}
       type: TextBox
     - layout_properties: {grid_position: 'OSGOYU,VTFDBG'}
@@ -38,7 +38,7 @@ components:
       properties: {text: 'Release Number:'}
       type: Label
     - layout_properties: {grid_position: 'OSGOYU,NWJLNJ'}
-      name: rel_box
+      name: rel_numb_box
       properties: {}
       type: TextBox
     - layout_properties: {grid_position: 'GHGTHT,CGNWEN'}
@@ -54,7 +54,7 @@ components:
       properties: {text: 'Product Code:'}
       type: Label
     - layout_properties: {grid_position: 'GHGTHT,FQWTPY'}
-      name: code_box
+      name: prod_code_box
       properties: {}
       type: TextBox
     - layout_properties: {grid_position: 'ZBPVAE,ULOAFM'}
@@ -70,7 +70,7 @@ components:
       properties: {text: 'Inspection Status:'}
       type: Label
     - layout_properties: {grid_position: 'EZCIMK,QNKWKQ KNAGJT,OQBYMA'}
-      name: ordqty_box
+      name: ord_qty_box
       properties: {}
       type: TextBox
     - layout_properties: {grid_position: 'EZCIMK,QNKWKQ RKZIDY,RGKASV'}
@@ -86,11 +86,11 @@ components:
       properties: {text: 'Update Date:'}
       type: Label
     - layout_properties: {grid_position: 'EZCIMK,JXQQED YPEISJ,PSANKC'}
-      name: lotqty_box
+      name: lot_qty_box
       properties: {}
       type: TextBox
     - layout_properties: {grid_position: 'EZCIMK,JXQQED ACAKDN,IQCOLX'}
-      name: update_box
+      name: update_dt_box
       properties: {}
       type: TextBox
     - layout_properties: {grid_position: 'EZCIMK,BUYLXJ'}
@@ -98,10 +98,11 @@ components:
       properties: {text: 'Sample Quantity:'}
       type: Label
     - layout_properties: {grid_position: 'EZCIMK,RWTHNN CIVMOI,IWLKZL'}
-      name: sampqty_box
+      name: sam_qty_box
       properties: {}
       type: TextBox
-    - layout_properties: {grid_position: 'EZCIMK,RWTHNN QSGBRX,ZXJPCQ'}
+    - event_bindings: {click: savehead_btn_click}
+      layout_properties: {grid_position: 'EZCIMK,RWTHNN QSGBRX,ZXJPCQ'}
       name: savehead_btn
       properties: {role: elevated-button, text: Save Header}
       type: Button
@@ -203,7 +204,7 @@ components:
       name: next_btn
       properties: {enabled: true, role: elevated-button, text: Next Part}
       type: Button
-    - event_bindings: {click: save_btn_click}
+    - event_bindings: {}
       layout_properties: {grid_position: 'XTNAQW,SOJTNI'}
       name: save_btn
       properties: {role: elevated-button, text: Complete Lot}

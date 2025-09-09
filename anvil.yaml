@@ -1,6 +1,14 @@
 allow_embedding: false
 db_schema:
-  inspections:
+  counter:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: count
+      type: number
+    server: full
+    title: counter
+  inspect_head:
     client: none
     columns:
     - admin_ui: {order: 0, width: 200}
@@ -15,11 +23,29 @@ db_schema:
     - admin_ui: {order: 3, width: 200}
       name: series
       type: string
-    - admin_ui: {order: 4, width: 200}
-      name: add_datetime
+    - admin_ui: {order: 7.5, width: 200}
+      name: update_dt
       type: datetime
+    - admin_ui: {order: 3.5, width: 200}
+      name: prod_code
+      type: string
+    - admin_ui: {order: 5.5, width: 200}
+      name: ord_qty
+      type: number
+    - admin_ui: {order: 6.5, width: 200}
+      name: lot_qty
+      type: number
+    - admin_ui: {order: 9.5, width: 200}
+      name: status
+      type: string
+    - admin_ui: {order: 10.5, width: 200}
+      name: sam_qty
+      type: number
+    - admin_ui: {order: 11.5, width: 200}
+      name: id_head
+      type: string
     server: full
-    title: inspections
+    title: inspect_head
 dependencies: []
 metadata: {description: Incoming Inspection for YS58 Strainers, title: YS58 - Incoming Inspection}
 name: YS58_Inspect

@@ -13,30 +13,31 @@ class Inspect_1(Inspect_1Template):
 
     # Any code you write here will run before the form opens.
 
-  def save_btn_click(self, **event_args):
+  def savehead_btn_click(self, **event_args):
     """This method is called when the button is clicked"""
-   # Assign Variables to Fields
-    idate = self.inspect_date.date
-    ponumb = self.po_box.text
-    relnumb = self.rel_box.text
+    # Assign Variables to Fields
+    ins_date_box = self.ins_date_box.date
+    po_numb = self.po_numb_box.text
+    rel_numb = self.rel_numb_box.text
     series = self.series_box.text
+    prod_code = self.prod_code_box.text
+    ord_qty = int(self.ord_qty_box.text)
+    lot_qty = int(self.lot_qty_box.text)
+    sam_qty = int(self.sam_qty_box.text)
+    status = self.status_box.text
 
     # Call your 'send_feedback' server function
     # pass in name, email and feedback as arguments
-    anvil.server.call('show_record', idate, ponumb, relnumb, series)
-
-    # Call your 'clear_inputs' method to clear the boxes
-    self.clear_inputs()
-
-    # Show a popup that says 'Feedback submitted!'
+    code = anvil.server.call('save_head', ins_date_box, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty, status)
+    self.id_head_box.text = code
+    # Show a popup that says 'Record Saved!'
     Notification("Record Saved").show()
 
-  def clear_inputs(self):
-    # Clear our three text boxes
-    self.inspect_date.date = ""
-    self.po_box.text = ""
-    self.rel_box.text = ""
-    self.series_box.text = ""
+
+   
+
+
+ 
     
     
       
