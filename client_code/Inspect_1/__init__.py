@@ -26,12 +26,15 @@ class Inspect_1(Inspect_1Template):
     sam_qty = int(self.sam_qty_box.text)
     status = self.status_box.text
 
-    # Call your 'send_feedback' server function
-    # pass in name, email and feedback as arguments
+    # Call your 'save_head' server function
+    # pass values for the inspect_head table
     code = anvil.server.call('save_head', ins_date_box, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty, status)
+    # Server function returns the next ID Number
+    # Displays it in the id_head_box
     self.id_head_box.text = code
-    # Show a popup that says 'Record Saved!'
-    Notification("Record Saved").show()
+    
+    # Show a popup that says 'Header Saved!'
+    Notification("Header Saved").show()
 
 
    
