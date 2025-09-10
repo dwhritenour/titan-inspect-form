@@ -20,18 +20,6 @@ from datetime import datetime
 
 @anvil.server.callable
 def save_head(ins_date, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty, status):
-  # Send yourself an email each time feedback is submitted
-  anvil.email.send(#to="noreply@anvil.works", # Change this to your email address and remove the #!
-    subject=f"Feedback from {po_numb}",
-    text=f"""
-                   
-  A new person has filled out the feedback form!
-
-  Date: {ins_date}
-  PO Number: {po_numb}
-  Rel Number: {rel_numb}
-  Series: {series}
-  """)
 
   row = app_tables.inspect_head.add_row(
     ins_date = ins_date,
@@ -61,3 +49,16 @@ def get_max_ord_qty():
   row = app_tables.counter.get(count=count_max)
   row['count'] = count_max + 1
   return count_max
+
+@anvil.server.callable
+def update_head(id_head, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty):
+  
+  row = app_tables.inspect_head.get(id_head=id_head)
+  row['po_numb'] = po_numb
+  row['rel_numb'] = rel_numb
+  row['series'] = series
+  row['prod_code'] = prod_code
+  row['ord_qty'] = ord_qty
+  row['lot_qty'] = lot_qty
+  row['sam_qty'] = sam_qty
+  row['update_dt'] = datetime.now()
