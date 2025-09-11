@@ -1,0 +1,131 @@
+components:
+- components:
+  - components:
+    - layout_properties: {grid_position: 'HKYVUH,IURZKL'}
+      name: dochead_lbl_copy
+      properties: {bold: true, role: title, text: Documentation Check}
+      type: Label
+    - layout_properties: {grid_position: 'EJQVXR,EBRAMG'}
+      name: Indent_lbl
+      properties: {text: 'Identification Check:'}
+      type: Label
+    - layout_properties: {grid_position: 'EJQVXR,NDLSJN'}
+      name: spacer_1_copy_2
+      properties: {height: 32}
+      type: Spacer
+    - layout_properties: {grid_position: 'EJQVXR,NVBHBY'}
+      name: inda_rad
+      properties: {group_name: radioIndent, text: Accept}
+      type: RadioButton
+    - layout_properties: {grid_position: 'EJQVXR,RUUEUC'}
+      name: indr_rad
+      properties: {group_name: radioIndent, text: Reject}
+      type: RadioButton
+    - layout_properties: {grid_position: 'BMJDST,KJCOCT'}
+      name: count_lbl
+      properties: {text: 'Count Verification:'}
+      type: Label
+    - layout_properties: {grid_position: 'BMJDST,XLJBCS'}
+      name: spacer_1_copy_2_copy_4_copy
+      properties: {height: 32}
+      type: Spacer
+    - layout_properties: {grid_position: 'BMJDST,FHWCSZ'}
+      name: counta_rad
+      properties: {group_name: radioCount, text: Accept}
+      type: RadioButton
+    - layout_properties: {grid_position: 'BMJDST,TBZVDN'}
+      name: countr_rad
+      properties: {group_name: radioCount, text: Reject}
+      type: RadioButton
+    - layout_properties: {grid_position: 'QDLNOF,GEVOIC'}
+      name: mtr_lbl
+      properties: {text: 'Mill Test Report:'}
+      type: Label
+    - layout_properties: {grid_position: 'QDLNOF,AFLHIE'}
+      name: spacer_1_copy_2_copy_4
+      properties: {height: 32}
+      type: Spacer
+    - layout_properties: {grid_position: 'QDLNOF,DBDKWQ'}
+      name: mtra_rad
+      properties:
+        align: left
+        group_name: radioMTR
+        spacing:
+          margin: [null, null, null, '0']
+        text: Accept
+      type: RadioButton
+    - layout_properties: {grid_position: 'QDLNOF,BEHEQK'}
+      name: mtrr_rad
+      properties:
+        group_name: radioMTR
+        spacing:
+          margin: [null, null, null, '0']
+        text: Reject
+      type: RadioButton
+    - layout_properties: {grid_position: 'AJLDZD,ZDOLDC AVFFER,KSBDHA'}
+      name: hydro_lbl
+      properties: {text: 'Hydro-Test Reports:'}
+      type: Label
+    - layout_properties: {grid_position: 'AJLDZD,ZDOLDC AJCJWM,FDYYJG'}
+      name: comment_lbl
+      properties: {text: 'Comments:'}
+      type: Label
+    - layout_properties: {grid_position: 'AJLDZD,ODXKRM'}
+      name: spacer_1_copy_2_copy_4_copy_2
+      properties: {height: 32}
+      type: Spacer
+    - layout_properties: {grid_position: 'AJLDZD,SBYXKL'}
+      name: hyda_rad
+      properties: {group_name: radioHydro, text: Accept}
+      type: RadioButton
+    - layout_properties: {grid_position: 'AJLDZD,XJQIZV'}
+      name: hydr_rad
+      properties: {group_name: radioHydro, text: Reject}
+      type: RadioButton
+    - layout_properties: {grid_position: 'VIVEMY,YZNFWM'}
+      name: comment_area
+      properties: {}
+      type: TextArea
+    - layout_properties: {grid_position: 'XTNAQW,MKAIIF'}
+      name: spacer_1_copy_2_copy
+      properties: {height: 32}
+      type: Spacer
+    - layout_properties: {grid_position: 'XTNAQW,JOUNNJ'}
+      name: spacer_1_copy_2_copy_2
+      properties: {height: 32}
+      type: Spacer
+    - layout_properties: {grid_position: 'XTNAQW,VRJVVE'}
+      name: spacer_1_copy_2_copy_3
+      properties: {height: 32}
+      type: Spacer
+    - layout_properties: {grid_position: 'XTNAQW,JMFJWK'}
+      name: comp_btn
+      properties: {role: elevated-button, text: Back Part}
+      type: Button
+    - layout_properties: {grid_position: 'XTNAQW,EGWJIB'}
+      name: next_btn
+      properties: {enabled: true, role: elevated-button, text: Next Part}
+      type: Button
+    - event_bindings: {}
+      layout_properties: {grid_position: 'XTNAQW,SOJTNI'}
+      name: save_btn
+      properties: {role: elevated-button, text: Complete Lot}
+      type: Button
+    layout_properties: {grid_position: 'MURHNY,MQBQMS'}
+    name: document_card
+    properties: {col_widths: '{"GEVOIC":15,"AFLHIE":15,"DBDKWQ":15,"BEHEQK":15}', role: outlined-card}
+    type: ColumnPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+custom_component: true
+is_package: true
+toolbox_item: {title: inspect_docs}
