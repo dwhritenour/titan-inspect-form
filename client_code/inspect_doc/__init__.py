@@ -1,4 +1,4 @@
-from ._anvil_designer import inspect_docsTemplate
+from ._anvil_designer import inspect_docTemplate
 from anvil import *
 import anvil.server
 import anvil.tables as tables
@@ -6,7 +6,7 @@ import anvil.tables.query as q
 from anvil.tables import app_tables
 
 
-class inspect_docs(inspect_docsTemplate):
+class inspect_doc(inspect_docTemplate):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)

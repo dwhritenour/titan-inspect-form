@@ -1,4 +1,4 @@
-from ._anvil_designer import Inspect_1Template
+from ._anvil_designer import Inspect_headTemplate
 from anvil import *
 import anvil.server
 from datetime import datetime
@@ -6,7 +6,7 @@ import validation_utils
 
 STATUS_IN_PROGRESS = "In Progress"
 
-class Inspect_1(Inspect_1Template):
+class Inspect_head(Inspect_headTemplate):
   """
   Header section of the inspection form.
   Organizes UI helpers (enable/clear/read/write), and a single save handler
