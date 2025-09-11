@@ -301,7 +301,7 @@ components:
       type: Button
     layout_properties: {grid_position: 'RPVYLN,TSOZYI'}
     name: document_card
-    properties: {role: outlined-card}
+    properties: {col_widths: '{"GEVOIC":15,"AFLHIE":15,"DBDKWQ":15,"BEHEQK":15}', role: outlined-card}
     type: ColumnPanel
   - components:
     - layout_properties: {grid_position: 'XEGUNL,FFGTAM'}
