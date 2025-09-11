@@ -1,14 +1,5 @@
-import anvil.server
-import anvil.tables as tables
-import anvil.tables.query as q
-from anvil.tables import app_tables
-# This is a module.
-# You can define variables and functions here, and use them from any form. For example, in a top-level form:
-#
-#    from ..Inspect_1 import Module1
-#
-#    Module1.say_hello()
-#
+# Client Code → Modules → validation_utils.py
+# Reusable validation with field highlighting for Anvil apps.
 
 from anvil import alert
 
@@ -49,4 +40,6 @@ def validate_header(data: dict) -> bool:
   if not is_int(data["sam_qty"], "Sample Quantity", min_val=1): return False
 
   return True
+
+
 
