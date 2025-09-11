@@ -1,93 +1,146 @@
 from ._anvil_designer import Inspect_1Template
 from anvil import *
-import plotly.graph_objects as go
-import anvil.tables as tables
-import anvil.tables.query as q
-from anvil.tables import app_tables
 import anvil.server
 from datetime import datetime
+import validation_utils
+
+STATUS_IN_PROGRESS = "In Progress"
 
 class Inspect_1(Inspect_1Template):
+  """
+  Header section of the inspection form.
+  Organizes UI helpers (enable/clear/read/write), and a single save handler
+  that decides between insert and update based on presence of the header ID.
+  """
   def __init__(self, **properties):
-    # Set Form properties and Data Bindings.
     self.init_components(**properties)
 
-    # Any code you write here will run before the form opens.
-    # Set all fields to disabled at startup
-    self.ins_date_box.enabled = False
-    self.po_numb_box.enabled = False
-    self.rel_numb_box.enabled = False
-    self.series_box.enabled = False
-    self.prod_code_box.enabled = False
-    self.ord_qty_box.enabled = False
-    self.lot_qty_box.enabled = False
-    self.sam_qty_box.enabled = False
-    self.status_box.enabled = False
-    
-  # Clear Header Fields Method
-  def clear_header(self, **event_args):
-    self.ins_date_box.date = ""
-    self.id_head_box.text = ""
-    self.po_numb_box.text = ""
-    self.rel_numb_box.text = ""
-    self.series_box.text = ""
-    self.prod_code_box.text = ""
-    self.ord_qty_box.text = ""
-    self.lot_qty_box.text = ""
-    self.sam_qty_box.text = ""
-    self.status_box.text = ""
-    self.update_dt_box.text = ""
-    self.update_t_box.text = ""
-  
-  # Saves or Updates the Header based upon the value of Status Field
-  def savehead_btn_click(self, **event_args):
-    """This method is called when the button is clicked"""
-    # Assign Variables to Fields
-    ins_date = self.ins_date_box.date
-    po_numb = self.po_numb_box.text
-    rel_numb = self.rel_numb_box.text
-    series = self.series_box.text
-    prod_code = self.prod_code_box.text
-    ord_qty = int(self.ord_qty_box.text)
-    lot_qty = int(self.lot_qty_box.text)
-    sam_qty = int(self.sam_qty_box.text)
-    status = "In Progress"
+    # Start with header fields disabled and cleared
+    self.enable_header_fields(False)
+    self.clear_header_fields()
 
-    # Check if it is a insert of update record operation
-    if not self.status_box.text:
-      # Call your 'save_head' server function - Pass values for the inspect_head table
-      # Server function returns the next ID Number
-      code = anvil.server.call('save_head', ins_date, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty, status)
-      
-      # Displays it in ID, Status, and Update Date upon save
-      self.id_head_box.text = code
-      self.status_box.text = status
-      self.update_dt_box.text = datetime.now().strftime("%Y-%m-%d")
-      self.update_t_box.text = datetime.now().strftime("%H:%M:%S")
-      
-      # Show a popup that says 'Header Saved!'
+  # ---------------------------
+  # UI STATE HELPERS
+  # ---------------------------
+  def enable_header_fields(self, enabled: bool):
+    """Enable/disable all user-editable header fields."""
+    self.ins_date_box.enabled   = enabled
+    self.po_numb_box.enabled    = enabled
+    self.rel_numb_box.enabled   = enabled
+    self.series_box.enabled     = enabled
+    self.prod_code_box.enabled  = enabled
+    self.ord_qty_box.enabled    = enabled
+    self.lot_qty_box.enabled    = enabled
+    self.sam_qty_box.enabled    = enabled
+    # status_box is display-only; keep disabled
+    self.status_box.enabled     = False
+
+  def clear_header_fields(self):
+    """Clear user-editable header fields and system fields."""
+    # Editable
+    self.ins_date_box.date  = None
+    self.po_numb_box.text   = ""
+    self.rel_numb_box.text  = ""
+    self.series_box.text    = ""
+    self.prod_code_box.text = ""
+    self.ord_qty_box.text   = ""
+    self.lot_qty_box.text   = ""
+    self.sam_qty_box.text   = ""
+
+    # System/display fields
+    self.id_head_box.text   = ""
+    self.status_box.text    = ""
+    self.update_dt_box.text = ""
+    self.update_t_box.text  = ""
+
+  # ---------------------------
+  # DATA MARSHALING
+  # ---------------------------
+  def _to_int_or_none(self, s):
+    """Best-effort parse to int; returns None if blank/invalid (validation later)."""
+    try:
+      return int(s) if s not in (None, "") else None
+    except ValueError:
+      return None
+
+  def read_header_from_ui(self) -> dict:
+    """Collect header values from UI into a dict."""
+    return {
+      "ins_date":  self.ins_date_box.date,   # datetime.date or None
+      "po_numb":   self.po_numb_box.text.strip(),
+      "rel_numb":  self.rel_numb_box.text.strip(),
+      "series":    self.series_box.text.strip(),
+      "prod_code": self.prod_code_box.text.strip(),
+      "ord_qty":   self._to_int_or_none(self.ord_qty_box.text),
+      "lot_qty":   self._to_int_or_none(self.lot_qty_box.text),
+      "sam_qty":   self._to_int_or_none(self.sam_qty_box.text),
+    }
+
+  def write_header_to_ui(self, data: dict):
+    """Apply header dict values to UI (useful after fetch/save)."""
+    self.ins_date_box.date  = data.get("ins_date")
+    self.po_numb_box.text   = data.get("po_numb", "")
+    self.rel_numb_box.text  = data.get("rel_numb", "")
+    self.series_box.text    = data.get("series", "")
+    self.prod_code_box.text = data.get("prod_code", "")
+    self.ord_qty_box.text   = "" if data.get("ord_qty") is None else str(data["ord_qty"])
+    self.lot_qty_box.text   = "" if data.get("lot_qty") is None else str(data["lot_qty"])
+    self.sam_qty_box.text   = "" if data.get("sam_qty") is None else str(data["sam_qty"])
+
+  # ---------------------------
+  # BUTTON HANDLERS
+  # ---------------------------
+  def newhead_btn_click(self, **event_args):
+    """Prepare UI for a brand-new header record."""
+    self.clear_header_fields()
+    self.enable_header_fields(True)
+
+  def savehead_btn_click(self, **event_args):
+    header = self.read_header_from_ui()
+
+    # Run validation first
+    if not validation_utils.validate_header(header):
+      return  # stop if invalid
+
+    now = datetime.now()
+    id_head = (self.id_head_box.text or "").strip()
+    is_insert = (id_head == "")
+
+    if is_insert:
+      status = STATUS_IN_PROGRESS
+      code = anvil.server.call(
+        "save_head",
+        header["ins_date"],
+        header["po_numb"],
+        header["rel_numb"],
+        header["series"],
+        header["prod_code"],
+        header["ord_qty"],
+        header["lot_qty"],
+        header["sam_qty"],
+        status
+      )
+      self.id_head_box.text   = code
+      self.status_box.text    = status
+      self.update_dt_box.text = now.strftime("%Y-%m-%d")
+      self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Saved").show()
     else:
-      # Call update_head method - pass it the ID value
-      id_head = self.id_head_box.text
-      anvil.server.call('update_head', id_head, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty)
+      anvil.server.call(
+        "update_head",
+        id_head,
+        header["po_numb"],
+        header["rel_numb"],
+        header["series"],
+        header["prod_code"],
+        header["ord_qty"],
+        header["lot_qty"],
+        header["sam_qty"]
+      )
+      self.update_dt_box.text = now.strftime("%Y-%m-%d")
+      self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Updated").show()
 
-  # Enables all header fields and sets them to ""
-  def newhead_btn_click(self, **event_args):
-    """This method is called when the button is clicked"""
-    # Enable all fields
-    self.ins_date_box.enabled = True
-    self.po_numb_box.enabled = True
-    self.rel_numb_box.enabled = True
-    self.series_box.enabled = True
-    self.prod_code_box.enabled = True
-    self.ord_qty_box.enabled = True
-    self.lot_qty_box.enabled = True
-    self.sam_qty_box.enabled = True    
-
-    # Call clear_header function
-    self.clear_header()
 
 
    
