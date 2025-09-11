@@ -37,6 +37,7 @@ class Inspect_1(Inspect_1Template):
     self.sam_qty_box.text = ""
     self.status_box.text = ""
     self.update_dt_box.text = ""
+    self.update_t_box.text = ""
   
   # Saves or Updates the Header based upon the value of Status Field
   def savehead_btn_click(self, **event_args):
@@ -62,6 +63,7 @@ class Inspect_1(Inspect_1Template):
       self.id_head_box.text = code
       self.status_box.text = status
       self.update_dt_box.text = datetime.now().strftime("%Y-%m-%d")
+      self.update_t_box.text = datetime.now().strftime("%H:%M:%S")
       
       # Show a popup that says 'Header Saved!'
       Notification("Header Saved").show()
