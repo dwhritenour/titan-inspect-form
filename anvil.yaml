@@ -8,6 +8,29 @@ db_schema:
       type: number
     server: full
     title: counter
+  inspect_doc:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: id_head
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: ident_chk
+      type: string
+    - admin_ui: {order: 2, width: 200}
+      name: count_chk
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: mtr_chk
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: hydro_chk
+      type: string
+    - admin_ui: {order: 5, width: 200}
+      name: comments
+      type: string
+    server: full
+    title: inspect_doc
   inspect_head:
     client: none
     columns:
@@ -47,9 +70,9 @@ db_schema:
     server: full
     title: inspect_head
 dependencies: []
-metadata: {description: Incoming Inspection for YS58 Strainers, title: YS58 - Incoming Inspection}
-name: YS58_Inspect
-package_name: YS58_Inspect
+metadata: {description: 'Incoming Inspection ', title: Incoming Inspection}
+name: Inspect Form
+package_name: Inspect_Form
 renamed: true
 runtime_options:
   client_version: '3'
@@ -63,5 +86,5 @@ services:
 - client_config: {}
   server_config: {test_mode: true}
   source: /runtime/services/anvil/email.yml
-startup: {module: Inspect_head, type: form}
+startup: {module: inspect_doc, type: form}
 startup_form: null

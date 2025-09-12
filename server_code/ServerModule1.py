@@ -62,3 +62,13 @@ def update_head(id_head, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty,
   row['lot_qty'] = lot_qty
   row['sam_qty'] = sam_qty
   row['update_dt'] = datetime.now()
+
+@anvil.server.callable
+def save_docs(ident_chk, count_chk, mtr_chk, hydro_chk, comments):
+  app_tables.inspect_doc.add_row(
+    ident_chk = ident_chk,
+    count_chk = count_chk,
+    mtr_chk = mtr_chk,
+    hydro_chk = hydro_chk,
+    comments = comments
+  )
