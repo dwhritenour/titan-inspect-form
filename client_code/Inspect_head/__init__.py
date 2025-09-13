@@ -7,8 +7,6 @@ import validation_head
 
 STATUS_IN_PROGRESS = "In Progress"
 
-
-
 class Inspect_head(Inspect_headTemplate):
   """
   Header section of the inspection form.

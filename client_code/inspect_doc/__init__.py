@@ -26,6 +26,9 @@ class inspect_doc(inspect_docTemplate):
     self.hyda_rad.value    = "ACCEPT"
     self.hydr_rad.value    = "REJECT"
     self.hydrona_rad.value = "NOT APPLICABLE"
+    self.packa_rad.value    = "ACCEPT"
+    self.packr_rad.value    = "REJECT"
+    self.packna_rad.value = "NOT APPLICABLE"
 
   def read_docs_from_ui(self) -> dict:
     # NOTE: If your RadioButtons use group_name="radioIden"/etc.,
@@ -34,7 +37,9 @@ class inspect_doc(inspect_docTemplate):
     #   ident_val = get_group_value("radioIden")
     # If self.inda_rad.get_group_value(...) throws, switch to get_group_value(...)
     return {
+      # Gets the radio button selected in a radio group
       "id_head":    self.id_head_box.text,
+      "pack_chk":   self.packa_rad.get_group_value("radioPack"),
       "ident_chk":  self.inda_rad.get_group_value("radioIden"),
       "count_chk":  self.counta_rad.get_group_value("radioCount"),
       "mtr_chk":    self.mtra_rad.get_group_value("radioMTR"),
@@ -54,6 +59,7 @@ class inspect_doc(inspect_docTemplate):
     anvil.server.call(
       "save_docs",
       documents["id_head"],
+      documents["pack_chk"],
       documents["ident_chk"],
       documents["count_chk"],
       documents["mtr_chk"],

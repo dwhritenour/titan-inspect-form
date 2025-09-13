@@ -36,7 +36,8 @@ def validate_doc(data: dict) -> bool:
   Ensures all required documents are present.
   Returns True if valid, otherwise False (after showing alerts).
   """
-  if not required(data.get("ident_chk"), "Identification"): return False
+  if not required(data.get("pack_chk"), "Packaging"): return False
+  if not required(data.get("ident_chk"), "Identification"): return False    
   if not required(data.get("count_chk"), "Count Check"): return False
   if not required(data.get("mtr_chk"), "Mill Test Reports"): return False
   if not required(data.get("hydro_chk"), "Hydro Reports"): return False

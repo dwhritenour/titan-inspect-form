@@ -20,6 +20,26 @@ components:
     name: id_head_box
     properties: {align: right, enabled: false}
     type: TextBox
+  - layout_properties: {grid_position: 'QALWVL,SXRMPO'}
+    name: pack_lbl
+    properties: {text: 'Packaging:'}
+    type: Label
+  - layout_properties: {grid_position: 'QALWVL,YJMGXU'}
+    name: spacer_1_copy_2_copy_4_copy_2_copy
+    properties: {height: 32}
+    type: Spacer
+  - layout_properties: {grid_position: 'QALWVL,IVVGUR'}
+    name: packa_rad
+    properties: {group_name: radioPack, text: Accept}
+    type: RadioButton
+  - layout_properties: {grid_position: 'QALWVL,GPGDGB'}
+    name: packr_rad
+    properties: {group_name: radioPack, text: Reject}
+    type: RadioButton
+  - layout_properties: {grid_position: 'QALWVL,IYUOTA'}
+    name: packna_rad
+    properties: {group_name: radioPack, text: Not Applicable}
+    type: RadioButton
   - layout_properties: {grid_position: 'EJQVXR,EBRAMG'}
     name: Ident_lbl
     properties: {text: 'Identification Check:'}
@@ -90,13 +110,9 @@ components:
     name: mtrna_rad
     properties: {group_name: radioMTR, text: Not Applicable}
     type: RadioButton
-  - layout_properties: {grid_position: 'AJLDZD,ZDOLDC AVFFER,KSBDHA'}
+  - layout_properties: {grid_position: 'AJLDZD,ZDOLDC'}
     name: hydro_lbl
     properties: {text: 'Hydro-Test Reports:'}
-    type: Label
-  - layout_properties: {grid_position: 'AJLDZD,ZDOLDC AJCJWM,FDYYJG'}
-    name: comment_lbl
-    properties: {text: 'Comments:'}
     type: Label
   - layout_properties: {grid_position: 'AJLDZD,ODXKRM'}
     name: spacer_1_copy_2_copy_4_copy_2
@@ -114,6 +130,10 @@ components:
     name: hydrona_rad
     properties: {group_name: radioHydro, text: Not Applicable}
     type: RadioButton
+  - layout_properties: {grid_position: 'VJLNEW,GBPDVT'}
+    name: comment_lbl
+    properties: {text: 'Comments:'}
+    type: Label
   - layout_properties: {grid_position: 'VIVEMY,YZNFWM'}
     name: comment_area
     properties: {}
@@ -128,6 +148,10 @@ components:
     type: Spacer
   - layout_properties: {grid_position: 'XTNAQW,VRJVVE'}
     name: spacer_1_copy_2_copy_3
+    properties: {height: 32}
+    type: Spacer
+  - layout_properties: {grid_position: 'XTNAQW,RHDTZE'}
+    name: spacer_1_copy_2_copy_3_copy
     properties: {height: 32}
     type: Spacer
   - event_bindings: {click: save_btn_click}
