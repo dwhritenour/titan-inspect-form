@@ -114,9 +114,11 @@ class Inspect_head(Inspect_headTemplate):
       self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Saved").show()
 
-      '''' Immediately open the Documentation step, passing the header id
-      self.content_panel.clear()
-      self.content_panel.add_component(inspect_doc(header_id=code))'''
+      '''' I took this out because I wanted sidebar buttons to handle the flow
+          I added to method: def doc_chk_btn_click(self, **event_args):
+          Immediately open the Documentation step, passing the header id
+          self.content_panel.clear()
+          self.content_panel.add_component(inspect_doc(header_id=code))'''
 
     else:
       anvil.server.call(
