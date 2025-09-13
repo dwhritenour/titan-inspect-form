@@ -130,6 +130,26 @@ components:
     name: hydrona_rad
     properties: {group_name: radioHydro, text: Not Applicable}
     type: RadioButton
+  - layout_properties: {grid_position: 'MXYGMK,JHTJNW'}
+    name: pack_photo_lbl
+    properties: {text: 'Packaging Photo:'}
+    type: Label
+  - layout_properties: {grid_position: 'MXYGMK,UKBWJV'}
+    name: pack_load
+    properties:
+      align: left
+      role: elevated-button
+      spacing:
+        padding: [null, '45', null, '45']
+    type: FileLoader
+  - layout_properties: {grid_position: 'MXYGMK,ZFMXOJ'}
+    name: spacer_1_copy_2_copy_4_copy_2_copy_2_copy
+    properties: {height: 32}
+    type: Spacer
+  - layout_properties: {grid_position: 'MXYGMK,IXHQQP'}
+    name: spacer_1_copy_2_copy_4_copy_2_copy_2_copy_2
+    properties: {height: 32}
+    type: Spacer
   - layout_properties: {grid_position: 'VJLNEW,GBPDVT'}
     name: comment_lbl
     properties: {text: 'Comments:'}
