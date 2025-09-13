@@ -2,9 +2,12 @@ from ._anvil_designer import Inspect_headTemplate
 from anvil import *
 import anvil.server
 from datetime import datetime
-import validation_utils
+from ..inspect_doc import inspect_doc
+import validation_head
 
 STATUS_IN_PROGRESS = "In Progress"
+
+
 
 class Inspect_head(Inspect_headTemplate):
   """
@@ -14,7 +17,6 @@ class Inspect_head(Inspect_headTemplate):
   """
   def __init__(self, **properties):
     self.init_components(**properties)
-
     # Start with header fields disabled and cleared
     self.enable_header_fields(False)
     self.clear_header_fields()
@@ -23,7 +25,6 @@ class Inspect_head(Inspect_headTemplate):
   # UI STATE HELPERS
   # ---------------------------
   def enable_header_fields(self, enabled: bool):
-    """Enable/disable all user-editable header fields."""
     self.ins_date_box.enabled   = enabled
     self.po_numb_box.enabled    = enabled
     self.rel_numb_box.enabled   = enabled
@@ -32,12 +33,9 @@ class Inspect_head(Inspect_headTemplate):
     self.ord_qty_box.enabled    = enabled
     self.lot_qty_box.enabled    = enabled
     self.sam_qty_box.enabled    = enabled
-    # status_box is display-only; keep disabled
     self.status_box.enabled     = False
 
   def clear_header_fields(self):
-    """Clear user-editable header fields and system fields."""
-    # Editable
     self.ins_date_box.date  = None
     self.po_numb_box.text   = ""
     self.rel_numb_box.text  = ""
@@ -46,8 +44,6 @@ class Inspect_head(Inspect_headTemplate):
     self.ord_qty_box.text   = ""
     self.lot_qty_box.text   = ""
     self.sam_qty_box.text   = ""
-
-    # System/display fields
     self.id_head_box.text   = ""
     self.status_box.text    = ""
     self.update_dt_box.text = ""
@@ -57,16 +53,14 @@ class Inspect_head(Inspect_headTemplate):
   # DATA MARSHALING
   # ---------------------------
   def _to_int_or_none(self, s):
-    """Best-effort parse to int; returns None if blank/invalid (validation later)."""
     try:
       return int(s) if s not in (None, "") else None
     except ValueError:
       return None
 
   def read_header_from_ui(self) -> dict:
-    """Collect header values from UI into a dict."""
     return {
-      "ins_date":  self.ins_date_box.date,   # datetime.date or None
+      "ins_date":  self.ins_date_box.date,
       "po_numb":   self.po_numb_box.text.strip(),
       "rel_numb":  self.rel_numb_box.text.strip(),
       "series":    self.series_box.text.strip(),
@@ -77,7 +71,6 @@ class Inspect_head(Inspect_headTemplate):
     }
 
   def write_header_to_ui(self, data: dict):
-    """Apply header dict values to UI (useful after fetch/save)."""
     self.ins_date_box.date  = data.get("ins_date")
     self.po_numb_box.text   = data.get("po_numb", "")
     self.rel_numb_box.text  = data.get("rel_numb", "")
@@ -91,16 +84,15 @@ class Inspect_head(Inspect_headTemplate):
   # BUTTON HANDLERS
   # ---------------------------
   def newhead_btn_click(self, **event_args):
-    """Prepare UI for a brand-new header record."""
     self.clear_header_fields()
     self.enable_header_fields(True)
 
   def savehead_btn_click(self, **event_args):
     header = self.read_header_from_ui()
 
-    # Run validation first
-    if not validation_utils.validate_header(header):
-      return  # stop if invalid
+    # Validate before save
+    if not validation_head.validate_header(header):
+      return
 
     now = datetime.now()
     id_head = (self.id_head_box.text or "").strip()
@@ -110,36 +102,40 @@ class Inspect_head(Inspect_headTemplate):
       status = STATUS_IN_PROGRESS
       code = anvil.server.call(
         "save_head",
-        header["ins_date"],
-        header["po_numb"],
-        header["rel_numb"],
-        header["series"],
-        header["prod_code"],
-        header["ord_qty"],
-        header["lot_qty"],
-        header["sam_qty"],
+        header["ins_date"], header["po_numb"], header["rel_numb"],
+        header["series"], header["prod_code"],
+        header["ord_qty"], header["lot_qty"], header["sam_qty"],
         status
       )
+      # Reflect saved state in UI
       self.id_head_box.text   = code
       self.status_box.text    = status
       self.update_dt_box.text = now.strftime("%Y-%m-%d")
       self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Saved").show()
+
+      '''' Immediately open the Documentation step, passing the header id
+      self.content_panel.clear()
+      self.content_panel.add_component(inspect_doc(header_id=code))'''
+
     else:
       anvil.server.call(
         "update_head",
         id_head,
-        header["po_numb"],
-        header["rel_numb"],
-        header["series"],
-        header["prod_code"],
-        header["ord_qty"],
-        header["lot_qty"],
-        header["sam_qty"]
+        header["po_numb"], header["rel_numb"],
+        header["series"], header["prod_code"],
+        header["ord_qty"], header["lot_qty"], header["sam_qty"]
       )
       self.update_dt_box.text = now.strftime("%Y-%m-%d")
       self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Updated").show()
+
+  def doc_chk_btn_click(self, **event_args):
+    # Immediately open the Documentation step, passing the header id
+    self.content_panel.clear()
+    self.content_panel.add_component(inspect_doc(header_id=self.id_head_box.text))
+
+
 
 
 

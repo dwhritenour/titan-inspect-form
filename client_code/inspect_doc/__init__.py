@@ -4,49 +4,60 @@ import anvil.server
 import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
-
+import validation_doc
 
 class inspect_doc(inspect_docTemplate):
-  def __init__(self, **properties):
-    # Set Form properties and Data Bindings.
+  def __init__(self, header_id=None, **properties):
     self.init_components(**properties)
+    self.header_id = header_id
+    self.id_head_box.text = header_id
+    print("inspect_doc loaded. header_id =", self.header_id)
 
-    # Any code you write here will run before the form opens.
-    # Set values for each radio button
-    self.inda_rad.value = "ACCEPT"
-    self.indr_rad.value = "REJECT"
-    self.indna_rad.value = "NOT APPLICABLE"
-    self.counta_rad.value = "ACCEPT"
-    self.countr_rad.value = "REJECT"
+    # Set radio defaults
+    self.inda_rad.value    = "ACCEPT"
+    self.indr_rad.value    = "REJECT"
+    self.indna_rad.value   = "NOT APPLICABLE"
+    self.counta_rad.value  = "ACCEPT"
+    self.countr_rad.value  = "REJECT"
     self.countna_rad.value = "NOT APPLICABLE"
-    self.mtra_rad.value = "ACCEPT"
-    self.mtrr_rad.value = "REJECT"
-    self.mtrna_rad.value = "NOT APPLICABLE"
-    self.hyda_rad.value = "ACCEPT"
-    self.hydr_rad.value = "REJECT"
+    self.mtra_rad.value    = "ACCEPT"
+    self.mtrr_rad.value    = "REJECT"
+    self.mtrna_rad.value   = "NOT APPLICABLE"
+    self.hyda_rad.value    = "ACCEPT"
+    self.hydr_rad.value    = "REJECT"
     self.hydrona_rad.value = "NOT APPLICABLE"
 
-  # Place ui values into dictionary
   def read_docs_from_ui(self) -> dict:
-    """Collect Documentation Check values from UI into a dict."""
+    # NOTE: If your RadioButtons use group_name="radioIden"/etc.,
+    # anvil's group value getter is the module-level function:
+    #   from anvil import get_group_value
+    #   ident_val = get_group_value("radioIden")
+    # If self.inda_rad.get_group_value(...) throws, switch to get_group_value(...)
     return {
-      "ident_chk":  self.inda_rad.get_group_value("radioIden"),      
+      "id_head":    self.id_head_box.text,
+      "ident_chk":  self.inda_rad.get_group_value("radioIden"),
       "count_chk":  self.counta_rad.get_group_value("radioCount"),
       "mtr_chk":    self.mtra_rad.get_group_value("radioMTR"),
       "hydro_chk":  self.hyda_rad.get_group_value("radioHydro"),
-      "comments":   self.comment_area.text.strip()      
+      "comments":   self.comment_area.text.strip()
     }
 
-  # Save ui values to database
   def save_btn_click(self, **event_args):
-    """This method is called when the button is clicked"""
-    documents = self.read_docs_from_ui()   
+    documents = self.read_docs_from_ui()
+
+    # Call validation_doc module
+    if not validation_doc.validate_doc(documents):
+      return
+      
+    # You probably want to associate docs to header_id here as well:
+    # anvil.server.call("save_docs", self.header_id, ...)
     anvil.server.call(
-     "save_docs",
+      "save_docs",
+      documents["id_head"],
       documents["ident_chk"],
       documents["count_chk"],
       documents["mtr_chk"],
       documents["hydro_chk"],
       documents["comments"]
-     )
-
+    )
+    Notification("Documents Saved").show()

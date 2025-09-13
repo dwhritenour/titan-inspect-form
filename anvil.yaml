@@ -86,5 +86,5 @@ services:
 - client_config: {}
   server_config: {test_mode: true}
   source: /runtime/services/anvil/email.yml
-startup: {module: inspect_doc, type: form}
+startup: {module: Inspect_head, type: form}
 startup_form: null

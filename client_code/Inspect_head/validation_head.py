@@ -3,6 +3,8 @@
 
 from anvil import alert
 
+# ---- shared helpers -----------------------------------------------------------
+
 def required(value, field_name):
   """Ensure value is not empty/None."""
   if value in (None, "", []):
@@ -26,20 +28,19 @@ def is_int(value, field_name, min_val=None, max_val=None):
     return False
   return True
 
+# ---- header validation (inspect_head) -----------------------------------------
+
 def validate_header(data: dict) -> bool:
   """
-    Validate header dict before save.
-    Returns True if valid, otherwise False (after showing alerts).
-    """
-  if not required(data["ins_date"], "Inspection Date"): return False
-  if not required(data["po_numb"], "PO Number"): return False
-  if not required(data["prod_code"], "Product Code"): return False
+  Validate header dict before save.
+  Returns True if valid, otherwise False (after showing alerts).
+  """
+  if not required(data.get("ins_date"), "Inspection Date"): return False
+  if not required(data.get("po_numb"), "PO Number"): return False
+  if not required(data.get("prod_code"), "Product Code"): return False
 
-  if not is_int(data["ord_qty"], "Order Quantity", min_val=1): return False
-  if not is_int(data["lot_qty"], "Lot Quantity", min_val=1): return False
-  if not is_int(data["sam_qty"], "Sample Quantity", min_val=1): return False
+  if not is_int(data.get("ord_qty"), "Order Quantity", min_val=1): return False
+  if not is_int(data.get("lot_qty"), "Lot Quantity", min_val=1): return False
+  if not is_int(data.get("sam_qty"), "Sample Quantity", min_val=1): return False
 
   return True
-
-
-

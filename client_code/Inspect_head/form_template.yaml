@@ -188,10 +188,9 @@ components:
     name: header_card
     properties: {role: tonal-card}
     type: ColumnPanel
-  - components: []
-    layout_properties: {grid_position: 'RPVYLN,TSOZYI'}
-    name: childform_card
-    properties: {col_widths: '{}', role: outlined-card}
+  - layout_properties: {grid_position: 'CFMSRO,IRVWKN'}
+    name: content_panel
+    properties: {}
     type: ColumnPanel
   - components:
     - layout_properties: {grid_position: 'XEGUNL,FFGTAM'}
@@ -266,6 +265,52 @@ components:
   name: navbar_links
   properties: {}
   type: FlowPanel
+- components:
+  - event_bindings: {click: doc_chk_btn_click}
+    layout_properties: {grid_position: 'XCFNFN,YVULTA'}
+    name: doc_chk_btn
+    properties:
+      role: elevated-button
+      spacing:
+        padding: [null, '37', null, '37']
+      text: Documents
+    type: Button
+  - layout_properties: {grid_position: 'IFJHCW,TBLTUG'}
+    name: vis_chk_btn
+    properties:
+      role: elevated-button
+      spacing:
+        padding: [null, '32', null, '32']
+      text: Visual Check
+    type: Button
+  - layout_properties: {grid_position: 'QQERYT,URETUQ'}
+    name: dim_chk_btn
+    properties:
+      role: elevated-button
+      spacing:
+        padding: [null, '36', null, '36']
+      text: Dimensions
+    type: Button
+  - layout_properties: {grid_position: 'MVRSED,NXOAHM'}
+    name: func_chk_btn
+    properties:
+      role: elevated-button
+      spacing:
+        padding: [null, '40', null, '40']
+      text: Functional
+    type: Button
+  - layout_properties: {grid_position: 'BNPNIW,ZCEDHL'}
+    name: func_chk_btn_copy
+    properties:
+      role: elevated-button
+      spacing:
+        padding: [null, '42', null, '42']
+      text: Summary
+    type: Button
+  layout_properties: {slot: left-nav}
+  name: sidebar_panel
+  properties: {}
+  type: ColumnPanel
 container:
   properties: {html: '@theme:standard-page.html'}
   type: HtmlTemplate
