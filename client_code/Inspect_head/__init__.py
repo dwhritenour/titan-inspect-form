@@ -111,6 +111,9 @@ class Inspect_head(Inspect_headTemplate):
       self.update_dt_box.text = now.strftime("%Y-%m-%d")
       self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Saved").show()
+      
+      # Enables next step in inspection process
+      self.doc_chk_btn.enabled = True
 
       '''' I took this out because I wanted sidebar buttons to handle the flow
           I added to method: def doc_chk_btn_click(self, **event_args):
@@ -129,6 +132,9 @@ class Inspect_head(Inspect_headTemplate):
       self.update_dt_box.text = now.strftime("%Y-%m-%d")
       self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Updated").show()
+      
+      # Enables next step in inspection process
+      self.doc_chk_btn.enabled = True
 
   def doc_chk_btn_click(self, **event_args):
     # Immediately open the Documentation step, passing the header id

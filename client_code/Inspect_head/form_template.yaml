@@ -270,6 +270,7 @@ components:
     layout_properties: {grid_position: 'XCFNFN,YVULTA'}
     name: doc_chk_btn
     properties:
+      enabled: false
       role: elevated-button
       spacing:
         padding: [null, '37', null, '37']
@@ -278,6 +279,7 @@ components:
   - layout_properties: {grid_position: 'IFJHCW,TBLTUG'}
     name: vis_chk_btn
     properties:
+      enabled: false
       role: elevated-button
       spacing:
         padding: [null, '32', null, '32']
@@ -286,6 +288,7 @@ components:
   - layout_properties: {grid_position: 'QQERYT,URETUQ'}
     name: dim_chk_btn
     properties:
+      enabled: false
       role: elevated-button
       spacing:
         padding: [null, '36', null, '36']
@@ -294,6 +297,7 @@ components:
   - layout_properties: {grid_position: 'MVRSED,NXOAHM'}
     name: func_chk_btn
     properties:
+      enabled: false
       role: elevated-button
       spacing:
         padding: [null, '40', null, '40']
@@ -302,6 +306,7 @@ components:
   - layout_properties: {grid_position: 'BNPNIW,ZCEDHL'}
     name: func_chk_btn_copy
     properties:
+      enabled: false
       role: elevated-button
       spacing:
         padding: [null, '42', null, '42']
