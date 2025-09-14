@@ -5,22 +5,10 @@ import anvil.email
 import anvil.server
 from datetime import datetime
 
-# This is a server module. It runs on the Anvil server,
-# rather than in the user's browser.
-#
-# To allow anvil.server.call() to call functions here, we mark
-# them with @anvil.server.callable.
-# Here is an example - you can replace it with your own:
-#
-# @anvil.server.callable
-# def say_hello(name):
-#   print("Hello, " + name + "!")
-#   return 42
-#
-
+# Code related to inspect_head form
+# Method to save inspect_head form data to inspect_head table
 @anvil.server.callable
 def save_head(ins_date, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty, status):
-
   row = app_tables.inspect_head.add_row(
     ins_date = ins_date,
     po_numb = po_numb,
@@ -42,7 +30,7 @@ def save_head(ins_date, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, 
 
   return new_id
 
-    
+# Not sure
 def get_max_ord_qty():
   rows = app_tables.counter.search()
   count_max = max((r['count'] for r in rows if r['count'] is not None), default=0)
@@ -50,9 +38,9 @@ def get_max_ord_qty():
   row['count'] = count_max + 1
   return count_max
 
+# Method to update inspect_head form data to inspect_head table
 @anvil.server.callable
-def update_head(id_head, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty):
-  
+def update_head(id_head, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty, sam_qty):  
   row = app_tables.inspect_head.get(id_head=id_head)
   row['po_numb'] = po_numb
   row['rel_numb'] = rel_numb
@@ -63,6 +51,16 @@ def update_head(id_head, po_numb, rel_numb, series, prod_code, ord_qty, lot_qty,
   row['sam_qty'] = sam_qty
   row['update_dt'] = datetime.now()
 
+
+# Determine if head_id exists in the inspect_doc table
+@anvil.server.callable
+def if_exist(id_head):
+  if (app_tables.inspect_doc.get(id_head=id_head)):
+    return True
+
+
+# Code related to inspec_doc form
+# Save inspect_doc fields to database
 @anvil.server.callable
 def save_docs(id_head, pack_chk, ident_chk, count_chk, mtr_chk, hydro_chk, pack_img, comments):
   app_tables.inspect_doc.add_row(
@@ -73,5 +71,20 @@ def save_docs(id_head, pack_chk, ident_chk, count_chk, mtr_chk, hydro_chk, pack_
     mtr_chk = mtr_chk,
     hydro_chk = hydro_chk,
     pack_img = pack_img,
-    comments = comments
+    comments = comments,
+    update_dt = datetime.now()
   )
+
+# Update to inspect_doc table
+@anvil.server.callable
+def update_docs(id_head, pack_chk, ident_chk, count_chk, mtr_chk, hydro_chk, pack_img, comments):
+  row = app_tables.inspect_doc.get(id_head=id_head)
+  row['id_head'] = id_head
+  row['pack_chk'] = pack_chk
+  row['ident_chk'] = ident_chk
+  row['count_chk'] = count_chk
+  row['mtr_chk'] = mtr_chk
+  row['hydro_chk'] = hydro_chk
+  row['pack_img'] = pack_img
+  row['comments'] = comments
+  row['update_dt'] = datetime.now()

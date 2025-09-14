@@ -54,18 +54,33 @@ class inspect_doc(inspect_docTemplate):
     # Call validation_doc module
     if not validation_doc.validate_doc(documents):
       return
-      
-    # You probably want to associate docs to header_id here as well:
-    # anvil.server.call("save_docs", self.header_id, ...)
-    anvil.server.call(
-      "save_docs",
-      documents["id_head"],
-      documents["pack_chk"],
-      documents["ident_chk"],
-      documents["count_chk"],
-      documents["mtr_chk"],
-      documents["hydro_chk"],
-      documents["pack_img"],
-      documents["comments"]
-    )
-    Notification("Documents Saved").show()
+
+    # Used to determine Save or Update
+    if anvil.server.call("if_exist",(documents["id_head"])):
+      anvil.server.call(
+        "update_docs",
+        documents["id_head"],
+        documents["pack_chk"],
+        documents["ident_chk"],
+        documents["count_chk"],
+        documents["mtr_chk"],
+        documents["hydro_chk"],
+        documents["pack_img"],
+        documents["comments"]
+      )
+      Notification("Update Saved").show()
+    else:          
+      # You probably want to associate docs to header_id here as well:
+      # anvil.server.call("save_docs", self.header_id, ...)
+      anvil.server.call(
+        "save_docs",
+        documents["id_head"],
+        documents["pack_chk"],
+        documents["ident_chk"],
+        documents["count_chk"],
+        documents["mtr_chk"],
+        documents["hydro_chk"],
+        documents["pack_img"],
+        documents["comments"]
+      )
+      Notification("Documents Saved").show()
