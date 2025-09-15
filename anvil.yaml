@@ -82,12 +82,12 @@ db_schema:
     client: none
     columns:
     - admin_ui: {order: 0, width: 200}
-      name: inspection_id
+      name: head_ref
       type: string
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {order: 1.25, width: 200}
       name: question_id
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {order: 2.6875, width: 200}
       name: notes
       type: string
     - admin_ui: {order: 5, width: 200}
@@ -99,13 +99,7 @@ db_schema:
     - admin_ui: {order: 3.5, width: 200}
       name: photo
       type: media
-    - admin_ui: {order: 1.5, width: 200}
-      name: series
-      type: string
-    - admin_ui: {order: 2.5, width: 200}
-      name: question_ref
-      type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {order: 1.875, width: 200}
       name: answer
       type: bool
     - admin_ui: {order: 6, width: 200}
@@ -125,17 +119,17 @@ db_schema:
     - admin_ui: {order: 3, width: 200}
       name: prompt
       type: string
-    - admin_ui: {order: 4, width: 200}
-      name: active
-      type: bool
-    - admin_ui: {order: 5, width: 200}
-      name: add_dt
-      type: datetime
-    - admin_ui: {order: 2, width: 200}
-      name: sequence
+    - admin_ui: {order: 0.75, width: 200}
+      name: sort_order
       type: number
     - admin_ui: {order: 4.5, width: 200}
       name: photo_required_on_fail
+      type: bool
+    - admin_ui: {order: 3.5, width: 200}
+      name: requried
+      type: bool
+    - admin_ui: {order: 0.375, width: 200}
+      name: status
       type: bool
     server: full
     title: visual_questions
