@@ -10,7 +10,7 @@ components:
     type: Label
   - layout_properties: {grid_position: 'VIJMTQ,VBEFQG JPAURX,UQJDDF'}
     name: samp_numb_drp
-    properties: {}
+    properties: {include_placeholder: true, placeholder: Select sample...}
     type: DropDown
   - layout_properties: {grid_position: 'VIJMTQ,QRDAZP'}
     name: spacer_1

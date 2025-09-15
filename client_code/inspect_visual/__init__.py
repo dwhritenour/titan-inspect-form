@@ -28,81 +28,46 @@ class inspect_visual(inspect_visualTemplate):
   def __init__(self, inspection_no, series_no, sample_size, **properties):
     self.init_components(**properties)
 
-    # ---- Inputs from parent ----
     self.inspection_no = inspection_no
     self.series_no = series_no
-    self.sample_size = int(sample_size)
+    self.sample_size = self._coerce_positive_int(sample_size, default=1)
 
-    # Show inspection id in your textbox
     self.id_head_box.text = str(self.inspection_no or "")
 
-    # Ensure the repeating panel is using your row template
-    self.VisualQuestionRow.item_template = "visual_question_row"
+    # Ensure the repeating panel points to your row template
+    self.VisualQuestionRow.item_template = "inspect_visual.visual_question_row"
 
-    # ---- Load catalog questions for this series ----
+    # Load catalog from server (your visual_services)
     self._catalog = self._load_catalog()
 
-    # ---- Local cache of answers by sample number ----
-    # shape: { sample_no: { question_code: {'answer': 'ACCEPT|REJECT|NA', 'photo': MediaObject} } }
+    # Local cache: {sample_no: {question_code: {...}}}
     self._responses = {}
 
-    # ---- Populate the sample dropdown and load sample 1 ----
-    self.samp_numb_drp.items = list(range(1, self.sample_size + 1))
+    # Build dropdown with (label, value) tuples – avoids mixed types
+    self.samp_numb_drp.items = [(f"Sample {i}", i) for i in range(1, self.sample_size + 1)]
     self.samp_numb_drp.selected_value = 1
+
+    # Load UI for Sample 1
     self._load_sample_ui(1)
+
+  # --- helpers ---
+  def _coerce_positive_int(self, val, default=1):
+    try:
+      n = int(str(val).strip())
+      return n if n > 0 else default
+    except Exception:
+      return default
 
   # ====================== Data loading ======================
 
   def _load_catalog(self):
-    """
-    Pulls the question catalog for the given series.
-    Returns a list of dicts, one per question, with safe defaults.
-    """
-    rows = app_tables.visual_questions.search(**{VQ_COL_SERIES: self.series_no})
-    # Filter active if the column exists and is boolean
-    def is_active(r):
-      return (VQ_COL_ACTIVE in r and (r[VQ_COL_ACTIVE] is True)) or (VQ_COL_ACTIVE not in r)
+    return anvil.server.call("get_visual_catalog", self.series_no)
 
-    # Sort if sort_order exists; else by row id
-    def sort_key(r):
-      if VQ_COL_SORT in r and r[VQ_COL_SORT] is not None:
-        return (r[VQ_COL_SORT], r.get_id())
-      return (0, r.get_id())
-
-    qs = [r for r in rows if is_active(r)]
-    qs.sort(key=sort_key)
-
-    result = []
-    for r in qs:
-      qcode = r[VQ_COL_QCODE] if VQ_COL_QCODE in r else str(r.get_id())
-      prompt = r[VQ_COL_PROMPT] if VQ_COL_PROMPT in r else qcode
-      required = bool(r[VQ_COL_REQ]) if VQ_COL_REQ in r else False
-      photo_fail = bool(r[VQ_COL_PHOTOF]) if VQ_COL_PHOTOF in r else False
-      result.append({
-        "question_code": qcode,
-        "prompt": prompt,
-        "required": required,
-        "photo_required_on_fail": photo_fail,
-      })
-    return result
 
   def _load_existing_from_db(self, sample_no):
-    """
-    Reads any previously saved answers for this inspection_no + sample_no.
-    Returns { question_code: {'answer': str, 'photo': MediaObject} }
-    """
-    existing = {}
-    rows = app_tables.inspect_visual.search(
-      inspection_no=self.inspection_no,
-      sample_no=sample_no
-    )
-    for r in rows:
-      qcode = r["question_code"]
-      existing[qcode] = {
-        "answer": r.get("answer"),
-        "photo": r.get("photo")
-      }
-    return existing
+    return anvil.server.call("get_visual_responses",
+                             self.inspection_no, sample_no)
+
 
   # ====================== UI assembly ======================
 
@@ -117,7 +82,7 @@ class inspect_visual(inspect_visualTemplate):
 
     items = []
     for q in self._catalog:
-      qc = q["question_code"]
+      qc = q["question_id"]
       prior = self._responses.get(sample_no, {}).get(qc, {})
       items.append({
         **q,
@@ -133,7 +98,7 @@ class inspect_visual(inspect_visualTemplate):
     """
     cache = self._responses.setdefault(sample_no, {})
     for row_item in (self.VisualQuestionRow.items or []):
-      qc = row_item["question_code"]
+      qc = row_item["question_id"]
       cache[qc] = {
         "answer": row_item.get("answer"),
         "photo": row_item.get("photo")
@@ -157,35 +122,11 @@ class inspect_visual(inspect_visualTemplate):
     return True
 
   def _upsert_sample_to_db(self, sample_no):
-    """
-    Writes current cache for sample_no into app_tables.inspect_visual.
-    """
-    now = datetime.now()
-    payload = self._responses.get(sample_no, {})
-    if not payload:
-      return
+    payload = self._responses.get(sample_no, {}) or {}
+    if payload:
+      anvil.server.call("upsert_visual_responses",
+                      self.inspection_no, sample_no, payload)
 
-    for qc, data in payload.items():
-      row = app_tables.inspect_visual.get(
-        inspection_no=self.inspection_no,
-        sample_no=sample_no,
-        question_code=qc
-      )
-      if row:
-        row.update(
-          answer=data.get("answer"),
-          photo=data.get("photo"),
-          ts=now
-        )
-      else:
-        app_tables.inspect_visual.add_row(
-          inspection_no=self.inspection_no,
-          sample_no=sample_no,
-          question_code=qc,
-          answer=data.get("answer"),
-          photo=data.get("photo"),
-          ts=now
-        )
 
   # ====================== Events ======================
 
@@ -221,16 +162,3 @@ class inspect_visual(inspect_visualTemplate):
 
 
 
-
-
-
-'''MAY STILL NEED ALL BELOW
-# Assigns current header_id to to id_head_box
-self.header_id = header_id
-self.id_head_box.text = header_id
-print("inspect_doc loaded. header_id =", self.header_id)'''
-
-''' # Assigns the number of samples to the samp_numb_drp field
-samp_qtys = list(map(str, range(1,int(samp_qty)+1)))
-self.samp_numb_drp.items = samp_qtys
-Notification(print(samp_qtys)).show()'''

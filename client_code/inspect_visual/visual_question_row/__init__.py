@@ -23,7 +23,7 @@ class visual_question_row(visual_question_rowTemplate):
     self.prompt_lbl.text = self.item.get('prompt', '')
 
     # --- Unique radio group per row so the three radios are linked
-    gid = f"grp_{self.item.get('question_code') or id(self)}"
+    gid = f"grp_{self.item.get('question_id') or id(self)}"
     self.accept_rad.group_name = gid
     self.reject_rad.group_name = gid
     self.na_rad.group_name = gid
