@@ -1,6 +1,6 @@
 components:
 - layout_properties: {grid_position: 'DIAYQK,AFBTDN'}
-  name: question_lbl
+  name: prompt_lbl
   properties: {text: Visual Inspection Prompts}
   type: Label
 - layout_properties: {grid_position: 'DIAYQK,LRSHUI'}
@@ -36,4 +36,5 @@ components:
   properties: {}
   type: TextArea
 container: {type: ColumnPanel}
+custom_component: false
 is_package: true

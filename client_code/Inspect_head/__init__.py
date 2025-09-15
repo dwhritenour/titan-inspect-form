@@ -147,8 +147,8 @@ class Inspect_head(Inspect_headTemplate):
   # Loads the Visual Check Form
   def vis_chk_btn_click(self, **event_args):
     self.content_panel.clear()
-    self.content_panel.add_component(inspect_visual(header_id=self.id_head_box.text,samp_qty=self.sam_qty_box.text))
-
+    # self.content_panel.add_component(inspect_visual(header_id=self.id_head_box.text,samp_qty=self.sam_qty_box.text))
+    self.content_panel.add_component(inspect_visual(inspection_no=self.id_head_box.text,series_no="YS58",sample_size=self.sam_qty_box.text))
 
 
    

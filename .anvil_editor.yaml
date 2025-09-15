@@ -7,7 +7,7 @@ unique_ids:
     Inspect_head.RowTemplate1: '175751661618867055904855.52726'
     inspect_doc: '1757614301726308130077950.60376'
     inspect_visual: '175794536306748074590550.03793'
-    inspect_visual.ItemTemplate1: '1757945524879538398910531.46674'
+    inspect_visual.visual_question_row: '1757945524879538398910531.46674'
   modules:
     Inspect_head.validation_head: '1757603239854955910787892.1578'
     inspect_doc.validation_doc: '1757784458734792869929598.8947'
