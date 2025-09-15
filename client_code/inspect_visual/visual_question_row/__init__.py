@@ -1,95 +1,127 @@
-# ----- Client Form: visual_question_row.py -----
+# Client Code → Forms → visual_question_row
 from ._anvil_designer import visual_question_rowTemplate
 from anvil import *
+import anvil.server
+
+# Keep these constants in sync with server/DB expectations
+QKEY_CODE   = "question_id"
+QKEY_PROMPT = "prompt"
+QKEY_REQ    = "required"
+QKEY_PHOTOF = "photo_required_on_fail"
 
 class visual_question_row(visual_question_rowTemplate):
   """
-  One row for a visual question with Pass/Fail, optional photo on fail, and notes.
-  Exposes:
-    - set_question(qdict)
-    - get_answer() -> dict
-    - validate() -> raises Exception if required fields missing
+  A single row in the visual inspection list.
+  Components expected on the form:
+    - lbl_qcode : Label
+    - lbl_prompt : Label
+    - req_star : Label (e.g., "*", visible only if required)
+    - rb_accept : RadioButton (group set in code)
+    - rb_reject : RadioButton (group set in code)
+    - rb_na     : RadioButton (optional; include if you allow N/A)
+    - ta_notes  : TextArea
+    - fl_photo  : FileLoader (optional photo upload)
+    - lbl_photo_hint : Label (visible only if photo required on fail)
   """
   def __init__(self, **properties):
-    self._question = {
-      "question_id": None,
-      "prompt": "",
-      "required": False,
-      "photo_required_on_fail": False,
-      "sort_order": 0
-    }
     self.init_components(**properties)
-    self._bind_events()
+    # default internal state
+    self._qinfo = None
+    self._group_name = f"grp_{id(self)}"
 
-  def _bind_events(self):
-    self.pass_radio.set_event_handler('change', self._on_pass_fail_change)
-    self.fail_radio.set_event_handler('change', self._on_pass_fail_change)
+    # assign radio button groups
+    self.rb_accept.group_name = self._group_name
+    self.rb_reject.group_name = self._group_name
+    if hasattr(self, "rb_na") and self.rb_na:
+      self.rb_na.group_name = self._group_name
 
-  def set_question(self, q):
-    # q keys: question_id, prompt, required, photo_required_on_fail
-    self._question.update({k: q.get(k) for k in self._question.keys() if k in q})
-    # UI
-    self.lbl_code.text = q.get("question_id") or ""
-    self.lbl_prompt.text = q.get("prompt") or ""
-    self._sync_visibility()
+    # optional: default to Accept
+    self.rb_accept.checked = True
+    self.lbl_photo_hint.visible = False
+    self.req_star.visible = False
 
-  def _on_pass_fail_change(self, **event_args):
-    self._sync_visibility()
+  # ----- public API -----
 
-  def _is_fail_selected(self):
-    return bool(self.fail_radio.selected)
+  def set_question(self, qinfo: dict, existing: dict = None):
+    """
+    qinfo like:
+      {
+        "question_id": "...",
+        "prompt": "...",
+        "required": bool,
+        "photo_required_on_fail": bool
+      }
+    existing like:
+      { "answer": True|False|None, "notes": str, "has_photo": bool }
+    """
+    self._qinfo = qinfo or {}
+    qcode = self._qinfo.get(QKEY_CODE) or ""
+    prompt = self._qinfo.get(QKEY_PROMPT) or ""
+    required = bool(self._qinfo.get(QKEY_REQ))
+    photo_on_fail = bool(self._qinfo.get(QKEY_PHOTOF))
 
-  def _sync_visibility(self):
-    # Photo required UI only when fail selected
-    if self._is_fail_selected():
-      self.photo_panel.visible = True
-      self.photo_req_hint.visible = bool(self._question.get("photo_required_on_fail"))
+    self.lbl_qcode.text = qcode
+    self.lbl_prompt.text = prompt
+    self.req_star.visible = required
+    self.lbl_photo_hint.visible = False  # toggled by change handlers below
+
+    # preload existing
+    if existing:
+      ans = existing.get("answer", True)
+      if ans is True:
+        self.rb_accept.checked = True
+      elif ans is False:
+        self.rb_reject.checked = True
+      else:
+        if hasattr(self, "rb_na") and self.rb_na:
+          self.rb_na.checked = True
+        else:
+          self.rb_accept.checked = False
+          self.rb_reject.checked = False
+      self.ta_notes.text = existing.get("notes", "")
+
+    # Show the photo hint if reject is currently selected and photo is required on fail
+    self._update_photo_hint()
+
+  def get_response(self) -> dict:
+    """Return a normalized response dict for saving."""
+    if self._qinfo is None:
+      return {}
+    qcode = self._qinfo.get(QKEY_CODE)
+    ans = None
+    if self.rb_accept.checked:
+      ans = True
+    elif self.rb_reject.checked:
+      ans = False
     else:
-      self.photo_panel.visible = False
-      self.photo_req_hint.visible = False
-      self.file_loader.clear()
+      # allow None if NA radio exists or neither is chosen
+      ans = None
 
-    # Reset borders (in case previous validation highlighted)
-    self._clear_highlights()
-
-  def _clear_highlights(self):
-    for c in (self.pass_radio, self.fail_radio, self.file_loader, self.ta_notes):
-      try:
-        c.role = None
-      except Exception:
-        pass
-
-  def validate(self):
-    """Raise an Exception if required inputs are missing."""
-    req = bool(self._question.get("required"))
-    if req and not (self.pass_radio.selected or self.fail_radio.selected):
-      self.fail_radio.role = "outlined"
-      self.pass_radio.role = "outlined"
-      raise Exception("Please select Pass or Fail for all required questions.")
-
-    if self._is_fail_selected() and self._question.get("photo_required_on_fail"):
-      if not self.file_loader.file:
-        self.file_loader.role = "outlined"
-        raise Exception("Photo is required for failed answers on this question.")
-
-  def get_answer(self):
-    """
-    Collect the user's answer.
-    Returns a dict: {question_id, prompt, result, notes, photo}
-      - result: True (pass), False (fail), or None (not answered)
-    """
-    result = None
-    if self.pass_radio.selected:
-      result = True
-    elif self.fail_radio.selected:
-      result = False
+    photo_media = None
+    if getattr(self, "fl_photo", None) and self.fl_photo.file:
+      photo_media = self.fl_photo.file
 
     return {
-      "question_id": self._question.get("question_id"),
-      "prompt": self._question.get("prompt"),
-      "result": result,
-      "notes": (self.ta_notes.text or "").strip(),
-      "photo": self.file_loader.file,  # anvil.BlobMedia or None
+      "question_id": qcode,
+      "answer": ans,
+      "notes": self.ta_notes.text or None,
+      "photo": photo_media,
     }
+
+  # ----- UI helpers -----
+
+  def rb_accept_change(self, **event_args):
+    self._update_photo_hint()
+
+  def rb_reject_change(self, **event_args):
+    self._update_photo_hint()
+
+  def rb_na_change(self, **event_args):
+    self._update_photo_hint()
+
+  def _update_photo_hint(self):
+    photo_on_fail = bool(self._qinfo and self._qinfo.get(QKEY_PHOTOF))
+    self.lbl_photo_hint.visible = (photo_on_fail and self.rb_reject.checked)
+
 
 

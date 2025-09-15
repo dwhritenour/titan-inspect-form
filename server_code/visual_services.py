@@ -1,116 +1,133 @@
-# ----- Server Module: visual_services.py -----
+# Server Modules → visual_services
 import anvil.server
-import anvil.media
 from anvil.tables import app_tables, query as q
+from anvil import Media
 from datetime import datetime
+import anvil.users
 
-# Adjust these if your visual_questions table uses different column names
-VQ_COL_SERIES = "series"                  # e.g., "series_no"
-VQ_COL_ACTIVE = "status"                  # bool or str like "active"
-VQ_COL_SORT   = "sort_order"              # int
-VQ_COL_QCODE  = "question_id"             # e.g., "VQ-001"
-VQ_COL_PROMPT = "prompt"                  # question text
-VQ_COL_REQ    = "required"                # bool
-VQ_COL_PHOTOF = "photo_required_on_fail"  # bool
+# ----------------------------
+# TABLE & COLUMN NAME MAPPINGS
+# ----------------------------
+# visual_questions table
+VQ_TABLE = app_tables.visual_questions
+VQ_COL_SERIES   = "series"                # text, e.g., "A" or "VIS-1"
+VQ_COL_ACTIVE   = "status"                # bool or 'active' flag; treat truthy as active
+VQ_COL_SORT     = "sort_order"            # int (optional but helpful)
+VQ_COL_QCODE    = "question_id"           # text unique code (e.g., "VQ-001")
+VQ_COL_PROMPT   = "prompt"                # text shown to user
+VQ_COL_REQUIRED = "required"              # bool
+VQ_COL_PHOTO_ON_FAIL = "photo_required_on_fail"  # bool
 
-def _coerce_active(val):
-  """Treat True/'active' as active; everything else inactive."""
+# inspect_visual table
+IV_TABLE = app_tables.inspect_visual
+IV_COL_HEAD     = "head_ref"              # link to inspect_head (Row)
+IV_COL_SAMPLE   = "sample_no"             # int or text sample identifier
+IV_COL_QCODE    = "question_id"           # text; must match VQ_COL_QCODE
+IV_COL_ANSWER   = "answer"                # bool (True=Accept, False=Reject, None=NA)
+IV_COL_NOTES    = "notes"                 # text
+IV_COL_PHOTO    = "photo"                 # media
+IV_COL_UPDATED  = "updated_at"            # datetime
+IV_COL_UPDATED_BY = "updated_by"          # text (email or name)
+
+def _is_active(vq_row):
+  """Interpret 'status' flexibly (bool or string)."""
+  val = vq_row.get(VQ_COL_ACTIVE)
   if isinstance(val, bool):
     return val
   if isinstance(val, str):
-    return val.strip().lower() in ("1", "true", "yes", "active")
-  return False
+    return val.strip().lower() in ("active", "yes", "true", "1")
+  return bool(val)
 
 @anvil.server.callable
-def get_visual_questions(series, active_only=True):
-  """Return list[dict] of visual questions for a given series."""
-  if not series:
-    return []
-
-  rows = app_tables.visual_questions.search(
-    **{VQ_COL_SERIES: series}
-  )
-  # Filter/shape
-  out = []
+def get_visual_questions(series=None, active_only=True):
+  """
+  Return list of dicts describing visual questions.
+  If 'series' provided, filter to that; else return all questions.
+  """
+  rows = VQ_TABLE.search() if series in (None, "", []) else VQ_TABLE.search(**{VQ_COL_SERIES: series})
+  items = []
   for r in rows:
-    if active_only and not _coerce_active(r.get(VQ_COL_ACTIVE)):
+    if active_only and not _is_active(r):
       continue
-    out.append({
+    items.append({
+      "series": r.get(VQ_COL_SERIES),
       "question_id": r.get(VQ_COL_QCODE),
       "prompt": r.get(VQ_COL_PROMPT),
-      "required": bool(r.get(VQ_COL_REQ)),
-      "photo_required_on_fail": bool(r.get(VQ_COL_PHOTOF)),
-      "sort_order": r.get(VQ_COL_SORT) or 0,
+      "required": bool(r.get(VQ_COL_REQUIRED)),
+      "photo_required_on_fail": bool(r.get(VQ_COL_PHOTO_ON_FAIL)),
+      "sort_order": r.get(VQ_COL_SORT) if r.get(VQ_COL_SORT) is not None else 999999,
     })
-  # sort by sort_order, then question_id
-  out.sort(key=lambda d: (d["sort_order"], d["question_id"] or ""))
-  return out
-
+  items.sort(key=lambda d: (d["sort_order"], d["question_id"] or ""))
+  return items
 
 @anvil.server.callable
-def save_inspect_visual(head_row_id, sample_no, series, answers, status="Completed"):
+def get_existing_visual_responses(head_row, sample_no):
   """
-  Persist a single visual inspection (header/sample/series) and its answers.
-  - head_row_id: the ID of the inspect_head row (or the row itself)
-  - sample_no: int/str sample number
-  - series: str
-  - answers: list of dicts from client (question_id, prompt, result, notes, photo)
-  Returns: dict with 'ok': True and created row id
+  Return a dict keyed by question_id → {answer, notes, has_photo}.
+  Useful to pre-fill the UI if user revisits a sample.
   """
-  # accept either a row or an id for head
-  head_row = head_row_id
-  if not getattr(head_row, "get_id", None):
-    head_row = app_tables.inspect_head.get_by_id(head_row_id)
+  if not head_row:
+    return {}
+  results = {}
+  for r in IV_TABLE.search(**{IV_COL_HEAD: head_row, IV_COL_SAMPLE: sample_no}):
+    qcode = r.get(IV_COL_QCODE)
+    results[qcode] = {
+      "answer": r.get(IV_COL_ANSWER),
+      "notes": r.get(IV_COL_NOTES),
+      "has_photo": bool(r.get(IV_COL_PHOTO)),
+    }
+  return results
 
-  if head_row is None:
-    raise ValueError("inspect_head row not found.")
+@anvil.server.callable
+def upsert_inspect_visual(head_row, sample_no, responses):
+  """
+  Persist a batch of responses for a single (head_row, sample_no).
+  'responses' is a list of dicts:
+     { "question_id": str, "answer": bool|None, "notes": str|None, "photo": Media|None }
+  For each (question_id), update if exists; otherwise add.
+  Returns count of saved rows.
+  """
+  if not head_row:
+    raise ValueError("head_row is required")
+  if sample_no in (None, ""):
+    raise ValueError("sample_no is required")
 
-  # Upsert rule (optional): if you want one record per (head_row, sample_no, series)
-  existing = app_tables.inspect_visual.get(
-    head=head_row, sample_no=str(sample_no), series=series
-  )
-  now = datetime.now()
+  user = anvil.users.get_user()
+  user_id = (user and (user.get('email') or user.get('name'))) or "system"
+  now = datetime.utcnow()
 
-  if existing:
-    vis_row = existing
-    vis_row.update(status=status, updated_at=now)
-    # purge old answers and reinsert
-    for a in app_tables.visual_answers.search(inspect_visual=vis_row):
-      a.delete()
-  else:
-    vis_row = app_tables.inspect_visual.add_row(
-      head=head_row,
-      sample_no=str(sample_no),
-      series=series,
-      status=status,
-      created_at=now,
-      updated_at=now,
-    )
+  # Index existing by question_id for quick lookup
+  existing = {r.get(IV_COL_QCODE): r for r in IV_TABLE.search(**{IV_COL_HEAD: head_row, IV_COL_SAMPLE: sample_no})}
 
-  # Insert answers
-  for a in answers or []:
-    # Normalize result to bool/None
-    result = a.get("result")
-    if isinstance(result, str):
-      result_l = result.lower().strip()
-      if result_l in ("pass", "p", "yes", "true", "1"):
-        result = True
-      elif result_l in ("fail", "f", "no", "false", "0"):
-        result = False
-      else:
-        result = None
+  saved = 0
+  for item in responses or []:
+    qcode = (item or {}).get("question_id")
+    if not qcode:
+      continue
+    ans = item.get("answer", None)
+    notes = item.get("notes", None)
+    photo = item.get("photo", None)
+    rec = existing.get(qcode)
+    fields = {
+      IV_COL_HEAD: head_row,
+      IV_COL_SAMPLE: sample_no,
+      IV_COL_QCODE: qcode,
+      IV_COL_ANSWER: ans,
+      IV_COL_NOTES: notes,
+      IV_COL_UPDATED: now,
+      IV_COL_UPDATED_BY: user_id,
+    }
+    if isinstance(photo, Media) or photo is None:
+      fields[IV_COL_PHOTO] = photo
 
-    app_tables.visual_answers.add_row(
-      inspect_visual=vis_row,
-      question_id=a.get("question_id"),
-      prompt=a.get("prompt"),
-      result=result,
-      notes=a.get("notes"),
-      photo=a.get("photo") if isinstance(a.get("photo"), anvil.BlobMedia) else None,
-      created_at=now,
-    )
+    if rec:
+      rec.update(**fields)
+    else:
+      IV_TABLE.add_row(**fields)
+    saved += 1
 
-  return {"ok": True, "inspect_visual_id": vis_row.get_id()}
+  return saved
+
 
 
 

@@ -1,20 +1,32 @@
 components:
 - layout_properties: {grid_position: 'DIAYQK,AFBTDN'}
-  name: prompt_lbl
+  name: lbl_prompt
   properties: {role: input-prompt, text: Visual Inspection Prompts}
   type: Label
 - layout_properties: {grid_position: 'DIAYQK,LRSHUI'}
-  name: accept_rad
+  name: rb_accept
   properties: {group_name: radioVisual, text: Accept}
   type: RadioButton
 - layout_properties: {grid_position: 'DIAYQK,FJHWRA'}
-  name: reject_rad
+  name: rb_reject
   properties: {group_name: radioVisual, text: Reject}
   type: RadioButton
 - layout_properties: {grid_position: 'DIAYQK,GILDRC'}
-  name: visual_file
+  name: fl_photo
   properties: {}
   type: FileLoader
+- layout_properties: {grid_position: 'BHGMRI,DCTAON'}
+  name: lbl_code
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'BHGMRI,OUCBXG'}
+  name: req_star
+  properties: {text: '*'}
+  type: Label
+- layout_properties: {grid_position: 'BHGMRI,SWFOOI'}
+  name: lbl_photo_hint
+  properties: {}
+  type: Label
 - layout_properties: {grid_position: 'ZQVRWP,YMOREF'}
   name: comment_lbl
   properties: {text: 'Comments:'}
