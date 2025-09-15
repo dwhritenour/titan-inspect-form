@@ -21,14 +21,10 @@ components:
     name: id_head_box
     properties: {enabled: false}
     type: TextBox
-  - layout_properties: {grid_position: 'AAMIVS,PQVUWX'}
-    name: rp_questions
-    properties: {item_template: inspect_visual.visual_question_row}
+  - layout_properties: {grid_position: 'JFJOML,IVIASD'}
+    name: question_panel
+    properties: {item_template: inspect_visual.row_questions}
     type: RepeatingPanel
-  - layout_properties: {grid_position: 'BMXJDJ,MAFPLG'}
-    name: lbl_status
-    properties: {}
-    type: Label
   - layout_properties: {grid_position: 'BMXJDJ,KUMBES'}
     name: btn_cancel
     properties: {role: elevated-button, text: Cancel}

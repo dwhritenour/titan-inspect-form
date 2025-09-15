@@ -82,7 +82,7 @@ db_schema:
     client: none
     columns:
     - admin_ui: {order: 0, width: 200}
-      name: head_ref
+      name: head_id
       type: string
     - admin_ui: {order: 1.25, width: 200}
       name: question_id
@@ -102,12 +102,6 @@ db_schema:
     - admin_ui: {order: 1.875, width: 200}
       name: answer
       type: bool
-    - admin_ui: {order: 6, width: 200}
-      name: updated_by
-      type: string
-    - admin_ui: {order: 7, width: 200}
-      name: required
-      type: bool
     server: full
     title: inspect_visual
   visual_questions:
@@ -123,16 +117,10 @@ db_schema:
       name: prompt
       type: string
     - admin_ui: {order: 0.75, width: 200}
-      name: sort_order
+      name: sort_no
       type: number
-    - admin_ui: {order: 4.5, width: 200}
-      name: photo_required_on_fail
-      type: bool
     - admin_ui: {order: 0.375, width: 200}
       name: status
-      type: bool
-    - admin_ui: {order: 5.5, width: 200}
-      name: required
       type: bool
     server: full
     title: visual_questions
