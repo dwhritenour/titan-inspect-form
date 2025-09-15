@@ -3,6 +3,7 @@ from anvil import *
 import anvil.server
 from datetime import datetime
 from ..inspect_doc import inspect_doc
+from ..inspect_visual import inspect_visual
 import validation_head
 
 STATUS_IN_PROGRESS = "In Progress"
@@ -112,8 +113,9 @@ class Inspect_head(Inspect_headTemplate):
       self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Saved").show()
       
-      # Enables next step in inspection process
+      # Enables next step(s) in inspection process
       self.doc_chk_btn.enabled = True
+      self.vis_chk_btn.enabled = True
 
       '''' I took this out because I wanted sidebar buttons to handle the flow
           I added to method: def doc_chk_btn_click(self, **event_args):
@@ -136,12 +138,16 @@ class Inspect_head(Inspect_headTemplate):
       # Enables next step in inspection process
       self.doc_chk_btn.enabled = True
 
+  # Loads the Document Check Form
   def doc_chk_btn_click(self, **event_args):
     # Immediately open the Documentation step, passing the header id
     self.content_panel.clear()
     self.content_panel.add_component(inspect_doc(header_id=self.id_head_box.text))
 
-
+  # Loads the Visual Check Form
+  def vis_chk_btn_click(self, **event_args):
+    self.content_panel.clear()
+    self.content_panel.add_component(inspect_visual(header_id=self.id_head_box.text,samp_qty=self.sam_qty_box.text))
 
 
 

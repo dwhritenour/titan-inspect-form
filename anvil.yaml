@@ -78,6 +78,52 @@ db_schema:
       type: string
     server: full
     title: inspect_head
+  inspect_visual:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: id_head
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: sample_numb
+      type: string
+    - admin_ui: {order: 2, width: 200}
+      name: question_id
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: answer
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: comments
+      type: string
+    - admin_ui: {order: 5, width: 200}
+      name: update_dt
+      type: datetime
+    server: full
+    title: inspect_visual
+  visual_questions:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: series
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: question_id
+      type: string
+    - admin_ui: {order: 2, width: 200}
+      name: seq_numb
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: prompt
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: status
+      type: bool
+    - admin_ui: {order: 5, width: 200}
+      name: add_dt
+      type: datetime
+    server: full
+    title: visual_questions
 dependencies: []
 metadata: {description: 'Incoming Inspection ', title: Incoming Inspection}
 name: Inspect Form
