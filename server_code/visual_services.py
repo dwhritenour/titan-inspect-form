@@ -1,94 +1,117 @@
-# Server Modules > visual_services
+# ----- Server Module: visual_services.py -----
 import anvil.server
-from anvil.tables import app_tables
+import anvil.media
+from anvil.tables import app_tables, query as q
 from datetime import datetime
 
-VQ_COL_SERIES = "series"
-VQ_COL_QCODE  = "question_id"
-VQ_COL_SORT   = "seq_numb"
-VQ_COL_PROMPT = "prompt"
-VQ_COL_ACTIVE = "status"                 # text or bool
+# Adjust these if your visual_questions table uses different column names
+VQ_COL_SERIES = "series"                  # e.g., "series_no"
+VQ_COL_ACTIVE = "status"                  # bool or str like "active"
+VQ_COL_SORT   = "sort_order"              # int
+VQ_COL_QCODE  = "question_id"             # e.g., "VQ-001"
+VQ_COL_PROMPT = "prompt"                  # question text
+VQ_COL_REQ    = "required"                # bool
+VQ_COL_PHOTOF = "photo_required_on_fail"  # bool
 
-def col(row, name, default=None):
-  """Safe column getter for Anvil DataRow (no .get on rows)."""
-  try:
-    return row[name]
-  except KeyError:
-    return default
-
-def _is_active(val):
+def _coerce_active(val):
+  """Treat True/'active' as active; everything else inactive."""
   if isinstance(val, bool):
     return val
   if isinstance(val, str):
-    return val.strip().lower() in ("active", "yes", "true", "1", "enabled")
+    return val.strip().lower() in ("1", "true", "yes", "active")
   return False
 
 @anvil.server.callable
-def get_visual_catalog(series_value):
-  rows = app_tables.visual_questions.search(**{VQ_COL_SERIES: series_value})
+def get_visual_questions(series, active_only=True):
+  """Return list[dict] of visual questions for a given series."""
+  if not series:
+    return []
 
-  def sort_key(r):
-    so = col(r, VQ_COL_SORT, 0) or 0
-    return (so, r.get_id())
-
-  qs = [r for r in rows if _is_active(col(r, VQ_COL_ACTIVE))]
-  qs.sort(key=sort_key)
-
+  rows = app_tables.visual_questions.search(
+    **{VQ_COL_SERIES: series}
+  )
+  # Filter/shape
   out = []
-  for r in qs:
-    qcode = col(r, VQ_COL_QCODE, str(r.get_id()))
-    prompt = col(r, VQ_COL_PROMPT, qcode)    
-    
+  for r in rows:
+    if active_only and not _coerce_active(r.get(VQ_COL_ACTIVE)):
+      continue
     out.append({
-      "question_id": qcode,
-      "prompt": prompt,      
+      "question_id": r.get(VQ_COL_QCODE),
+      "prompt": r.get(VQ_COL_PROMPT),
+      "required": bool(r.get(VQ_COL_REQ)),
+      "photo_required_on_fail": bool(r.get(VQ_COL_PHOTOF)),
+      "sort_order": r.get(VQ_COL_SORT) or 0,
     })
+  # sort by sort_order, then question_id
+  out.sort(key=lambda d: (d["sort_order"], d["question_id"] or ""))
   return out
 
+
 @anvil.server.callable
-def get_visual_responses(inspection_no, sample_no):
-  existing = {}
-  rows = app_tables.inspect_visual.search(
-    inspection_no=inspection_no, sample_no=sample_no
+def save_inspect_visual(head_row_id, sample_no, series, answers, status="Completed"):
+  """
+  Persist a single visual inspection (header/sample/series) and its answers.
+  - head_row_id: the ID of the inspect_head row (or the row itself)
+  - sample_no: int/str sample number
+  - series: str
+  - answers: list of dicts from client (question_id, prompt, result, notes, photo)
+  Returns: dict with 'ok': True and created row id
+  """
+  # accept either a row or an id for head
+  head_row = head_row_id
+  if not getattr(head_row, "get_id", None):
+    head_row = app_tables.inspect_head.get_by_id(head_row_id)
+
+  if head_row is None:
+    raise ValueError("inspect_head row not found.")
+
+  # Upsert rule (optional): if you want one record per (head_row, sample_no, series)
+  existing = app_tables.inspect_visual.get(
+    head=head_row, sample_no=str(sample_no), series=series
   )
-  for r in rows:
-    qid = col(r, "question_id", "")
-    if not qid:
-      continue
-    existing[qid] = {
-      "answer":  col(r, "answer"),
-      "photo":   col(r, "ref_img"),   # ← ref_img column
-      "comment": col(r, "comments"),  # optional, if you add a comments control
-    }
-  return existing
-
-@anvil.server.callable
-def upsert_visual_responses(inspection_no, sample_no, payload: dict):
   now = datetime.now()
-  count = 0
-  payload = payload or {}
-  for qid, data in payload.items():
-    row = app_tables.inspect_visual.get(
-      inspection_no=inspection_no, sample_no=sample_no, question_id=qid
-    )
-    answer  = (data or {}).get("answer")
-    photo   = (data or {}).get("photo")     # MediaObject → ref_img
-    comment = (data or {}).get("comment")   # optional
 
-    if row:
-      row.update(answer=answer, ref_img=photo, comments=comment, update_dt=now)
-    else:
-      app_tables.inspect_visual.add_row(
-        inspection_no=inspection_no,
-        sample_no=sample_no,
-        question_id=qid,
-        answer=answer,
-        ref_img=photo,
-        comments=comment,
-        update_dt=now
-      )
-    count += 1
-  return {"updated": count}
+  if existing:
+    vis_row = existing
+    vis_row.update(status=status, updated_at=now)
+    # purge old answers and reinsert
+    for a in app_tables.visual_answers.search(inspect_visual=vis_row):
+      a.delete()
+  else:
+    vis_row = app_tables.inspect_visual.add_row(
+      head=head_row,
+      sample_no=str(sample_no),
+      series=series,
+      status=status,
+      created_at=now,
+      updated_at=now,
+    )
+
+  # Insert answers
+  for a in answers or []:
+    # Normalize result to bool/None
+    result = a.get("result")
+    if isinstance(result, str):
+      result_l = result.lower().strip()
+      if result_l in ("pass", "p", "yes", "true", "1"):
+        result = True
+      elif result_l in ("fail", "f", "no", "false", "0"):
+        result = False
+      else:
+        result = None
+
+    app_tables.visual_answers.add_row(
+      inspect_visual=vis_row,
+      question_id=a.get("question_id"),
+      prompt=a.get("prompt"),
+      result=result,
+      notes=a.get("notes"),
+      photo=a.get("photo") if isinstance(a.get("photo"), anvil.BlobMedia) else None,
+      created_at=now,
+    )
+
+  return {"ok": True, "inspect_visual_id": vis_row.get_id()}
+
 
 
 
