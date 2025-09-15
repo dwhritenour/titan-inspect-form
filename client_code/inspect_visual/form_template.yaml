@@ -26,12 +26,16 @@ components:
     properties: {item_template: inspect_visual.row_questions}
     type: RepeatingPanel
   - layout_properties: {grid_position: 'BMXJDJ,KUMBES'}
-    name: btn_cancel
+    name: cancel_btn
     properties: {role: elevated-button, text: Cancel}
     type: Button
   - layout_properties: {grid_position: 'BMXJDJ,DCANFN'}
-    name: btn_save
+    name: save_btn
     properties: {role: elevated-button, text: Save}
+    type: Button
+  - layout_properties: {grid_position: 'BMXJDJ,BJTHBB'}
+    name: lock_btn
+    properties: {role: elevated-button, text: Lock}
     type: Button
   layout_properties: {grid_position: 'OKOTHK,GNDEXE'}
   name: visual_card

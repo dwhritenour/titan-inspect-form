@@ -154,11 +154,7 @@ class Inspect_head(Inspect_headTemplate):
       sample_n = 1  # fallback if text is blank or not a number
 
     self.content_panel.add_component(
-      inspect_visual(
-        inspection_no=self.id_head_box.text,
-        series_no="YS58",
-        sample_size=sample_n
-      )
+      inspect_visual(head_id=self.id_head_box.text, series=self.series_box.text, sample_numbers=None)
     )
 
 
