@@ -8,7 +8,8 @@ components:
     name: samp_numb_lbl
     properties: {text: 'Current Sample Number:'}
     type: Label
-  - layout_properties: {grid_position: 'VIJMTQ,VBEFQG'}
+  - event_bindings: {change: samp_numb_drp_change}
+    layout_properties: {grid_position: 'VIJMTQ,VBEFQG'}
     name: samp_numb_drp
     properties: {include_placeholder: true, placeholder: Select sample...}
     type: DropDown

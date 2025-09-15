@@ -16,7 +16,7 @@ components:
   properties: {}
   type: FileLoader
 - layout_properties: {grid_position: 'BHGMRI,DCTAON'}
-  name: lbl_code
+  name: lbl_qcode
   properties: {}
   type: Label
 - layout_properties: {grid_position: 'BHGMRI,OUCBXG'}

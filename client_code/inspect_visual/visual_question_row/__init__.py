@@ -1,9 +1,8 @@
 # Client Code → Forms → visual_question_row
 from ._anvil_designer import visual_question_rowTemplate
 from anvil import *
-import anvil.server
 
-# Keep these constants in sync with server/DB expectations
+# Keys coming from the repeating panel's item
 QKEY_CODE   = "question_id"
 QKEY_PROMPT = "prompt"
 QKEY_REQ    = "required"
@@ -11,90 +10,54 @@ QKEY_PHOTOF = "photo_required_on_fail"
 
 class visual_question_row(visual_question_rowTemplate):
   """
-  A single row in the visual inspection list.
-  Components expected on the form:
-    - lbl_qcode : Label
-    - lbl_prompt : Label
-    - req_star : Label (e.g., "*", visible only if required)
-    - rb_accept : RadioButton (group set in code)
-    - rb_reject : RadioButton (group set in code)
-    - rb_na     : RadioButton (optional; include if you allow N/A)
-    - ta_notes  : TextArea
-    - fl_photo  : FileLoader (optional photo upload)
-    - lbl_photo_hint : Label (visible only if photo required on fail)
+  Components required on the form:
+    - lbl_qcode        : Label
+    - lbl_prompt       : Label
+    - req_star         : Label (text="*", red; Visible=False default)
+    - rb_accept        : RadioButton
+    - rb_reject        : RadioButton
+    - rb_na            : RadioButton (optional; include if you allow N/A)
+    - ta_notes         : TextArea
+    - fl_photo         : FileLoader (optional)
+    - lbl_photo_hint   : Label (text="Photo required on reject"; red; Visible=False)
   """
   def __init__(self, **properties):
     self.init_components(**properties)
-    # default internal state
-    self._qinfo = None
-    self._group_name = f"grp_{id(self)}"
-
-    # assign radio button groups
-    self.rb_accept.group_name = self._group_name
-    self.rb_reject.group_name = self._group_name
+    self._group = f"group_{id(self)}"
+    self.rb_accept.group_name = self._group
+    self.rb_reject.group_name = self._group
     if hasattr(self, "rb_na") and self.rb_na:
-      self.rb_na.group_name = self._group_name
+      self.rb_na.group_name = self._group
 
-    # optional: default to Accept
-    self.rb_accept.checked = True
-    self.lbl_photo_hint.visible = False
-    self.req_star.visible = False
+  def form_show(self, **event_args):
+    # Populate UI from self.item
+    q = self.item.get("qinfo", {}) if isinstance(self.item, dict) else {}
+    existing = self.item.get("existing", {}) if isinstance(self.item, dict) else {}
 
-  # ----- public API -----
+    self.lbl_qcode.text = q.get(QKEY_CODE, "")
+    self.lbl_prompt.text = q.get(QKEY_PROMPT, "")
+    self.req_star.visible = bool(q.get(QKEY_REQ, False))
 
-  def set_question(self, qinfo: dict, existing: dict = None):
-    """
-    qinfo like:
-      {
-        "question_id": "...",
-        "prompt": "...",
-        "required": bool,
-        "photo_required_on_fail": bool
-      }
-    existing like:
-      { "answer": True|False|None, "notes": str, "has_photo": bool }
-    """
-    self._qinfo = qinfo or {}
-    qcode = self._qinfo.get(QKEY_CODE) or ""
-    prompt = self._qinfo.get(QKEY_PROMPT) or ""
-    required = bool(self._qinfo.get(QKEY_REQ))
-    photo_on_fail = bool(self._qinfo.get(QKEY_PHOTOF))
+    # set radios from existing answer
+    ans = existing.get("answer", True)
+    self.rb_accept.checked = (ans is True)
+    self.rb_reject.checked = (ans is False)
+    if hasattr(self, "rb_na") and self.rb_na:
+      self.rb_na.checked = (ans is None)
 
-    self.lbl_qcode.text = qcode
-    self.lbl_prompt.text = prompt
-    self.req_star.visible = required
-    self.lbl_photo_hint.visible = False  # toggled by change handlers below
+    self.ta_notes.text = existing.get("notes", "") or ""
+    self._update_photo_hint(q)
 
-    # preload existing
-    if existing:
-      ans = existing.get("answer", True)
-      if ans is True:
-        self.rb_accept.checked = True
-      elif ans is False:
-        self.rb_reject.checked = True
-      else:
-        if hasattr(self, "rb_na") and self.rb_na:
-          self.rb_na.checked = True
-        else:
-          self.rb_accept.checked = False
-          self.rb_reject.checked = False
-      self.ta_notes.text = existing.get("notes", "")
-
-    # Show the photo hint if reject is currently selected and photo is required on fail
-    self._update_photo_hint()
-
+  # ----- public API used by parent to collect values -----
   def get_response(self) -> dict:
-    """Return a normalized response dict for saving."""
-    if self._qinfo is None:
-      return {}
-    qcode = self._qinfo.get(QKEY_CODE)
-    ans = None
+    q = self.item.get("qinfo", {}) if isinstance(self.item, dict) else {}
+    qcode = q.get(QKEY_CODE)
+
     if self.rb_accept.checked:
       ans = True
     elif self.rb_reject.checked:
       ans = False
     else:
-      # allow None if NA radio exists or neither is chosen
       ans = None
 
     photo_media = None
@@ -104,24 +67,24 @@ class visual_question_row(visual_question_rowTemplate):
     return {
       "question_id": qcode,
       "answer": ans,
-      "notes": self.ta_notes.text or None,
+      "notes": (self.ta_notes.text or None),
       "photo": photo_media,
     }
 
-  # ----- UI helpers -----
-
+  # ----- UI handlers -----
   def rb_accept_change(self, **event_args):
-    self._update_photo_hint()
+    self._update_photo_hint(self.item.get("qinfo", {}))
 
   def rb_reject_change(self, **event_args):
-    self._update_photo_hint()
+    self._update_photo_hint(self.item.get("qinfo", {}))
 
   def rb_na_change(self, **event_args):
-    self._update_photo_hint()
+    self._update_photo_hint(self.item.get("qinfo", {}))
 
-  def _update_photo_hint(self):
-    photo_on_fail = bool(self._qinfo and self._qinfo.get(QKEY_PHOTOF))
-    self.lbl_photo_hint.visible = (photo_on_fail and self.rb_reject.checked)
+  def _update_photo_hint(self, qinfo: dict):
+    need_on_fail = bool(qinfo.get(QKEY_PHOTOF, False))
+    self.lbl_photo_hint.visible = need_on_fail and self.rb_reject.checked
+
 
 
 
