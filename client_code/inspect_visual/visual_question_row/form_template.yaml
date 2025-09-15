@@ -11,10 +11,6 @@ components:
   name: reject_rad
   properties: {group_name: radioVisual, text: Reject}
   type: RadioButton
-- layout_properties: {grid_position: 'DIAYQK,DZZDCO'}
-  name: na_rad
-  properties: {group_name: radioVisual, text: N/A}
-  type: RadioButton
 - layout_properties: {grid_position: 'DIAYQK,GILDRC'}
   name: visual_file
   properties: {}
@@ -24,7 +20,7 @@ components:
   properties: {text: 'Comments:'}
   type: Label
 - layout_properties: {grid_position: 'URGMKR,HSFHUM'}
-  name: comments_area
+  name: ta_notes
   properties: {}
   type: TextArea
 container: {type: ColumnPanel}

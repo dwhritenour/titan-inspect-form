@@ -92,3 +92,4 @@ class visual_question_row(visual_question_rowTemplate):
       "photo": self.file_loader.file,  # anvil.BlobMedia or None
     }
 
+

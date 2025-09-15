@@ -1,76 +1,122 @@
+# ----- Client Form: inspect_visual.py -----
 from ._anvil_designer import inspect_visualTemplate
 from anvil import *
 import anvil.server
+from anvil.tables import app_tables
+from datetime import datetime
+
+# If your column names differ in visual_questions, adjust in server module instead
 
 class inspect_visual(inspect_visualTemplate):
-  def __init__(self, inspection_no, series_no, sample_size, **properties):
-    self.init_components(**properties)
+  """
+  Visual inspection capture per sample.
+  Expected designer components:
+    - samp_numb_drp (DropDown)          : choose sample number
+    - series_drp (DropDown)             : choose question series
+    - refresh_btn (Button)              : reload questions
+    - rp_questions (RepeatingPanel)     : item_template = 'visual_question_row'
+    - save_btn (Button)                 : persist
+    - status_lbl (Label)                : small status / errors
+  """
+  def __init__(self, head_row, default_series=None, default_sample=None, **properties):
+    self.head_row = head_row        # required: row from inspect_head
+    self._questions = []            # list[dict]
+    super().__init__(**properties)
+    self._init_ui(default_series, default_sample)
 
-    self.inspection_no = inspection_no
-    self.series_no = series_no
-    self.sample_size = int(sample_size) if sample_size else 1
+  # ---------- UI Setup ----------
+  def _init_ui(self, default_series, default_sample):
+    # Populate samples: pull from elsewhere if you have a known list.
+    # Fallback: create a simple [1..N] list. You can replace with your own source.
+    self.samp_numb_drp.items = [(str(i), str(i)) for i in range(1, 11)]
+    if default_sample:
+      self.samp_numb_drp.selected_value = str(default_sample)
 
-    self.id_head_box.text = str(self.inspection_no or "")
+    # Populate series dropdown from visual_questions table distinct series
+    series_values = sorted({r['series'] for r in app_tables.visual_questions.search() if r.get('series')})
+    self.series_drp.items = [(s, s) for s in series_values]
+    if default_series and default_series in series_values:
+      self.series_drp.selected_value = default_series
 
-    # Correct item_template path
-    self.VisualQuestionRow.item_template = "visual_question_row"
+    # Events
+    self.refresh_btn.set_event_handler('click', self.refresh_questions)
+    self.save_btn.set_event_handler('click', self.save)
 
-    self._catalog = anvil.server.call("get_visual_catalog", self.series_no)
-    self._responses = {}
+    # First load
+    self.refresh_questions()
 
-    self.samp_numb_drp.items = [(f"Sample {i}", i) for i in range(1, self.sample_size + 1)]
-    self.samp_numb_drp.selected_value = 1
-    self._load_sample_ui(1)
+  # ---------- Data Loading ----------
+  def refresh_questions(self, **event_args):
+    self.status_lbl.text = ""
+    series = self.series_drp.selected_value
+    if not series:
+      self.rp_questions.items = []
+      return
 
-  def _load_existing_from_db(self, sample_no):
-    return anvil.server.call("get_visual_responses", self.inspection_no, sample_no)
-
-  def _load_sample_ui(self, sample_no):
-    existing = self._responses.get(sample_no)
-    if existing is None:
-      existing = self._load_existing_from_db(sample_no)
-      self._responses[sample_no] = existing if isinstance(existing, dict) else {}
-
-    items = []
-    for q in self._catalog:
-      qc = q["question_id"]
-      prior = self._responses.get(sample_no, {}).get(qc, {})
-      items.append({**q, "answer": prior.get("answer"), "photo": prior.get("photo")})
-    self.VisualQuestionRow.items = items
-
-  def _capture_current_sample_from_ui(self, sample_no):
-    cache = self._responses.setdefault(sample_no, {})
-    for row_item in (self.VisualQuestionRow.items or []):
-      qc = row_item["question_id"]
-      cache[qc] = {"answer": row_item.get("answer"), "photo": row_item.get("photo")}
-
-  def _upsert_sample_to_db(self, sample_no):
-    payload = self._responses.get(sample_no, {}) or {}
-    if payload:
-      anvil.server.call("upsert_visual_responses", self.inspection_no, sample_no, payload)
-
-  def samp_numb_drp_change(self, **event_args):
-    current = self._get_current_sample_no()
-    if current:
-      self._capture_current_sample_from_ui(current)
-      self._upsert_sample_to_db(current)
-    new_sample = self._get_current_sample_no()
-    if new_sample:
-      self._load_sample_ui(new_sample)
-
-  def btn_save_click(self, **event_args):
-    """Manual save button"""
-    current = self._get_current_sample_no()
-    if current:
-      self._capture_current_sample_from_ui(current)
-      self._upsert_sample_to_db(current)
-      Notification("Responses saved.", style="success").show()
-
-  def _get_current_sample_no(self):
     try:
-      return int(self.samp_numb_drp.selected_value)
-    except Exception:
-      return None
+      self._questions = anvil.server.call('get_visual_questions', series, True)
+      # Each item becomes data for the row template; template must expose set_question
+      # RepeatingPanel can pass the dict; the template will call set_question in form_show.
+      self.rp_questions.items = self._questions
+    except Exception as e:
+      self.rp_questions.items = []
+      self.status_lbl.text = f"Error loading questions: {e}"
+
+  # ---------- Helpers ----------
+  def _collect_row_forms(self):
+    # Get instantiated template forms inside the repeating panel
+    # (get_components() yields child Forms for each row)
+    return [c for c in self.rp_questions.get_components() if hasattr(c, "get_answer")]
+
+  def _validate_all(self):
+    for row_form in self._collect_row_forms():
+      if hasattr(row_form, "validate"):
+        row_form.validate()
+
+  def _gather_answers(self):
+    answers = []
+    for row_form in self._collect_row_forms():
+      answers.append(row_form.get_answer())
+    return answers
+
+  # ---------- Actions ----------
+  def save(self, **event_args):
+    self.status_lbl.text = ""
+    series = self.series_drp.selected_value
+    samp = self.samp_numb_drp.selected_value
+
+    if not series:
+      alert("Please select a Series.")
+      return
+    if not samp:
+      alert("Please select a Sample #.")
+      return
+
+    try:
+      # Validate all required rows before saving
+      self._validate_all()
+    except Exception as e:
+      self.status_lbl.text = str(e)
+      return
+
+    answers = self._gather_answers()
+
+    try:
+      res = anvil.server.call(
+        'save_inspect_visual',
+        head_row_id=self.head_row,     # can pass row; server accepts row or id
+        sample_no=samp,
+        series=series,
+        answers=answers,
+        status="Completed"
+      )
+      if res.get("ok"):
+        self.status_lbl.text = "Saved."
+        Notification("Visual inspection saved.", style="success").show()
+      else:
+        self.status_lbl.text = "Save failed."
+    except Exception as e:
+      self.status_lbl.text = f"Save error: {e}"
 
 
 
