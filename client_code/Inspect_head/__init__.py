@@ -146,16 +146,18 @@ class Inspect_head(Inspect_headTemplate):
 
   # Loads the Visual Check Form
   def vis_chk_btn_click(self, **event_args):
+    # Clear the current content panel
     self.content_panel.clear()
-    sample_text = self.sam_qty_box.text
-    try:
-      sample_n = int(str(sample_text).strip())
-    except (ValueError, TypeError):
-      sample_n = 1  # fallback if text is blank or not a number
-
-    self.content_panel.add_component(
-      inspect_visual(head_id=self.id_head_box.text, series=self.series_box.text, sample_numbers=None)
+    self.visual_form = inspect_visual(
+      inspection_id=self.id_head_box.text,
+      product_series=self.series_box.text,
+      sample_size=int(self.sam_qty_box.text)  
     )
+    # Add the form to the content panel
+    self.content_panel.add_component(self.visual_form)
+    
+    
+    
 
 
  

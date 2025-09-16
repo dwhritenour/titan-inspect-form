@@ -1,150 +1,160 @@
+# inspect_visual form - Fixed navigation
+
 from ._anvil_designer import inspect_visualTemplate
 from anvil import *
 import anvil.server
-import anvil.tables as tables
-import anvil.tables.query as q
-from anvil.tables import app_tables
-from datetime import datetime
-
-# Allowed answer values persisted to app_tables.inspect_visual
-ANS_ACCEPT = "ACCEPT"
-ANS_REJECT = "REJECT"
-ANS_NA     = "NA"   # optional third state (when neither radio is chosen)
 
 class inspect_visual(inspect_visualTemplate):
-  """
-  Visual inspection form
-  Components per forms_tables_def.txt:
-    - id_head_box (TextBox) : shows the Inspection ID (head_id)
-    - samp_numb_drp (DropDown): select sample number
-    - question_panel (RepeatingPanel): item_template = row_questions
-    - save_btn, cancel_btn, lock_btn (Buttons)
-
-  Usage:
-    open_form('inspect_visual', head_id="INS-000123", series="YS12", sample_numbers=[1,2,3,4,5])
-  """
-
-  def __init__(self, head_id, series, sample_numbers=None, **properties):
+  def __init__(self, **properties):
     self.init_components(**properties)
 
-    # Top-of-form context
-    self._head_id = head_id
-    self._series  = series
+    
+    self.inspection_id = properties.get('inspection_id')
+    self.id_head_box.text = self.inspection_id
+    self.product_series = properties.get('product_series')
+    self.sample_size = int(properties.get('sample_size', 1))
+    self.current_sample = 1
+    self.questions = []
+    self.sample_results = {}
 
-    # UI header fields
-    self.id_head_box.text = head_id
+    self.setup_inspection()
 
-    # Sample dropdown options
-    if not sample_numbers:
-      sample_numbers = [1]  # default to a single sample if none provided
-    self.samp_numb_drp.items = [(str(n), n) for n in sample_numbers]
-    self.samp_numb_drp.selected_value = sample_numbers[0]
+  def setup_inspection(self):
+    # Load questions for this product series
+    self.questions = anvil.server.call('get_visual_questions', self.product_series)
 
-    # Load questions + any existing answers for the initial sample
-    self._load_questions_for_sample(self.samp_numb_drp.selected_value)
-
-  # -------------------------------
-  # Data loading / binding
-  # -------------------------------
-  def _load_questions_for_sample(self, sample_no: int):
-    """
-    Pull active questions for the series and merge any saved answers for (head_id, sample_no).
-    Bind the merged list to the repeating panel.
-    """
-    # Server calls (no client import of server modules)
-    questions = anvil.server.call('vs_get_visual_questions', self._series)
-    existing  = anvil.server.call('vs_get_existing_answers', self._head_id, sample_no)
-    existing_by_qid = {row['question_id']: row for row in existing}
-
-    # Merge questions with existing answers
-    merged_items = []
-    for q in questions:
-      qid = q.get('question_id')
-      row = {
-        'question_id': qid,
-        'prompt': q.get('prompt'),
-        'sort_no': q.get('sort_no'),
-        # prefill from previously saved answers if present
-        'answer': None,
-        'notes': '',
-        'photo': None
-      }
-      if qid in existing_by_qid:
-        prev = existing_by_qid[qid]
-        row['answer'] = prev.get('answer')         # "ACCEPT" | "REJECT" | "NA"/None
-        row['notes']  = prev.get('notes')
-        row['photo']  = prev.get('photo')
-      merged_items.append(row)
-
-    # Sort by sort_no (server already sorts, but keep safe)
-    merged_items.sort(key=lambda r: (r.get('sort_no') is None, r.get('sort_no', 0)))
-
-    # Bind to repeating panel
-    self.question_panel.items = merged_items
-
-  # -------------------------------
-  # UI Events
-  # -------------------------------
-  def sample_no_drp_change(self, **event_args):
-    """Reload questions/answers when sample changes."""
-    sample_no = self.samp_numb_drp.selected_value
-    if sample_no is not None:
-      self._load_questions_for_sample(sample_no)
-
-  def save_btn_click(self, **event_args):
-    """
-    Gather user input from row_questions components and persist as a batch.
-    """
-    sample_no = self.samp_numb_drp.selected_value
-    if sample_no is None:
-      alert("Please select a sample number.")
+    if not self.questions:
+      alert(f"No visual inspection questions found for series: {self.product_series}")
       return
 
-    # Collect answers from the row components
-    payload = []
-    for comp in self.question_panel.get_components():
-      # Only collect from our row form
-      if hasattr(comp, 'get_answer_row'):
-        row = comp.get_answer_row()
-        # Defensive checks against missing data
-        if not row.get('question_id'):
-          continue
-        # Normalize answer if radios are both off
-        ans = row.get('answer')
-        if ans not in (ANS_ACCEPT, ANS_REJECT, ANS_NA, None):
-          ans = None
-        payload.append({
-          'question_id': row['question_id'],
-          'answer': ans,
-          'notes': row.get('notes') or '',
-          'photo': row.get('photo')  # Media object or None
-        })
+    self.update_sample_counter()
+    self.load_questions_for_sample()
 
-    # Persist via server function
-    ok_count = anvil.server.call('vs_save_visual_answers',
-                                 head_id=self._head_id,
-                                 sample_no=sample_no,
-                                 answers=payload)
-    Notification(f"Saved {ok_count} answer(s) for sample {sample_no}.", timeout=2).show()
+  def update_sample_counter(self):
+    self.label_sample_counter.text = f"Sample {self.current_sample} of {self.sample_size}"
+    self.button_previous.enabled = self.current_sample > 1
+    self.button_next.enabled = True  # Always enabled, text changes for last sample
 
-  def cancel_btn_click(self, **event_args):
-    """Revert any unsaved changes by reloading from DB."""
-    if confirm("Discard changes and reload saved answers?"):
-      self._load_questions_for_sample(self.samp_numb_drp.selected_value)
+    if self.current_sample < self.sample_size:
+      self.button_next.text = "Next Sample"
+    else:
+      self.button_next.text = "Complete"
 
-  def lock_btn_click(self, **event_args):
-    """
-    Example 'lock' behavior: disable all inputs in current list.
-    (Does not change schema; just prevents edits in UI)
-    """
-    for comp in self.question_panel.get_components():
-      if hasattr(comp, 'set_locked'):
-        comp.set_locked(True)
-    self.samp_numb_drp.enabled = False
-    self.save_btn.enabled = False
-    self.lock_btn.enabled = False
-    Notification("This sample is now locked in the UI.", timeout=2).show()
+  def load_questions_for_sample(self):
+    # Get saved results for this sample if they exist
+    sample_key = f"sample_{self.current_sample}"
+    saved_results = self.sample_results.get(sample_key, {})
 
+    # Create question items for repeating panel
+    question_items = []
+    for question in self.questions:
+      item = {
+        'question_id': question['question_id'],
+        'question_text': question['question_text'],        
+        'sample_number': self.current_sample,
+        'pass_fail': saved_results.get(question['question_id'], {}).get('pass_fail', None),
+        'notes': saved_results.get(question['question_id'], {}).get('notes', '')
+      }
+      question_items.append(item)
+
+      # Set the items - this should trigger the repeating panel to update
+    self.repeating_panel_questions.items = question_items
+
+  def save_current_sample(self):
+    """Save current sample"""
+    sample_key = f"sample_{self.current_sample}"
+    self.sample_results[sample_key] = {}
+
+    print(f"=== SAVING SAMPLE {self.current_sample} ===")
+
+    # Get all row components and save their results
+    components = self.repeating_panel_questions.get_components()
+    print(f"Found {len(components)} question components")
+
+    for row in components:
+      if hasattr(row, 'get_result'):
+        result = row.get_result()
+        print(f"  Q{result['question_id']}: {result['pass_fail']} - Notes: {result.get('notes', 'none')}")
+        self.sample_results[sample_key][result['question_id']] = result
+
+    print(f"Total saved for this sample: {len(self.sample_results[sample_key])} questions")
+    print(f"All samples so far: {self.sample_results.keys()}")
+
+  def button_previous_click(self, **event_args):
+    # Save current sample
+    self.save_current_sample()
+
+    # Move to previous sample
+    if self.current_sample > 1:
+      self.current_sample -= 1
+      self.update_sample_counter()
+      self.load_questions_for_sample()
+
+  def button_next_click(self, **event_args):
+    """Handle next sample/complete button"""
+    print(f"=== NEXT BUTTON CLICKED - Sample {self.current_sample} of {self.sample_size} ===")
+
+    # Save current sample
+    self.save_current_sample()
+
+    if self.current_sample < self.sample_size:
+      # Move to next sample
+      self.current_sample += 1
+      self.update_sample_counter()
+      self.load_questions_for_sample()
+    else:
+      # This is the last sample - complete inspection
+      print("=== LAST SAMPLE - CALLING COMPLETE INSPECTION ===")
+      self.complete_inspection()
+
+  
+  def complete_inspection(self):
+    """Save all inspection results to database when Complete is clicked"""
+    print("=== COMPLETE INSPECTION CALLED ===")
+    print(f"Inspection ID: {self.inspection_id}")
+    print(f"Total samples in results: {len(self.sample_results)}")
+
+    # Save the current (last) sample before completing
+    self.save_current_sample()
+
+    # Check we have results
+    if not self.sample_results:
+      print("ERROR: No sample results to save!")
+      alert("No results to save!")
+      return
+
+    # Print what we're about to save
+    for sample_key, questions in self.sample_results.items():
+      print(f"{sample_key}: {len(questions)} questions")
+
+    # Hard-code inspector for testing
+    inspector_name = "test_inspector"
+
+    print(f"  - inspection_id: {self.inspection_id}")
+    print(f"  - inspector: {inspector_name}")
+    print(f"  - samples: {list(self.sample_results.keys())}")
+
+    # Save all results to database
+    try:
+      result = anvil.server.call(
+        'save_visual_inspection_results',
+        self.inspection_id,
+        self.sample_results,
+        inspector_name
+      )
+
+      print(f"Server response: {result}")
+
+      if result['success']:
+        alert(f"Inspection saved: {result['message']}")
+      else:
+        alert(f"Save failed: {result['message']}")
+
+    except Exception as e:
+      print(f"ERROR calling server: {str(e)}")
+      alert(f"Error: {str(e)}")
+
+ 
  
 
 

@@ -1,120 +1,91 @@
+# Add these functions to your existing visual_services server module
+
 import anvil.server
-from anvil.tables import app_tables, query as q, order_by
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
 from datetime import datetime
 
-# ---- Column names from forms_tables_def.txt ----
-VQ_SERIES = "series"
-VQ_STATUS = "status"
-VQ_SORT   = "sort_no"
-VQ_QID    = "question_id"
-VQ_PROMPT = "prompt"
-
-IV_HEAD   = "head_id"
-IV_SAMPLE = "sample_no"
-IV_QID    = "question_id"
-IV_ANSWER = "answer"      # "ACCEPT" | "REJECT" | None/NA
-IV_NOTES  = "notes"
-IV_PHOTO  = "photo"
-IV_UPDATED= "uddate_at"   # spelling kept exact
-
-def _now():
-  return datetime.now()
-
-# ------------------------------------------------
-# Question loading
-# ------------------------------------------------
 @anvil.server.callable
-def vs_get_visual_questions(series: str):
-  """
-  Return active questions for a given product series, ordered by sort_no.
-  """
-  rows = app_tables.visual_questions.search(
-    order_by(VQ_SORT, ascending=True),
-    **{VQ_SERIES: series, VQ_STATUS: True}
+def get_visual_questions(product_series):
+  """Fetch all active visual inspection questions for a specific product series"""
+  questions = app_tables.visual_questions.search(
+    product_series=product_series,
+    is_active=True
   )
-  return [
-    {
-      VQ_QID:    r[VQ_QID],
-      VQ_PROMPT: r[VQ_PROMPT],
-      VQ_SORT:   r[VQ_SORT],
-    }
-    for r in rows
-  ]
 
-# ------------------------------------------------
-# Existing answers
-# ------------------------------------------------
+  question_list = []
+  for question in questions:
+    question_list.append({
+      'question_id': question['question_id'],
+      'question_text': question['question_text']
+    })
+
+  question_list.sort(key=lambda x: x['question_id'])
+  return question_list
+
 @anvil.server.callable
-def vs_get_existing_answers(head_id: str, sample_no: int):
-  """
-  Return saved inspect_visual answers for a given head_id + sample_no.
-  """
-  rows = app_tables.inspect_visual.search(
-    q.all_of(**{IV_HEAD: head_id, IV_SAMPLE: sample_no})
-  )
-  return [
-    {
-      IV_QID:     r[IV_QID],
-      IV_ANSWER:  r[IV_ANSWER],
-      IV_NOTES:   r[IV_NOTES],
-      IV_PHOTO:   r[IV_PHOTO],
-      IV_UPDATED: r[IV_UPDATED],
-    }
-    for r in rows
-  ]
+def save_visual_inspection_results(inspection_id, sample_results, inspector_name):
+  """Save all visual inspection results to the visual_results table"""
+  try:
+    for sample_key, questions in sample_results.items():
+      sample_number = int(sample_key.split('_')[1])
 
-# ------------------------------------------------
-# Save / upsert answers
-# ------------------------------------------------
+      for question_id, result in questions.items():
+        app_tables.visual_results.add_row(
+          inspection_id=inspection_id,
+          sample_number=sample_number,
+          question_id=question_id,
+          pass_fail=result.get('pass_fail', 'Not Answered'),
+          notes=result.get('notes', ''),
+          inspected_by=inspector_name,
+          inspection_datetime=datetime.now()
+        )
+
+    return {'success': True, 'message': 'Results saved successfully'}
+
+  except Exception as e:
+    return {'success': False, 'message': str(e)}
+
 @anvil.server.callable
-def vs_save_visual_answers(head_id: str, sample_no: int, answers: list):
-  """
-  Upsert answers into inspect_visual.
-  - If (head_id, sample_no, question_id) exists, update it
-  - Else add a new row
-  Always refresh uddate_at.
-  """
-  if not isinstance(answers, list):
-    return 0
+def get_visual_inspection_summary(inspection_id):
+  """Get summary of visual inspection results for all samples"""
+  results = app_tables.visual_results.search(inspection_id=inspection_id)
 
-  processed = 0
-  for a in answers:
-    qid   = a.get(IV_QID)
-    ans   = a.get(IV_ANSWER)
-    notes = a.get(IV_NOTES) or ""
-    photo = a.get(IV_PHOTO)
+  summary = {
+    'total_samples': 0,
+    'samples_passed': 0,
+    'samples_failed': 0,
+    'failure_details': []
+  }
 
-    if not qid:
-      continue
+  sample_results = {}
+  for result in results:
+    sample_num = result['sample_number']
+    if sample_num not in sample_results:
+      sample_results[sample_num] = {'passed': 0, 'failed': 0, 'failures': []}
 
-    existing = app_tables.inspect_visual.get(
-      **{IV_HEAD: head_id, IV_SAMPLE: sample_no, IV_QID: qid}
-    )
-
-    if existing:
-      existing.update(
-        **{
-          IV_ANSWER:  ans,
-          IV_NOTES:   notes,
-          IV_PHOTO:   photo if photo is not None else existing[IV_PHOTO],
-          IV_UPDATED: _now(),
-        }
-      )
+    if result['pass_fail'] == 'Pass':
+      sample_results[sample_num]['passed'] += 1
     else:
-      app_tables.inspect_visual.add_row(
-        **{
-          IV_HEAD:   head_id,
-          IV_SAMPLE: sample_no,
-          IV_QID:    qid,
-          IV_ANSWER: ans,
-          IV_NOTES:  notes,
-          IV_PHOTO:  photo,
-          IV_UPDATED:_now(),
-        }
-      )
-    processed += 1
+      sample_results[sample_num]['failed'] += 1
+      sample_results[sample_num]['failures'].append({
+        'question_id': result['question_id'],
+        'notes': result['notes']
+      })
 
-  return processed
+  summary['total_samples'] = len(sample_results)
+  for sample_num, results in sample_results.items():
+    if results['failed'] == 0:
+      summary['samples_passed'] += 1
+    else:
+      summary['samples_failed'] += 1
+      summary['failure_details'].append({
+        'sample': sample_num,
+        'failures': results['failures']
+      })
+
+  return summary
 
 
 
