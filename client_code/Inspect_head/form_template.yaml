@@ -244,7 +244,7 @@ components:
       text: Functional
     type: Button
   - layout_properties: {grid_position: 'BNPNIW,ZCEDHL'}
-    name: func_chk_btn_copy
+    name: summary_btn
     properties:
       enabled: false
       role: elevated-button

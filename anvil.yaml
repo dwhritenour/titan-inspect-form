@@ -70,10 +70,10 @@ db_schema:
     - admin_ui: {order: 9.5, width: 200}
       name: status
       type: string
-    - admin_ui: {order: 10.5, width: 200}
+    - admin_ui: {order: 7, width: 200}
       name: sam_qty
       type: number
-    - admin_ui: {order: 11.5, width: 200}
+    - admin_ui: {order: -1, width: 200}
       name: id_head
       type: string
     server: full
