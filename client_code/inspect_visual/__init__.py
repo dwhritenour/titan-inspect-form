@@ -85,7 +85,7 @@ class inspect_visual(inspect_visualTemplate):
   # -------------------------------
   # UI Events
   # -------------------------------
-  def samp_numb_drp_change(self, **event_args):
+  def sample_no_drp_change(self, **event_args):
     """Reload questions/answers when sample changes."""
     sample_no = self.samp_numb_drp.selected_value
     if sample_no is not None:

@@ -44,7 +44,7 @@ class inspect_doc(inspect_docTemplate):
       "count_chk":  self.counta_rad.get_group_value("radioCount"),
       "mtr_chk":    self.mtra_rad.get_group_value("radioMTR"),
       "hydro_chk":  self.hyda_rad.get_group_value("radioHydro"),
-      "pack_img":   self.pack_load.file,
+      "pack_img":   self.pack_fl.file,
       "comments":   self.comment_area.text.strip()
     }
 
