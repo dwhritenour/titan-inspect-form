@@ -7,7 +7,7 @@ import anvil.server
 class inspect_visual(inspect_visualTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
-
+        
     
     self.inspection_id = properties.get('inspection_id')
     self.id_head_box.text = self.inspection_id

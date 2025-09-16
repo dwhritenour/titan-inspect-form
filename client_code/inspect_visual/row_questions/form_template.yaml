@@ -1,30 +1,52 @@
 components:
 - layout_properties: {grid_position: 'BIMUDU,FIADAF UVFNVY,KFLUAF'}
   name: label_question
-  properties: {}
+  properties:
+    spacing:
+      margin: ['0', null, '0', null]
+      padding: ['4', null, '4', null]
   type: Label
 - event_bindings: {clicked: radio_button_pass_clicked}
   layout_properties: {grid_position: 'BIMUDU,LEIHTC'}
   name: radio_button_pass
-  properties: {group_name: radioAnswer, text: Accept}
+  properties:
+    group_name: radioAnswer
+    spacing:
+      margin: ['0', null, '0', null]
+      padding: ['4', null, '4', null]
+    text: Accept
   type: RadioButton
 - event_bindings: {clicked: radio_button_fail_clicked}
   layout_properties: {grid_position: 'BIMUDU,CXQSAR'}
   name: radio_button_fail
-  properties: {group_name: radioAnswer, text: Reject}
+  properties:
+    group_name: radioAnswer
+    spacing:
+      margin: ['0', null, '0', null]
+      padding: ['4', null, '4', null]
+    text: Reject
   type: RadioButton
 - event_bindings: {clicked: radio_button_na_clicked}
   layout_properties: {grid_position: 'BIMUDU,WBMMNR'}
   name: radio_button_na
-  properties: {group_name: radioAnswer, text: Not Available}
+  properties:
+    group_name: radioAnswer
+    spacing:
+      margin: [-1, null, '0', null]
+      padding: ['4', null, '4', null]
+    text: Not Applicable
   type: RadioButton
 - layout_properties: {grid_position: 'BIMUDU,TMUJLM'}
   name: image_fl
-  properties: {}
+  properties:
+    spacing:
+      margin: [-3, null, '0', null]
+      padding: ['8', null, '4', null]
   type: FileLoader
 - layout_properties: {grid_position: 'CVANAH,SXHUMK'}
   name: text_area_notes
-  properties: {}
+  properties:
+    margin: ['0', null, '0', null]
   type: TextArea
 container: {type: ColumnPanel}
 is_package: true

@@ -26,23 +26,46 @@ def get_visual_questions(product_series):
 
 @anvil.server.callable
 def save_visual_inspection_results(inspection_id, sample_results, inspector_name):
-  """Save all visual inspection results to the visual_results table"""
+  """Save all visual inspection results to the visual_results table - Updates existing or inserts new"""
   try:
+    updated_count = 0
+    inserted_count = 0
+
     for sample_key, questions in sample_results.items():
       sample_number = int(sample_key.split('_')[1])
 
       for question_id, result in questions.items():
-        app_tables.visual_results.add_row(
+        # Check if record already exists
+        existing_row = app_tables.visual_results.get(
           inspection_id=inspection_id,
           sample_number=sample_number,
-          question_id=question_id,
-          pass_fail=result.get('pass_fail', 'Not Answered'),
-          notes=result.get('notes', ''),
-          inspected_by=inspector_name,
-          inspection_datetime=datetime.now()
+          question_id=question_id
         )
 
-    return {'success': True, 'message': 'Results saved successfully'}
+        if existing_row:
+          # Update existing record
+          existing_row['pass_fail'] = result.get('pass_fail', 'Not Answered')
+          existing_row['notes'] = result.get('notes', '')
+          existing_row['inspected_by'] = inspector_name
+          existing_row['inspection_datetime'] = datetime.now()
+          updated_count += 1
+        else:
+          # Insert new record
+          app_tables.visual_results.add_row(
+            inspection_id=inspection_id,
+            sample_number=sample_number,
+            question_id=question_id,
+            pass_fail=result.get('pass_fail', 'Not Answered'),
+            notes=result.get('notes', ''),
+            inspected_by=inspector_name,
+            inspection_datetime=datetime.now()
+          )
+          inserted_count += 1
+
+    return {
+      'success': True, 
+      'message': f'Results saved successfully - Updated: {updated_count}, New: {inserted_count}'
+    }
 
   except Exception as e:
     return {'success': False, 'message': str(e)}
