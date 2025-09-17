@@ -46,7 +46,7 @@ components:
 - layout_properties: {grid_position: 'BIMUDU,CLZIAJ'}
   name: label_photo_status
   properties:
-    bold: true
+    bold: false
     foreground: green
     spacing:
       margin: ['5', null, '0', null]
