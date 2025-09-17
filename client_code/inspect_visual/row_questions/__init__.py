@@ -1,10 +1,13 @@
-# row_questions form - Fixed version with photo upload support
+# client_code/inspect_visual/row_questions/__init__.py - Simplified version
 from ._anvil_designer import row_questionsTemplate
 from anvil import *
 
 class row_questions(row_questionsTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
+
+    # Store the photo reference separately to prevent loss
+    self.stored_photo = None
 
     # Display the question
     self.label_question.text = f"{self.item['question_id']}. {self.item['question_text']}"
@@ -20,7 +23,12 @@ class row_questions(row_questionsTemplate):
 
     # Restore photo if it exists
     if self.item.get('photo'):
-      self.image_fl.file = self.item['photo']
+      self.stored_photo = self.item['photo']
+      # Show indicator that photo exists
+      self.label_photo_status.text = "✓ Photo"
+      self.label_photo_status.visible = True
+    else:
+      self.label_photo_status.visible = False
 
       # Restore previous selection if it exists
     if self.item.get('pass_fail') == 'Pass':
@@ -36,8 +44,21 @@ class row_questions(row_questionsTemplate):
       # No selection yet - hide notes by default
       self.text_area_notes.visible = False
 
+  def image_fl_change(self, file, **event_args):
+    """Handle file upload changes"""
+    if file:
+      # Store the new photo
+      self.stored_photo = file
+      self.label_photo_status.text = "✓ Photo"
+      self.label_photo_status.visible = True
+    else:
+      # File was removed/cleared
+      self.stored_photo = None
+      self.label_photo_status.visible = False
+
   def get_result(self):
     pass_fail = None
+
     if self.radio_button_pass.selected:
       pass_fail = 'Pass'
     elif self.radio_button_fail.selected:
@@ -45,12 +66,15 @@ class row_questions(row_questionsTemplate):
     elif self.radio_button_na.selected:
       pass_fail = 'NA'
 
-      # Include the uploaded photo in the result
+      # Get the current file from the uploader OR use the stored photo
+    current_file = self.image_fl.file if self.image_fl.file else self.stored_photo
+
+    # Include the photo in the result
     return {
       'question_id': self.item['question_id'],
       'pass_fail': pass_fail,
       'notes': self.text_area_notes.text if pass_fail == 'Fail' else '',
-      'photo': self.image_fl.file if self.image_fl.file else None
+      'photo': current_file
     }
 
   def radio_button_pass_clicked(self, **event_args):

@@ -67,7 +67,7 @@ class inspect_visual(inspect_visualTemplate):
     """Save current sample"""
     sample_key = f"sample_{self.current_sample}"
     self.sample_results[sample_key] = {}
-
+    
     print(f"=== SAVING SAMPLE {self.current_sample} ===")
 
     # Get all row components and save their results

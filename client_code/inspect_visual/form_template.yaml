@@ -46,10 +46,6 @@ components:
     name: spacer_1_copy
     properties: {height: 32}
     type: Spacer
-  - layout_properties: {grid_position: 'IDFUIN,FETRBB'}
-    name: spacer_1_copy_copy
-    properties: {height: 32}
-    type: Spacer
   - layout_properties: {grid_position: 'JFJOML,IVIASD'}
     name: repeating_panel_questions
     properties: {item_template: inspect_visual.row_questions}
