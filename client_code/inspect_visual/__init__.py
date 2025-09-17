@@ -52,14 +52,15 @@ class inspect_visual(inspect_visualTemplate):
     for question in self.questions:
       item = {
         'question_id': question['question_id'],
-        'question_text': question['question_text'],        
+        'question_text': question['question_text'], 
         'sample_number': self.current_sample,
         'pass_fail': saved_results.get(question['question_id'], {}).get('pass_fail', None),
-        'notes': saved_results.get(question['question_id'], {}).get('notes', '')
+        'notes': saved_results.get(question['question_id'], {}).get('notes', ''),
+        'photo': saved_results.get(question['question_id'], {}).get('photo', None)  # Add photo
       }
       question_items.append(item)
 
-      # Set the items - this should trigger the repeating panel to update
+    # Set the items - this should trigger the repeating panel to update
     self.repeating_panel_questions.items = question_items
 
   def save_current_sample(self):

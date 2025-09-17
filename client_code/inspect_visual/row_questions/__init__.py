@@ -1,7 +1,4 @@
-# row_questions form - Fixed version
-
-# row_questions form - Fixed version with NA and proper notes visibility
-
+# row_questions form - Fixed version with photo upload support
 from ._anvil_designer import row_questionsTemplate
 from anvil import *
 
@@ -21,13 +18,17 @@ class row_questions(row_questionsTemplate):
     # Initialize notes visibility and content
     self.text_area_notes.text = self.item.get('notes', '')
 
-    # Restore previous selection if it exists
+    # Restore photo if it exists
+    if self.item.get('photo'):
+      self.image_fl.file = self.item['photo']
+
+      # Restore previous selection if it exists
     if self.item.get('pass_fail') == 'Pass':
       self.radio_button_pass.selected = True
       self.text_area_notes.visible = False
     elif self.item.get('pass_fail') == 'Fail':
       self.radio_button_fail.selected = True
-      self.text_area_notes.visible = True  # THIS IS THE KEY LINE - show notes for fail
+      self.text_area_notes.visible = True
     elif self.item.get('pass_fail') == 'NA':
       self.radio_button_na.selected = True
       self.text_area_notes.visible = False
@@ -44,10 +45,12 @@ class row_questions(row_questionsTemplate):
     elif self.radio_button_na.selected:
       pass_fail = 'NA'
 
+      # Include the uploaded photo in the result
     return {
       'question_id': self.item['question_id'],
       'pass_fail': pass_fail,
-      'notes': self.text_area_notes.text if pass_fail == 'Fail' else ''
+      'notes': self.text_area_notes.text if pass_fail == 'Fail' else '',
+      'photo': self.image_fl.file if self.image_fl.file else None
     }
 
   def radio_button_pass_clicked(self, **event_args):

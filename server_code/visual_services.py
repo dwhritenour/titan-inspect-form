@@ -46,8 +46,9 @@ def save_visual_inspection_results(inspection_id, sample_results, inspector_name
           # Update existing record
           existing_row['pass_fail'] = result.get('pass_fail', 'Not Answered')
           existing_row['notes'] = result.get('notes', '')
+          existing_row['photo'] = result.get('photo', None)  # Add photo update
           existing_row['inspected_by'] = inspector_name
-          existing_row['inspection_datetime'] = datetime.now()
+          existing_row['update_datetime'] = datetime.now()
           updated_count += 1
         else:
           # Insert new record
@@ -57,8 +58,9 @@ def save_visual_inspection_results(inspection_id, sample_results, inspector_name
             question_id=question_id,
             pass_fail=result.get('pass_fail', 'Not Answered'),
             notes=result.get('notes', ''),
+            photo=result.get('photo', None),  # Add photo insert
             inspected_by=inspector_name,
-            inspection_datetime=datetime.now()
+            update_datetime=datetime.now()
           )
           inserted_count += 1
 
@@ -66,7 +68,6 @@ def save_visual_inspection_results(inspection_id, sample_results, inspector_name
       'success': True, 
       'message': f'Results saved successfully - Updated: {updated_count}, New: {inserted_count}'
     }
-
   except Exception as e:
     return {'success': False, 'message': str(e)}
 
