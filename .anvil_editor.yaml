@@ -12,6 +12,7 @@ unique_ids:
   modules:
     Inspect_head.validation_head: '1757603239854955910787892.1578'
     inspect_doc.validation_doc: '1757784458734792869929598.8947'
+    inspect_visual.validation_visual: '1758117121970473243425426.8465'
   scripts: {}
   server_modules:
     ServerModule1: '1756909695675405517900544.46515'

@@ -3,6 +3,8 @@
 from ._anvil_designer import inspect_visualTemplate
 from anvil import *
 import anvil.server
+# Add this import:
+import validation_visual
 
 class inspect_visual(inspect_visualTemplate):
   def __init__(self, **properties):
@@ -81,6 +83,10 @@ class inspect_visual(inspect_visualTemplate):
     print(f"All samples so far: {self.sample_results.keys()}")
 
   def button_previous_click(self, **event_args):
+    # Block navigation if any row question is unanswered.
+    if not validation_visual.validate_before_nav(self):
+      return
+      
     # Save current sample
     self.save_current_sample()
 
@@ -91,6 +97,10 @@ class inspect_visual(inspect_visualTemplate):
       self.load_questions_for_sample()
 
   def button_next_click(self, **event_args):
+    # Block navigation if any row question is unanswered.
+    if not validation_visual.validate_before_nav(self):
+      return
+      
     """Handle next sample/complete button"""
     print(f"=== NEXT BUTTON CLICKED - Sample {self.current_sample} of {self.sample_size} ===")
 
