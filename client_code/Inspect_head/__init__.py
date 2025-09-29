@@ -117,6 +117,7 @@ class Inspect_head(Inspect_headTemplate):
       # Enables next step(s) in inspection process
       self.doc_chk_btn.enabled = True
       self.vis_chk_btn.enabled = True
+      self.dim_chk_btn.enabled = True
 
       '''' I took this out because I wanted sidebar buttons to handle the flow
           I added to method: def doc_chk_btn_click(self, **event_args):
