@@ -4,6 +4,7 @@ import anvil.server
 from datetime import datetime
 from ..inspect_doc import inspect_doc
 from ..inspect_visual import inspect_visual
+from ..inspect_dimension import inspect_dimension
 import validation_head
 
 STATUS_IN_PROGRESS = "In Progress"
@@ -155,6 +156,17 @@ class Inspect_head(Inspect_headTemplate):
     )
     # Add the form to the content panel
     self.content_panel.add_component(self.visual_form)
+
+  def dim_chk_btn_click(self, **event_args):
+    # Clear the current content panel
+    self.content_panel.clear()
+    self.dimension_form = inspect_dimension(
+      inspection_id=self.id_head_box.text,
+      product_series=self.series_box.text,
+      sample_size=int(self.sam_qty_box.text)  
+    )
+    # Add the form to the content panel
+    self.content_panel.add_component(self.dimension_form)
     
     
     

@@ -225,7 +225,8 @@ components:
         padding: [null, '32', null, '32']
       text: Visual Check
     type: Button
-  - layout_properties: {grid_position: 'QQERYT,URETUQ'}
+  - event_bindings: {click: dim_chk_btn_click}
+    layout_properties: {grid_position: 'QQERYT,URETUQ'}
     name: dim_chk_btn
     properties:
       enabled: false
