@@ -8,6 +8,8 @@ unique_ids:
     inspect_dimension: '1759154407830418391120478.9617'
     inspect_dimension.row_questions: '175915455506761663746394.1696'
     inspect_doc: '1757614301726308130077950.60376'
+    inspect_functional: '1759237772772569821119744.7828'
+    inspect_functional.row_questions: '175923780277163230858505.64969'
     inspect_visual: '175794536306748074590550.03793'
     inspect_visual.row_questions: '1757972792825750881746223.3535'
     summary: '1757956447420112407303117.71297'
@@ -15,9 +17,11 @@ unique_ids:
     Inspect_head.validation_head: '1757603239854955910787892.1578'
     inspect_dimension.validation_dimension: '1759154592703813457260130.5043'
     inspect_doc.validation_doc: '1757784458734792869929598.8947'
+    inspect_functional.validation_functional: '1759238307361372844228310.68774'
     inspect_visual.validation_visual: '1758117121970473243425426.8465'
   scripts: {}
   server_modules:
     ServerModule1: '1756909695675405517900544.46515'
     dimension_services: '1759156043782412934888817.2441'
+    functional_services: '1759238331288367995128430.35474'
     visual_services: '1757954227652493533577307.1364'

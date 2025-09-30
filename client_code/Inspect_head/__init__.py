@@ -5,6 +5,7 @@ from datetime import datetime
 from ..inspect_doc import inspect_doc
 from ..inspect_visual import inspect_visual
 from ..inspect_dimension import inspect_dimension
+from ..inspect_functional import inspect_functional
 import validation_head
 
 STATUS_IN_PROGRESS = "In Progress"
@@ -166,6 +167,15 @@ class Inspect_head(Inspect_headTemplate):
       sample_size=int(self.sam_qty_box.text or 1)
   )
     self.content_panel.add_component(self.dimension_form)
+
+  def func_chk_btn_click(self, **event_args):
+    self.content_panel.clear()
+    self.functional_form = inspect_functional(
+      inspection_id=self.id_head_box.text,
+      product_series=(self.series_box.text or "").strip(),  # ensure it’s a string
+      sample_size=int(self.sam_qty_box.text or 1)
+    )
+    self.content_panel.add_component(self.functional_form_form)
     
     
     
