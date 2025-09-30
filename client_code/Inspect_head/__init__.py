@@ -119,6 +119,7 @@ class Inspect_head(Inspect_headTemplate):
       self.doc_chk_btn.enabled = True
       self.vis_chk_btn.enabled = True
       self.dim_chk_btn.enabled = True
+      self.func_chk_btn.enabled = True
 
       '''' I took this out because I wanted sidebar buttons to handle the flow
           I added to method: def doc_chk_btn_click(self, **event_args):
@@ -175,7 +176,7 @@ class Inspect_head(Inspect_headTemplate):
       product_series=(self.series_box.text or "").strip(),  # ensure it’s a string
       sample_size=int(self.sam_qty_box.text or 1)
     )
-    self.content_panel.add_component(self.functional_form_form)
+    self.content_panel.add_component(self.functional_form)
     
     
     
