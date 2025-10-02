@@ -7,6 +7,7 @@ from ..inspect_visual import inspect_visual
 from ..inspect_dimension import inspect_dimension
 from ..inspect_functional import inspect_functional
 import validation_head
+from ..marking_ref import marking_ref
 
 STATUS_IN_PROGRESS = "In Progress"
 
@@ -120,6 +121,7 @@ class Inspect_head(Inspect_headTemplate):
       self.vis_chk_btn.enabled = True
       self.dim_chk_btn.enabled = True
       self.func_chk_btn.enabled = True
+      self.btn_marking.enabled = True
 
       '''' I took this out because I wanted sidebar buttons to handle the flow
           I added to method: def doc_chk_btn_click(self, **event_args):
@@ -177,7 +179,18 @@ class Inspect_head(Inspect_headTemplate):
       sample_size=int(self.sam_qty_box.text or 1)
     )
     self.content_panel.add_component(self.functional_form)
-    
+
+  def btn_marking_click(self, **event_args):
+    """Opens the marking reference information in a pop-up alert"""
+    # Create an instance of the marking_ref form
+    marking_form = marking_ref()
+    # Display it in a pop-up alert with a custom title
+    alert(
+      content=marking_form,
+      title="Marking Reference Information",
+      large=True,
+      buttons=[("Close", None)]
+    )    
     
     
 

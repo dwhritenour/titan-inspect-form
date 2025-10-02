@@ -205,6 +205,10 @@ components:
   properties: {}
   type: FlowPanel
 - components:
+  - layout_properties: {grid_position: 'MXEGAF,TCIWCP'}
+    name: lb_steps
+    properties: {bold: true, text: Inspection Steps}
+    type: Label
   - event_bindings: {click: doc_chk_btn_click}
     layout_properties: {grid_position: 'XCFNFN,YVULTA'}
     name: doc_chk_btn
@@ -249,8 +253,9 @@ components:
     name: label_1
     properties: {bold: true, text: Reference Data}
     type: Label
-  - layout_properties: {grid_position: 'BNPNIW,ZCEDHL'}
-    name: marking_btn
+  - event_bindings: {click: btn_marking_click}
+    layout_properties: {grid_position: 'BNPNIW,ZCEDHL'}
+    name: btn_marking
     properties:
       enabled: false
       role: elevated-button
