@@ -1,206 +1,231 @@
 components:
 - components:
-  - layout_properties: {grid_position: 'HKYVUH,IURZKL'}
-    name: dochead_lbl
-    properties: {bold: true, role: title, text: Documentation Check}
-    type: Label
-  - layout_properties: {grid_position: 'HKYVUH,OBNKFL'}
-    name: spacer_1_copy_2_copy_copy_copy_copy
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'HKYVUH,SOFBMC'}
-    name: spacer_1_copy_2_copy_copy_copy_copy_copy
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'HKYVUH,SMENCG'}
-    name: id_head_box
-    properties: {align: right, enabled: false}
-    type: TextBox
-  - layout_properties: {grid_position: 'FZOERQ,PFNXRE'}
-    name: spacer_1_copy_2_copy_copy_copy_2
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'FZOERQ,YPBKKN'}
-    name: spacer_1_copy_2_copy_copy_copy
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'FZOERQ,RGCPRF'}
-    name: spacer_1_copy_2_copy_copy
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'QALWVL,SXRMPO'}
-    name: pack_lbl
-    properties:
-      spacing:
-        margin: ['4', null, '4', null]
-        padding: ['8', null, '8', null]
-      text: 'Packaging:'
-    type: Label
-  - layout_properties: {grid_position: 'QALWVL,YJMGXU'}
-    name: spacer_1_copy_2_copy_4_copy_2_copy
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'QALWVL,IVVGUR'}
-    name: packa_rad
-    properties:
-      group_name: radioPack
-      spacing:
-        margin: ['4', null, '4', null]
-        padding: [7, null, '8', null]
-      text: Accept
-    type: RadioButton
-  - layout_properties: {grid_position: 'QALWVL,GPGDGB'}
-    name: packr_rad
-    properties:
-      group_name: radioPack
-      spacing:
-        margin: ['4', null, '4', null]
-        padding: [7, null, '8', null]
-      text: Reject
-    type: RadioButton
-  - layout_properties: {grid_position: 'QALWVL,IYUOTA'}
-    name: packna_rad
-    properties: {group_name: radioPack, text: Not Applicable}
-    type: RadioButton
-  - layout_properties: {grid_position: 'EJQVXR,EBRAMG'}
-    name: ident_lbl
-    properties: {text: 'Identification Check:'}
-    type: Label
-  - layout_properties: {grid_position: 'EJQVXR,NDLSJN'}
-    name: spacer_1_copy_2
-    properties: {height: 32}
-    type: Spacer
-  - data_bindings: []
-    layout_properties: {grid_position: 'EJQVXR,NVBHBY'}
-    name: inda_rad
-    properties: {group_name: radioIden, text: Accept, value: ACCEPT}
-    type: RadioButton
-  - layout_properties: {grid_position: 'EJQVXR,RUUEUC'}
-    name: indr_rad
-    properties: {group_name: radioIden, text: Reject}
-    type: RadioButton
-  - layout_properties: {grid_position: 'EJQVXR,YWGDME'}
-    name: indna_rad
-    properties: {group_name: radioIden, text: Not Applicable}
-    type: RadioButton
-  - layout_properties: {grid_position: 'BMJDST,KJCOCT'}
-    name: count_lbl
-    properties: {text: 'Count Verification:'}
-    type: Label
-  - layout_properties: {grid_position: 'BMJDST,XLJBCS'}
-    name: spacer_1_copy_2_copy_4_copy
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'BMJDST,FHWCSZ'}
-    name: counta_rad
-    properties: {group_name: radioCount, text: Accept}
-    type: RadioButton
-  - layout_properties: {grid_position: 'BMJDST,TBZVDN'}
-    name: countr_rad
-    properties: {group_name: radioCount, text: Reject}
-    type: RadioButton
-  - layout_properties: {grid_position: 'BMJDST,TKRICT'}
-    name: countna_rad
-    properties: {group_name: radioCount, text: Not Applicable}
-    type: RadioButton
-  - layout_properties: {grid_position: 'HAKQSJ,FKKWTH'}
-    name: mtr_lbl
-    properties: {text: 'Mill Test Report:'}
-    type: Label
-  - layout_properties: {grid_position: 'HAKQSJ,LJPLRQ'}
-    name: spacer_1_copy_2_copy_4
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'HAKQSJ,KTELKY'}
-    name: mtra_rad
-    properties:
-      align: left
-      group_name: radioMTR
-      spacing:
-        margin: [null, null, null, '0']
-      text: Accept
-    type: RadioButton
-  - layout_properties: {grid_position: 'HAKQSJ,AGWOIJ'}
-    name: mtrr_rad
-    properties:
-      group_name: radioMTR
-      spacing:
-        margin: [null, null, null, '0']
-      text: Reject
-    type: RadioButton
-  - layout_properties: {grid_position: 'HAKQSJ,KSEOET'}
-    name: mtrna_rad
-    properties: {group_name: radioMTR, text: Not Applicable}
-    type: RadioButton
-  - layout_properties: {grid_position: 'AJLDZD,ZDOLDC'}
-    name: hydro_lbl
-    properties: {text: 'Hydro-Test Reports:'}
-    type: Label
-  - layout_properties: {grid_position: 'AJLDZD,ODXKRM'}
-    name: spacer_1_copy_2_copy_4_copy_2
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'AJLDZD,SBYXKL'}
-    name: hyda_rad
-    properties: {group_name: radioHydro, text: Accept}
-    type: RadioButton
-  - layout_properties: {grid_position: 'AJLDZD,XJQIZV'}
-    name: hydr_rad
-    properties: {group_name: radioHydro, text: Reject}
-    type: RadioButton
-  - layout_properties: {grid_position: 'AJLDZD,GSFPWW'}
-    name: hydrona_rad
-    properties: {group_name: radioHydro, text: Not Applicable}
-    type: RadioButton
-  - layout_properties: {grid_position: 'MXYGMK,JHTJNW'}
-    name: pack_photo_lbl
-    properties: {text: 'Packaging Photo:'}
-    type: Label
-  - layout_properties: {grid_position: 'MXYGMK,UKBWJV'}
-    name: pack_fl
-    properties:
-      align: left
-      role: elevated-button
-      spacing:
-        padding: [null, '45', null, '45']
-    type: FileLoader
-  - layout_properties: {grid_position: 'MXYGMK,ZFMXOJ'}
-    name: spacer_1_copy_2_copy_4_copy_2_copy_2_copy
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'MXYGMK,IXHQQP'}
-    name: spacer_1_copy_2_copy_4_copy_2_copy_2_copy_2
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'VJLNEW,GBPDVT'}
-    name: comment_lbl
-    properties: {text: 'Comments:'}
-    type: Label
-  - layout_properties: {grid_position: 'VIVEMY,YZNFWM'}
-    name: comment_area
+  - components:
+    - layout_properties: {col_xs: 0, row: LTNYGW, width_xs: 10}
+      name: dochead_lbl
+      properties: {bold: true, role: title, text: Documentation Check}
+      type: Label
+    - layout_properties: {col_xs: 10, row: LTNYGW, width_xs: 2}
+      name: id_head_box
+      properties: {align: right, enabled: false}
+      type: TextBox
+    layout_properties: {grid_position: 'LNJQYZ,VWPOON'}
+    name: grid_panel_2
     properties: {}
-    type: TextArea
-  - layout_properties: {grid_position: 'XTNAQW,MKAIIF'}
-    name: spacer_1_copy_2_copy
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'XTNAQW,JOUNNJ'}
-    name: spacer_1_copy_2_copy_2
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'XTNAQW,VRJVVE'}
-    name: spacer_1_copy_2_copy_3
-    properties: {height: 32}
-    type: Spacer
-  - layout_properties: {grid_position: 'XTNAQW,RHDTZE'}
-    name: spacer_1_copy_2_copy_3_copy
-    properties: {height: 32}
-    type: Spacer
-  - event_bindings: {click: save_btn_click}
-    layout_properties: {grid_position: 'XTNAQW,SOJTNI'}
-    name: save_btn
-    properties: {role: elevated-button, text: Save}
-    type: Button
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 0, row: VDZOXY, width_xs: 5}
+      name: pack_lbl
+      properties:
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: 'Packaging:'
+      type: Label
+    - layout_properties: {col_xs: 5, row: VDZOXY, width_xs: 2}
+      name: packa_rad
+      properties:
+        group_name: radioPack
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: Accept
+      type: RadioButton
+    - layout_properties: {col_xs: 7, row: VDZOXY, width_xs: 2}
+      name: packr_rad
+      properties:
+        group_name: radioPack
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: Reject
+      type: RadioButton
+    - layout_properties: {col_xs: 9, row: VDZOXY, width_xs: 2}
+      name: packna_rad
+      properties:
+        group_name: radioPack
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: N/A
+      type: RadioButton
+    - layout_properties: {col_xs: 0, row: AEBPNT, width_xs: 5}
+      name: ident_lbl
+      properties:
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: 'Identification Check:'
+      type: Label
+    - data_bindings: []
+      layout_properties: {col_xs: 5, row: AEBPNT, width_xs: 2}
+      name: inda_rad
+      properties:
+        group_name: radioIden
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: Accept
+        value: ACCEPT
+      type: RadioButton
+    - layout_properties: {col_xs: 7, row: AEBPNT, width_xs: 2}
+      name: indr_rad
+      properties:
+        group_name: radioIden
+        spacing:
+          margin: ['0', null, 1, null]
+          padding: ['0', null, '0', null]
+        text: Reject
+      type: RadioButton
+    - layout_properties: {col_xs: 9, row: AEBPNT, width_xs: 2}
+      name: indna_rad
+      properties:
+        group_name: radioIden
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: N/A
+      type: RadioButton
+    - layout_properties: {col_xs: 0, row: VGFVOK, width_xs: 4}
+      name: count_lbl
+      properties:
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: 'Count Verification:'
+      type: Label
+    - layout_properties: {col_xs: 5, row: VGFVOK, width_xs: 2}
+      name: counta_rad
+      properties:
+        group_name: radioCount
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: Accept
+      type: RadioButton
+    - layout_properties: {col_xs: 7, row: VGFVOK, width_xs: 2}
+      name: countr_rad
+      properties:
+        group_name: radioCount
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: Reject
+      type: RadioButton
+    - layout_properties: {col_xs: 9, row: VGFVOK, width_xs: 3}
+      name: countna_rad
+      properties:
+        group_name: radioCount
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: N/A
+      type: RadioButton
+    - layout_properties: {col_xs: 0, row: KGAJAD, width_xs: 4}
+      name: mtr_lbl
+      properties:
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: 'Mill Test Report:'
+      type: Label
+    - layout_properties: {col_xs: 5, row: KGAJAD, width_xs: 2}
+      name: mtra_rad
+      properties:
+        align: left
+        group_name: radioMTR
+        spacing:
+          margin: ['0', null, '0', '0']
+          padding: ['0', null, '0', null]
+        text: Accept
+      type: RadioButton
+    - layout_properties: {col_xs: 7, row: KGAJAD, width_xs: 2}
+      name: mtrr_rad
+      properties:
+        group_name: radioMTR
+        spacing:
+          margin: ['0', null, '0', '0']
+          padding: ['0', null, '0', null]
+        text: Reject
+      type: RadioButton
+    - layout_properties: {col_xs: 9, row: KGAJAD, width_xs: 3}
+      name: mtrna_rad
+      properties:
+        group_name: radioMTR
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: N/A
+      type: RadioButton
+    - layout_properties: {col_xs: 0, row: FYXTUI, width_xs: 4}
+      name: hydro_lbl
+      properties:
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: 'Hydro-Test Reports:'
+      type: Label
+    - layout_properties: {col_xs: 5, row: FYXTUI, width_xs: 2}
+      name: hyda_rad
+      properties:
+        group_name: radioHydro
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: Accept
+      type: RadioButton
+    - layout_properties: {col_xs: 7, row: FYXTUI, width_xs: 2}
+      name: hydr_rad
+      properties:
+        group_name: radioHydro
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: Reject
+      type: RadioButton
+    - layout_properties: {col_xs: 9, row: FYXTUI, width_xs: 2}
+      name: hydrona_rad
+      properties:
+        group_name: radioHydro
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: N/A
+      type: RadioButton
+    - layout_properties: {col_xs: 0, row: KLHINQ, width_xs: 12}
+      name: comment_lbl
+      properties:
+        spacing:
+          margin: ['0', null, '0', null]
+          padding: ['0', null, '0', null]
+        text: 'Comments:'
+      type: Label
+    - layout_properties: {col_xs: 0, row: CNVQAG, width_xs: 12}
+      name: comment_area
+      properties:
+        margin: ['0', null, null, null]
+      type: TextArea
+    - layout_properties: {col_xs: 0, row: DOSDAU, width_xs: 3}
+      name: pack_photo_lbl
+      properties: {text: 'Packaging Photo (Optional):'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: DOSDAU, width_xs: 3}
+      name: pack_fl
+      properties:
+        align: left
+        role: elevated-button
+        spacing:
+          padding: [null, '45', null, '45']
+      type: FileLoader
+    - event_bindings: {click: save_btn_click}
+      layout_properties: {col_xs: 10, row: DOSDAU, width_xs: 2}
+      name: save_btn
+      properties: {align: right, role: elevated-button, text: Save}
+      type: Button
+    layout_properties: {grid_position: 'TTAKTG,UESIJB'}
+    name: grid_panel_1
+    properties: {}
+    type: GridPanel
   layout_properties: {grid_position: 'TNERAC,COCLGH'}
   name: document_card
   properties: {col_widths: '{}', role: outlined-card}

@@ -25,7 +25,7 @@ class row_questions(row_questionsTemplate):
     if self.item.get('photo'):
       self.stored_photo = self.item['photo']
       # Show indicator that photo exists
-      self.label_photo_status.text = "✓ Photo"
+      self.label_photo_status.text = "Photo"
       self.label_photo_status.visible = True
     else:
       self.label_photo_status.visible = False
@@ -49,7 +49,7 @@ class row_questions(row_questionsTemplate):
     if file:
       # Store the new photo
       self.stored_photo = file
-      self.label_photo_status.text = "✓ Photo"
+      self.label_photo_status.text = "Photo"
       self.label_photo_status.visible = True
     else:
       # File was removed/cleared
