@@ -33,7 +33,7 @@ components:
     properties:
       group_name: radioAnswer
       spacing:
-        margin: [-1, null, '0', null]
+        margin: ['0', null, '0', null]
         padding: ['4', '0', '4', null]
       text: N/A
     type: RadioButton
@@ -41,7 +41,7 @@ components:
     name: image_fl
     properties:
       spacing:
-        margin: [-3, null, '0', null]
+        margin: ['0', null, '0', null]
         padding: ['8', '0', '4', '0']
     type: FileLoader
   - layout_properties: {col_xs: 11, row: OPKWNZ, width_xs: 1}

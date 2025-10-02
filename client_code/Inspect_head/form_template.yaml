@@ -245,14 +245,18 @@ components:
         padding: [null, '40', null, '40']
       text: Functional
     type: Button
+  - layout_properties: {grid_position: 'CGLMXX,RWWXKM'}
+    name: label_1
+    properties: {bold: true, text: Reference Data}
+    type: Label
   - layout_properties: {grid_position: 'BNPNIW,ZCEDHL'}
-    name: summary_btn
+    name: marking_btn
     properties:
       enabled: false
       role: elevated-button
       spacing:
         padding: [null, '42', null, '42']
-      text: Summary
+      text: Markings
     type: Button
   layout_properties: {slot: left-nav}
   name: sidebar_panel

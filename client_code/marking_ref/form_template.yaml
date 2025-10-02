@@ -1,0 +1,25 @@
+components:
+- layout_properties: {grid_position: 'XBKDRC,NIWEER'}
+  name: lb_message1
+  properties: {bold: true, text: 'All products must be marked with the following:'}
+  type: Label
+- layout_properties: {grid_position: 'EPONZO,KWCMJG'}
+  name: lb_message2
+  properties:
+    italic: true
+    text: |
+      1. Titan Name
+      2. Model Number
+      3. Material
+      4. Class
+      5. Heat Number
+      6. Flow Arrow
+  type: Label
+- layout_properties: {grid_position: 'FXRYYF,HCCKBP'}
+  name: lb_message3
+  properties:
+    bold: true
+    text: "For smaller sizes where space is limited, it may not be possible to include all details. \nUse sound judgment to determine the most appropriate markings."
+  type: Label
+container: {type: ColumnPanel}
+is_package: true
