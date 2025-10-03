@@ -7,14 +7,15 @@ components:
   layout_properties: {grid_position: 'NURWSS,GJLVWN'}
   name: data_grid_1
   properties:
+    auto_header: true
     columns:
     - {data_key: tier, expand: true, id: ZHVUDM, title: Tier}
-    - {data_key: tier_desc, id: ZWDMDU, title: tier_desc}
-    - {data_key: lot_size, id: NTJEWU, title: lot_size}
-    - {data_key: samp_size, id: ZCGCRI, title: samp_size}
-    - {data_key: accept<=, id: HIGWAM, title: accept<=}
-    - {data_key: regect>=, id: HNYZKL, title: regect>=}
-    - {data_key: notes, id: EFUQJE, title: notes}
+    - {data_key: tier_desc, id: ZWDMDU, title: Description}
+    - {data_key: lot_size, id: NTJEWU, title: Lot Size}
+    - {data_key: samp_size, id: ZCGCRI, title: Sample Size}
+    - {data_key: accept<=, id: HIGWAM, title: Accept If (<=)}
+    - {data_key: regect>=, id: HNYZKL, title: Reject If (>=)}
+    show_page_controls: false
   type: DataGrid
 container: {type: ColumnPanel}
 is_package: true

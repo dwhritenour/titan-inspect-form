@@ -1,3 +1,5 @@
 components: []
-container: {type: DataRowPanel}
+container:
+  properties: {align: left, font_size: 14}
+  type: DataRowPanel
 is_package: true

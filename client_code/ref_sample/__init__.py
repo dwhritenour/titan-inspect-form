@@ -12,5 +12,5 @@ class ref_sample(ref_sampleTemplate):
     self.init_components(**properties)
 
     # Any code you write here will run before the form opens.
-    
+    self.repeating_panel_1.items = app_tables.vendor_tier.search()
     
