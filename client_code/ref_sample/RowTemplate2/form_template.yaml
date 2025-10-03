@@ -1,0 +1,7 @@
+components:
+- layout_properties: {column: JKSDUP}
+  name: label_1
+  properties: {text: Tier 1}
+  type: Label
+container: {type: DataRowPanel}
+is_package: true

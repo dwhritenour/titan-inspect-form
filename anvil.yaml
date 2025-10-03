@@ -176,6 +176,29 @@ db_schema:
       type: string
     server: full
     title: inspect_head
+  table_10:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: tier
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: lot_size
+      type: string
+    - admin_ui: {order: 2, width: 200}
+      name: samp_size
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: accept<=
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: regect>=
+      type: string
+    - admin_ui: {order: 5, width: 200}
+      name: notes
+      type: string
+    server: full
+    title: Table 10
   visual_questions:
     client: none
     columns:

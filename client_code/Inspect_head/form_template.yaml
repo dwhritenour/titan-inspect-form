@@ -253,8 +253,18 @@ components:
     name: label_1
     properties: {bold: true, text: Reference Data}
     type: Label
+  - event_bindings: {click: btn_sampling_click}
+    layout_properties: {grid_position: 'EFHWNR,NMJHJC'}
+    name: btn_sampling
+    properties:
+      enabled: false
+      role: elevated-button
+      spacing:
+        padding: [null, '42', null, '42']
+      text: Sampling
+    type: Button
   - event_bindings: {click: btn_marking_click}
-    layout_properties: {grid_position: 'BNPNIW,ZCEDHL'}
+    layout_properties: {grid_position: 'IGHVVS,YRACWN'}
     name: btn_marking
     properties:
       enabled: false

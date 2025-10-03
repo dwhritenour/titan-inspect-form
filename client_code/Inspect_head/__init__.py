@@ -7,7 +7,8 @@ from ..inspect_visual import inspect_visual
 from ..inspect_dimension import inspect_dimension
 from ..inspect_functional import inspect_functional
 import validation_head
-from ..marking_ref import marking_ref
+from ..ref_marking import ref_marking
+from ..ref_sample import ref_sample
 
 STATUS_IN_PROGRESS = "In Progress"
 
@@ -122,6 +123,7 @@ class Inspect_head(Inspect_headTemplate):
       self.dim_chk_btn.enabled = True
       self.func_chk_btn.enabled = True
       self.btn_marking.enabled = True
+      self.btn_sampling.enabled = True
 
       '''' I took this out because I wanted sidebar buttons to handle the flow
           I added to method: def doc_chk_btn_click(self, **event_args):
@@ -183,7 +185,7 @@ class Inspect_head(Inspect_headTemplate):
   def btn_marking_click(self, **event_args):
     """Opens the marking reference information in a pop-up alert"""
     # Create an instance of the marking_ref form
-    marking_form = marking_ref()
+    marking_form = ref_marking()
     # Display it in a pop-up alert with a custom title
     alert(
       content=marking_form,
@@ -191,6 +193,18 @@ class Inspect_head(Inspect_headTemplate):
       large=True,
       buttons=[("Close", None)]
     )    
+
+  def btn_sampling_click(self, **event_args):
+    """Opens the sampling methodlogy in a pop-up alert"""
+    # Create an instance of the sample_ref form
+    sample_form = ref_sample()
+    # Display it in a pop-up alert with a custom title
+    alert(
+      content=sample_form,
+      title="Sampling Methodology Information",
+      large=True,
+      buttons=[("Close", None)]
+    ) 
     
     
 
