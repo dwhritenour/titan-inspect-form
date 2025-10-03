@@ -1,11 +1,11 @@
 components:
 - components:
   - data_bindings: []
-    name: repeating_panel_1
+    name: rp_tiers
     properties: {item_template: ref_sample.row_tiers}
     type: RepeatingPanel
   layout_properties: {grid_position: 'NURWSS,GJLVWN'}
-  name: data_grid_1
+  name: dg_tiers
   properties:
     auto_header: true
     columns:
