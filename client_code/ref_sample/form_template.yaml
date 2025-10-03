@@ -2,7 +2,7 @@ components:
 - components:
   - data_bindings: []
     name: repeating_panel_1
-    properties: {item_template: ref_sample.RowTemplate2}
+    properties: {item_template: ref_sample.row_tiers}
     type: RepeatingPanel
   layout_properties: {grid_position: 'NURWSS,GJLVWN'}
   name: data_grid_1
@@ -15,6 +15,7 @@ components:
     - {data_key: samp_size, id: ZCGCRI, title: Sample Size}
     - {data_key: accept<=, id: HIGWAM, title: Accept If (<=)}
     - {data_key: regect>=, id: HNYZKL, title: Reject If (>=)}
+    - {data_key: steps, id: UZFMWG, title: Steps}
     show_page_controls: false
   type: DataGrid
 container: {type: ColumnPanel}
