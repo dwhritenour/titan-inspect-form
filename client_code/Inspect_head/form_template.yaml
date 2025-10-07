@@ -87,33 +87,38 @@ components:
         name: rel_numb_box
         properties: {}
         type: TextBox
-      - layout_properties: {grid_position: 'GKIIYD,MKOVWC'}
-        name: series_lbl_copy
-        properties: {text: 'Product Line:'}
-        type: Label
-      - event_bindings: {change: line_box_change}
-        layout_properties: {grid_position: 'GKIIYD,JUCQAE'}
-        name: line_box
-        properties: {enabled: true}
-        type: DropDown
-      - layout_properties: {grid_position: 'GKIIYD,QTLQTF'}
-        name: series_lbl
-        properties: {text: 'Product Series:'}
-        type: Label
-      - event_bindings: {change: series_box_change}
-        layout_properties: {grid_position: 'GKIIYD,IEVXIX'}
-        name: series_box
+      - components:
+        - layout_properties: {col_xs: 0, row: ICBSHS, width_xs: 2}
+          name: series_lbl_copy
+          properties: {text: 'Product Line:'}
+          type: Label
+        - event_bindings: {change: line_box_change}
+          layout_properties: {col_xs: 2, row: ICBSHS, width_xs: 3}
+          name: line_box
+          properties: {enabled: true, include_placeholder: true, placeholder: Select Line}
+          type: DropDown
+        - layout_properties: {col_xs: 5, row: ICBSHS, width_xs: 2}
+          name: series_lbl
+          properties: {text: 'Product Series:'}
+          type: Label
+        - event_bindings: {change: series_box_change}
+          layout_properties: {col_xs: 7, row: ICBSHS, width_xs: 3}
+          name: series_box
+          properties: {include_placeholder: true, placeholder: Select Series}
+          type: DropDown
+        - layout_properties: {col_xs: 0, row: IMDVAO, width_xs: 2}
+          name: code_lbl
+          properties: {text: 'Product Code:'}
+          type: Label
+        - event_bindings: {change: prod_code_box_change}
+          layout_properties: {col_xs: 2, row: IMDVAO, width_xs: 3}
+          name: prod_code_box
+          properties: {include_placeholder: true, placeholder: Select Code}
+          type: DropDown
+        layout_properties: {grid_position: 'WPJKWJ,LDPOSH'}
+        name: grid_panel_1
         properties: {}
-        type: DropDown
-      - layout_properties: {grid_position: 'GKIIYD,XDOMBI'}
-        name: code_lbl
-        properties: {text: 'Product Code:'}
-        type: Label
-      - event_bindings: {hide: part_code_box_hide}
-        layout_properties: {grid_position: 'GKIIYD,TRQWSM'}
-        name: part_code_box
-        properties: {}
-        type: DropDown
+        type: GridPanel
       layout_properties: {grid_position: 'UGDBRI,LBHWOW'}
       name: outlined_card_2
       properties: {role: outlined-card}

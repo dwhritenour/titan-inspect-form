@@ -27,7 +27,13 @@ class Inspect_head(Inspect_headTemplate):
     # Clear any designer-time selections so nothing is “invalid”
     self.line_box.selected_value = None
     self.series_box.selected_value = None
-    self.part_code_box.selected_value = None
+    self.prod_code_box.selected_value = None
+    # Set placeholders for dropdowns
+    self.line_box.placeholder = "Select Line"
+    self.series_box.placeholder = "Select Series"
+    self.prod_code_box.placeholder = "Select Code"
+    # Load initial product lines
+    self.load_product_lines()
 
   # ---------------------------
   # UI STATE HELPERS
@@ -38,7 +44,7 @@ class Inspect_head(Inspect_headTemplate):
     self.rel_numb_box.enabled   = enabled
     self.line_box.enabled       = enabled
     self.series_box.enabled     = enabled
-    self.part_code_box.enabled  = enabled
+    self.prod_code_box.enabled  = enabled
     self.ord_qty_box.enabled    = enabled
     self.lot_qty_box.enabled    = enabled
     self.sam_qty_box.enabled    = enabled
@@ -50,7 +56,7 @@ class Inspect_head(Inspect_headTemplate):
     self.rel_numb_box.text  = ""
     self.line_box.text      = ""
     self.series_box.text    = ""
-    self.part_code_box.text = ""
+    self.prod_code_box.text = ""
     self.ord_qty_box.text   = ""
     self.lot_qty_box.text   = ""
     self.sam_qty_box.text   = ""
@@ -123,7 +129,7 @@ class Inspect_head(Inspect_headTemplate):
       self.update_dt_box.text = now.strftime("%Y-%m-%d")
       self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Saved").show()
-      
+
       # Enables next step(s) in inspection process
       self.doc_chk_btn.enabled = True
       self.vis_chk_btn.enabled = True
@@ -149,7 +155,7 @@ class Inspect_head(Inspect_headTemplate):
       self.update_dt_box.text = now.strftime("%Y-%m-%d")
       self.update_t_box.text  = now.strftime("%H:%M:%S")
       Notification("Header Updated").show()
-      
+
       # Enables next step in inspection process
       self.doc_chk_btn.enabled = True
 
@@ -177,7 +183,7 @@ class Inspect_head(Inspect_headTemplate):
       inspection_id=self.id_head_box.text,
       product_series=(self.series_box.text or "").strip(),  # ensure it’s a string
       sample_size=int(self.sam_qty_box.text or 1)
-  )
+    )
     self.content_panel.add_component(self.dimension_form)
 
   def func_chk_btn_click(self, **event_args):
@@ -232,6 +238,65 @@ class Inspect_head(Inspect_headTemplate):
         alert(result)
     except Exception as e:
       alert(f"Error: {str(e)}")
+
+  # ---------------------------
+  # CASCADING DROPDOWN HANDLERS
+  # ---------------------------
+  def load_product_lines(self):
+    """Load product lines into the line_box dropdown on form initialization"""
+    try:
+      lines = anvil.server.call('get_product_lines')
+      self.line_box.items = lines
+    except Exception as e:
+      print(f"Error loading product lines: {str(e)}")
+      Notification(f"Error loading product lines: {str(e)}", style='danger').show()
+
+  def line_box_change(self, **event_args):
+    """
+    When line_box selection changes:
+    - Load series options based on selected line
+    - Clear series_box and part_code_box selections
+    """
+    selected_line = self.line_box.selected_value
+
+    # Clear dependent dropdowns
+    self.series_box.items = []
+    self.series_box.selected_value = None
+    self.prod_code_box.items = []
+    self.prod_code_box.selected_value = None
+
+    if selected_line:
+      try:
+        series_list = anvil.server.call('get_series_by_line', selected_line)
+        self.series_box.items = series_list
+      except Exception as e:
+        print(f"Error loading series: {str(e)}")
+        Notification(f"Error loading series: {str(e)}", style='danger').show()
+
+  def series_box_change(self, **event_args):
+    """
+    When series_box selection changes:
+    - Load part codes based on selected line and series
+    - Clear part_code_box selection
+    """
+    selected_line = self.line_box.selected_value
+    selected_series = self.series_box.selected_value
+
+    # Clear dependent dropdown
+    self.prod_code_box.items = []
+    self.prod_code_box.selected_value = None
+
+    if selected_line and selected_series:
+      try:
+        part_codes = anvil.server.call('get_part_codes_by_series', selected_line, selected_series)
+        self.prod_code_box.items = part_codes
+      except Exception as e:
+        print(f"Error loading part codes: {str(e)}")
+        Notification(f"Error loading part codes: {str(e)}", style='danger').show()
+
+  def prod_code_box_change(self, **event_args):
+    """This method is called when an item is selected"""
+    pass
 
 
     
