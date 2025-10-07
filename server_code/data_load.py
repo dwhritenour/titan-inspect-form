@@ -5,17 +5,16 @@ import anvil.media
 
 @anvil.server.callable
 def import_from_data_files(filename):
-  """Import CSV from Data Files to a Data Table"""
+  """Import CSV from Data Files to part_mstr table"""
 
-  # Get the file from app_files table
-  file_row = app_tables.Files.get(name=filename)
-  
+  # Get the file from files table (lowercase!)
+  file_row = app_tables.files.get(path=filename)
 
   if not file_row:
     return f"File '{filename}' not found in Data Files"
 
-  # Get the media object
-  csv_file = file_row['content']
+  # Get the media object from 'file' column (not 'content')
+  csv_file = file_row['file']
 
   # Read and parse the CSV
   with anvil.media.TempFile(csv_file) as temp_filename:
@@ -24,17 +23,17 @@ def import_from_data_files(filename):
 
       count = 0
       for row in reader:
-        # Add to your target table
-        app_tables.your_table_name.add_row(
-          column1=row['line'],
-          column2=row['series'],
-          column3=row['model'],
-          column4=row['part_code'],
-          column5=row['body_mat'],
-          column6=row['asme_class'],
-          column7=row['end_connect'],
-          column8=row['size'],
+        # Add to part_mstr table
+        app_tables.part_mstr.add_row(
+          line=row['line'],
+          series=row['series'],
+          model=row['model'],
+          part_code=row['part_code'],
+          body_mat=row['body_mat'],
+          asme_class=row['asme_class'],
+          end_connect=row['end_connect'],
+          size=row['size'],
         )
         count += 1
 
-      return f"Successfully imported {count} rows"
+      return f"Successfully imported {count} rows into part_mstr"

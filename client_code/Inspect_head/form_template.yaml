@@ -277,7 +277,7 @@ components:
     name: label_1_copy
     properties: {bold: true, text: Utilities}
     type: Label
-  - event_bindings: {click: btn_load_click}
+  - event_bindings: {click: btn_import_click}
     layout_properties: {grid_position: 'DPVSIR,JBCGLO'}
     name: btn_load
     properties:
