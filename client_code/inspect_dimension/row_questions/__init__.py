@@ -2,6 +2,7 @@
 # Row component for each dimension check question
 from ._anvil_designer import row_questionsTemplate
 from anvil import *
+import anvil.server
 
 class row_questions(row_questionsTemplate):
   def __init__(self, **properties):

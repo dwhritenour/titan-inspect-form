@@ -1,3 +1,4 @@
+import anvil.server
 # Client Code → Modules → validation_visual.py
 #
 # Validation helpers for inspect_visual navigation.

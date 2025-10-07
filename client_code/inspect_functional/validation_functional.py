@@ -1,3 +1,4 @@
+import anvil.server
 # Client Code → Modules → validation_functional.py
 #
 # Validation helpers for inspect_functional navigation.

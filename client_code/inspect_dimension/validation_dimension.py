@@ -1,3 +1,4 @@
+import anvil.server
 # Client Code → Modules → validation_dimension.py
 #
 # Validation helpers for inspect_dimension navigation.

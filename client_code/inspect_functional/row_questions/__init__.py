@@ -2,6 +2,7 @@
 # Row template for functional check questions - handles individual question display and input
 from ._anvil_designer import row_questionsTemplate
 from anvil import *
+import anvil.server
 
 class row_questions(row_questionsTemplate):
   """

@@ -178,7 +178,31 @@ db_schema:
     title: inspect_head
   part_mstr:
     client: none
-    columns: []
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: line
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: series
+      type: string
+    - admin_ui: {order: 2, width: 200}
+      name: model
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: part_code
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: body_mat
+      type: string
+    - admin_ui: {order: 5, width: 200}
+      name: asme_class
+      type: string
+    - admin_ui: {order: 6, width: 200}
+      name: end_connect
+      type: string
+    - admin_ui: {order: 7, width: 200}
+      name: size
+      type: string
     server: full
     title: part_mstr
   vendor_tier:
@@ -268,10 +292,11 @@ runtime_options:
   version: 2
 services:
 - client_config: {}
-  server_config: {}
+  server_config: {auto_create_missing_columns: true}
   source: /runtime/services/tables.yml
 - client_config: {}
   server_config: {test_mode: true}
   source: /runtime/services/anvil/email.yml
 startup: {module: Inspect_head, type: form}
 startup_form: null
+uplink_visible: true

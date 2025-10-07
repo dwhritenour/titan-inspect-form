@@ -1,3 +1,4 @@
+import anvil.server
 # Client Code → Modules → validation_utils.py
 # Reusable validation with field highlighting for Anvil apps.
 
