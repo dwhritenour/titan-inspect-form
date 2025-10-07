@@ -10,6 +10,7 @@ import validation_head
 from ..ref_marking import ref_marking
 from ..ref_sample import ref_sample
 
+"""VARIABLES"""
 STATUS_IN_PROGRESS = "In Progress"
 
 class Inspect_head(Inspect_headTemplate):
@@ -23,6 +24,10 @@ class Inspect_head(Inspect_headTemplate):
     # Start with header fields disabled and cleared
     self.enable_header_fields(False)
     self.clear_header_fields()
+    # Clear any designer-time selections so nothing is “invalid”
+    self.line_box.selected_value = None
+    self.series_box.selected_value = None
+    self.part_code_box.selected_value = None
 
   # ---------------------------
   # UI STATE HELPERS
@@ -31,8 +36,9 @@ class Inspect_head(Inspect_headTemplate):
     self.ins_date_box.enabled   = enabled
     self.po_numb_box.enabled    = enabled
     self.rel_numb_box.enabled   = enabled
+    self.line_box.enabled       = enabled
     self.series_box.enabled     = enabled
-    self.prod_code_box.enabled  = enabled
+    self.part_code_box.enabled  = enabled
     self.ord_qty_box.enabled    = enabled
     self.lot_qty_box.enabled    = enabled
     self.sam_qty_box.enabled    = enabled
@@ -42,8 +48,9 @@ class Inspect_head(Inspect_headTemplate):
     self.ins_date_box.date  = None
     self.po_numb_box.text   = ""
     self.rel_numb_box.text  = ""
+    self.line_box.text      = ""
     self.series_box.text    = ""
-    self.prod_code_box.text = ""
+    self.part_code_box.text = ""
     self.ord_qty_box.text   = ""
     self.lot_qty_box.text   = ""
     self.sam_qty_box.text   = ""
@@ -225,11 +232,6 @@ class Inspect_head(Inspect_headTemplate):
         alert(result)
     except Exception as e:
       alert(f"Error: {str(e)}")
-    
-    
 
 
- 
     
-    
-      

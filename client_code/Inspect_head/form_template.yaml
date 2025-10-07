@@ -91,15 +91,17 @@ components:
         name: series_lbl_copy
         properties: {text: 'Product Line:'}
         type: Label
-      - layout_properties: {grid_position: 'GKIIYD,JUCQAE'}
+      - event_bindings: {change: line_box_change}
+        layout_properties: {grid_position: 'GKIIYD,JUCQAE'}
         name: line_box
-        properties: {}
+        properties: {enabled: true}
         type: DropDown
       - layout_properties: {grid_position: 'GKIIYD,QTLQTF'}
         name: series_lbl
         properties: {text: 'Product Series:'}
         type: Label
-      - layout_properties: {grid_position: 'GKIIYD,IEVXIX'}
+      - event_bindings: {change: series_box_change}
+        layout_properties: {grid_position: 'GKIIYD,IEVXIX'}
         name: series_box
         properties: {}
         type: DropDown
@@ -107,8 +109,9 @@ components:
         name: code_lbl
         properties: {text: 'Product Code:'}
         type: Label
-      - layout_properties: {grid_position: 'GKIIYD,TRQWSM'}
-        name: prod_code_box
+      - event_bindings: {hide: part_code_box_hide}
+        layout_properties: {grid_position: 'GKIIYD,TRQWSM'}
+        name: part_code_box
         properties: {}
         type: DropDown
       layout_properties: {grid_position: 'UGDBRI,LBHWOW'}
