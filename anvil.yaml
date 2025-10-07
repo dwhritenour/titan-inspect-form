@@ -176,6 +176,11 @@ db_schema:
       type: string
     server: full
     title: inspect_head
+  part_mstr:
+    client: none
+    columns: []
+    server: full
+    title: part_mstr
   vendor_tier:
     client: search
     columns:
