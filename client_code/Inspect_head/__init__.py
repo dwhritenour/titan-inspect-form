@@ -208,9 +208,21 @@ class Inspect_head(Inspect_headTemplate):
 
   def btn_import_click(self, **event_args):
     try:
-      # Replace 'my_file.csv' with the actual path value from your files table
-      result = anvil.server.call('import_from_data_files', 'import.csv')
-      alert(result)
+      # First, show what headers are in the CSV
+      csv_info = anvil.server.call('show_csv_headers', 'ystrainer_import.csv')
+      print("CSV Headers:", csv_info['headers'])
+      print("Sample Row:", csv_info['sample_row'])
+
+      # Confirm import
+      confirm = alert(
+        f"Found CSV with headers: {csv_info['headers']}\n\nSample row: {csv_info['sample_row']}\n\nProceed with import?",
+        title="CSV Preview",
+        buttons=[("Yes, Import", True), ("Cancel", False)]
+      )
+
+      if confirm:
+        result = anvil.server.call('import_from_data_files', 'ystrainer_import.csv')
+        alert(result)
     except Exception as e:
       alert(f"Error: {str(e)}")
     

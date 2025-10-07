@@ -285,7 +285,7 @@ components:
       role: elevated-button
       spacing:
         padding: [null, '42', null, '42']
-      text: Load
+      text: Load Data
     type: Button
   layout_properties: {slot: left-nav}
   name: sidebar_panel

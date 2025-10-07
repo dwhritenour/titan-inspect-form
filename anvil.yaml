@@ -60,7 +60,7 @@ db_schema:
   files:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {order: 0, width: 350}
       name: path
       type: string
     - admin_ui: {order: 1, width: 200}
