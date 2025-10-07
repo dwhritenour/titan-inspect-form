@@ -89,7 +89,7 @@ components:
         type: TextBox
       - components:
         - layout_properties: {col_xs: 0, row: ICBSHS, width_xs: 2}
-          name: series_lbl_copy
+          name: lbl_line
           properties: {text: 'Product Line:'}
           type: Label
         - event_bindings: {change: line_box_change}
@@ -110,13 +110,13 @@ components:
           name: code_lbl
           properties: {text: 'Product Code:'}
           type: Label
-        - event_bindings: {change: prod_code_box_change}
+        - event_bindings: {}
           layout_properties: {col_xs: 2, row: IMDVAO, width_xs: 3}
           name: prod_code_box
           properties: {include_placeholder: true, placeholder: Select Code}
           type: DropDown
         layout_properties: {grid_position: 'WPJKWJ,LDPOSH'}
-        name: grid_panel_1
+        name: gp_part
         properties: {}
         type: GridPanel
       layout_properties: {grid_position: 'UGDBRI,LBHWOW'}
