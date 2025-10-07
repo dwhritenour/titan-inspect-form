@@ -54,9 +54,9 @@ class Inspect_head(Inspect_headTemplate):
     self.ins_date_box.date  = None
     self.po_numb_box.text   = ""
     self.rel_numb_box.text  = ""
-    self.line_box.text      = ""
-    self.series_box.text    = ""
-    self.prod_code_box.text = ""
+    self.line_box.selected_value      = None
+    self.series_box.selected_value    = None
+    self.prod_code_box.selected_value = None
     self.ord_qty_box.text   = ""
     self.lot_qty_box.text   = ""
     self.sam_qty_box.text   = ""
@@ -79,8 +79,8 @@ class Inspect_head(Inspect_headTemplate):
       "ins_date":  self.ins_date_box.date,
       "po_numb":   self.po_numb_box.text.strip(),
       "rel_numb":  self.rel_numb_box.text.strip(),
-      "series":    self.series_box.text.strip(),
-      "prod_code": self.prod_code_box.text.strip(),
+      "series":    self.series_box.selected_value or "",
+      "prod_code": self.prod_code_box.selected_value or "",
       "ord_qty":   self._to_int_or_none(self.ord_qty_box.text),
       "lot_qty":   self._to_int_or_none(self.lot_qty_box.text),
       "sam_qty":   self._to_int_or_none(self.sam_qty_box.text),
@@ -90,8 +90,8 @@ class Inspect_head(Inspect_headTemplate):
     self.ins_date_box.date  = data.get("ins_date")
     self.po_numb_box.text   = data.get("po_numb", "")
     self.rel_numb_box.text  = data.get("rel_numb", "")
-    self.series_box.text    = data.get("series", "")
-    self.prod_code_box.text = data.get("prod_code", "")
+    self.series_box.selected_value    = data.get("series", "")
+    self.prod_code_box.selected_value = data.get("prod_code", "")
     self.ord_qty_box.text   = "" if data.get("ord_qty") is None else str(data["ord_qty"])
     self.lot_qty_box.text   = "" if data.get("lot_qty") is None else str(data["lot_qty"])
     self.sam_qty_box.text   = "" if data.get("sam_qty") is None else str(data["sam_qty"])
@@ -171,7 +171,7 @@ class Inspect_head(Inspect_headTemplate):
     self.content_panel.clear()
     self.visual_form = inspect_visual(
       inspection_id=self.id_head_box.text,
-      product_series=self.series_box.text,
+      product_series=self.series_box.selected_value or "",
       sample_size=int(self.sam_qty_box.text)  
     )
     # Add the form to the content panel
@@ -181,7 +181,7 @@ class Inspect_head(Inspect_headTemplate):
     self.content_panel.clear()
     self.dimension_form = inspect_dimension(
       inspection_id=self.id_head_box.text,
-      product_series=(self.series_box.text or "").strip(),  # ensure it’s a string
+      product_series=self.series_box.selected_value or "",
       sample_size=int(self.sam_qty_box.text or 1)
     )
     self.content_panel.add_component(self.dimension_form)
@@ -190,7 +190,7 @@ class Inspect_head(Inspect_headTemplate):
     self.content_panel.clear()
     self.functional_form = inspect_functional(
       inspection_id=self.id_head_box.text,
-      product_series=(self.series_box.text or "").strip(),  # ensure it’s a string
+      product_series=self.series_box.selected_value or "",
       sample_size=int(self.sam_qty_box.text or 1)
     )
     self.content_panel.add_component(self.functional_form)
