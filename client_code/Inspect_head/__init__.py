@@ -102,6 +102,8 @@ class Inspect_head(Inspect_headTemplate):
   def newhead_btn_click(self, **event_args):
     self.clear_header_fields()
     self.enable_header_fields(True)
+    self.content_panel.clear()
+    
 
   def savehead_btn_click(self, **event_args):
     header = self.read_header_from_ui()

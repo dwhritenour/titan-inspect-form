@@ -164,53 +164,38 @@ components:
           properties: {}
           type: TextBox
         layout_properties: {grid_position: 'AOBXPH,KLUMDV'}
-        name: grid_panel_1
+        name: gp_qty
         properties: {}
         type: GridPanel
       layout_properties: {grid_position: 'SOKIEY,XKXSHX'}
       name: outlined_card_3
       properties: {role: outlined-card}
       type: ColumnPanel
-    - layout_properties: {grid_position: 'RRQEPM,SABCNY'}
-      name: spacer_5
-      properties: {height: 32}
-      type: Spacer
-    - layout_properties: {grid_position: 'RRQEPM,IOKQYJ'}
-      name: spacer_6
-      properties: {height: 32}
-      type: Spacer
-    - layout_properties: {grid_position: 'RRQEPM,OAQGLL'}
-      name: spacer_7
-      properties: {height: 32}
-      type: Spacer
-    - layout_properties: {grid_position: 'RRQEPM,LZKVVV'}
-      name: spacer_8
-      properties: {height: 32}
-      type: Spacer
-    - layout_properties: {grid_position: 'RRQEPM,RROCKO'}
-      name: spacer_8_copy
-      properties: {height: 32}
-      type: Spacer
-    - data_bindings: []
-      event_bindings: {click: newhead_btn_click}
-      layout_properties: {grid_position: 'RRQEPM,WFTPXW'}
-      name: newhead_btn
-      properties:
-        role: elevated-button
-        spacing:
-          margin: ['4', null, null, '0']
-          padding: [null, '30', null, '30']
-        text: New
-      type: Button
-    - event_bindings: {click: savehead_btn_click}
-      layout_properties: {grid_position: 'RRQEPM,CSXLCX'}
-      name: savehead_btn
-      properties:
-        role: elevated-button
-        spacing:
-          padding: [null, '30', null, '30']
-        text: Save
-      type: Button
+    - components:
+      - data_bindings: []
+        event_bindings: {click: newhead_btn_click}
+        layout_properties: {col_xs: 8, row: CKGLZP, width_xs: 2}
+        name: newhead_btn
+        properties:
+          role: elevated-button
+          spacing:
+            margin: ['4', null, null, '0']
+            padding: [null, '30', null, '30']
+          text: New
+        type: Button
+      - event_bindings: {click: savehead_btn_click}
+        layout_properties: {col_xs: 10, row: CKGLZP, width_xs: 2}
+        name: savehead_btn
+        properties:
+          role: elevated-button
+          spacing:
+            padding: [null, '30', null, '30']
+          text: Save
+        type: Button
+      layout_properties: {grid_position: 'JOTDSY,EZCXYX'}
+      name: gp_buttons
+      properties: {}
+      type: GridPanel
     layout_properties: {grid_position: 'OXSKKR,CJLNVT'}
     name: header_card
     properties: {role: tonal-card}
@@ -220,7 +205,7 @@ components:
     properties: {}
     type: ColumnPanel
   layout_properties: {slot: default}
-  name: head_panel
+  name: hp_all
   properties: {col_widths: '{}', role: elevated-card}
   type: ColumnPanel
 - layout_properties: {slot: nav-right}
