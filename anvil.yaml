@@ -57,6 +57,20 @@ db_schema:
       type: datetime
     server: full
     title: dimension_results
+  files:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: path
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: file
+      type: media
+    - admin_ui: {order: 2, width: 200}
+      name: file_version
+      type: string
+    server: full
+    title: Files
   functional_questions:
     client: none
     columns:
@@ -283,11 +297,12 @@ db_schema:
 dependencies: []
 metadata: {description: 'Incoming Inspection ', title: Incoming Inspection}
 name: Inspect Form
+native_deps: {head_html: ins}
 package_name: Inspect_Form
 renamed: true
 runtime_options:
   client_version: '3'
-  server_spec: {base: python310-minimal}
+  server_spec: {base: python310-standard}
   server_version: python3-sandbox
   version: 2
 services:
@@ -297,6 +312,9 @@ services:
 - client_config: {}
   server_config: {test_mode: true}
   source: /runtime/services/anvil/email.yml
+- client_config: {}
+  server_config: {file_table: files}
+  source: /runtime/services/anvil/files.yml
 startup: {module: Inspect_head, type: form}
 startup_form: null
 uplink_visible: true

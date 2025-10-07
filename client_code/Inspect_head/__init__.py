@@ -205,6 +205,17 @@ class Inspect_head(Inspect_headTemplate):
       large=True,
       buttons=[("Close", None)]
     ) 
+
+  def btn_load_click(self, **event_args):
+    """Loads data files to tables"""
+    try:
+    # Call the server function
+      result = anvil.server.call('import_from_data_files', 'import.csv')
+      alert(result)
+
+    except Exception as e:
+      alert(f"Error: {str(e)}") 
+
     
     
 

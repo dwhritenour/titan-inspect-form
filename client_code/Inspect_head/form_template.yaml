@@ -273,6 +273,20 @@ components:
         padding: [null, '42', null, '42']
       text: Markings
     type: Button
+  - layout_properties: {grid_position: 'JASFUP,CVAMED'}
+    name: label_1_copy
+    properties: {bold: true, text: Utilities}
+    type: Label
+  - event_bindings: {click: btn_load_click}
+    layout_properties: {grid_position: 'DPVSIR,JBCGLO'}
+    name: btn_load
+    properties:
+      enabled: true
+      role: elevated-button
+      spacing:
+        padding: [null, '42', null, '42']
+      text: Load
+    type: Button
   layout_properties: {slot: left-nav}
   name: sidebar_panel
   properties: {}
