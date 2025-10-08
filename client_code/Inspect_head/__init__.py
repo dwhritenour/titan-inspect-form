@@ -221,25 +221,90 @@ class Inspect_head(Inspect_headTemplate):
       buttons=[("Close", None)]
     ) 
 
+  # Improved version of btn_import_click method for Inspect_head form
+  # Replace the existing btn_import_click method (lines 224-242) with this improved version
+
   def btn_import_click(self, **event_args):
+    """
+    Improved import handler with better error handling and user feedback.
+    Shows import progress and handles timeout issues gracefully.
+    """
     try:
-      # First, show what headers are in the CSV
-      csv_info = anvil.server.call('show_csv_headers', 'basket_import.csv')
+      # Show loading notification
+      with Notification("Checking CSV file..."):
+        # First, show what headers are in the CSV
+        csv_info = anvil.server.call('show_csv_headers', 'basket_import.csv')
+  
       print("CSV Headers:", csv_info['headers'])
       print("Sample Row:", csv_info['sample_row'])
-
-      # Confirm import
+  
+      # Show preview and confirm import
+      preview_message = (
+        f"CSV File Preview:\n\n"
+        f"Headers found: {', '.join(csv_info['headers'])}\n\n"
+        f"Sample row:\n"
+      )
+  
+      # Format sample row nicely
+      if csv_info['sample_row']:
+        for header, value in csv_info['sample_row'].items():
+          preview_message += f"  • {header}: {value or '(empty)'}\n"
+  
+      preview_message += "\n\nProceed with import?"
+  
       confirm = alert(
-        f"Found CSV with headers: {csv_info['headers']}\n\nSample row: {csv_info['sample_row']}\n\nProceed with import?",
-        title="CSV Preview",
+        preview_message,
+        title="CSV Import Preview",
         buttons=[("Yes, Import", True), ("Cancel", False)]
       )
-
+  
       if confirm:
-        result = anvil.server.call('import_from_data_files', 'basket_import.csv')
-        alert(result)
+        # Show progress notification
+        with Notification("Importing data... This may take a moment."):
+          # Call the improved import function
+          result = anvil.server.call('import_from_data_files', 'basket_import.csv')
+  
+        # Show detailed results
+        if result['success']:
+          alert(
+            result['message'],
+            title="✓ Import Successful",
+            buttons=[("OK", None)]
+          )
+        else:
+          # Show error details with option to retry
+          retry = alert(
+            result['message'],
+            title="⚠ Import Completed with Errors",
+            buttons=[("OK", False), ("View Statistics", True)]
+          )
+  
+          if retry:
+            # Show table statistics
+            stats = anvil.server.call('get_import_statistics')
+            stats_msg = (
+              f"Current Database Statistics:\n\n"
+              f"Total rows: {stats['total_rows']}\n"
+              f"Valid rows: {stats['valid_rows']}\n"
+              f"Empty rows: {stats['empty_rows']}"
+            )
+            alert(stats_msg, title="Database Statistics")
+  
+    except anvil.server.TimeoutError:
+      # Handle timeout specifically
+      error_msg = (
+        "Import operation timed out.\n\n"
+        "This usually happens with large CSV files. Try:\n"
+        "1. Splitting your CSV into smaller files\n"
+        "2. Removing empty rows from the CSV before import\n"
+        "3. Checking the database - some rows may have been imported"
+      )
+      alert(error_msg, title="⏱ Operation Timed Out")
+  
     except Exception as e:
-      alert(f"Error: {str(e)}")
+      # Handle other errors
+      error_msg = f"An error occurred during import:\n\n{str(e)}"
+      alert(error_msg, title="❌ Import Error")
 
   # ---------------------------
   # CASCADING DROPDOWN HANDLERS
