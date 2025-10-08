@@ -6,4 +6,4 @@ import anvil.tables.query as q
 from anvil.tables import app_tables
 import anvil.server
 
-results = app_tables.inspect_head.search()
+results = app_tables.inspect_head.search(i)
