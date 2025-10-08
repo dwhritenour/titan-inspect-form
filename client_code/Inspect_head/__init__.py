@@ -367,7 +367,8 @@ class Inspect_head(Inspect_headTemplate):
 
   def btn_servertest_click(self, **event_args):
     """This method is called when the button is clicked"""
-    anvil.server.call("print_tables")
+    result = anvil.server.call('get_part_code','INS-391')
+    print(result)
 
 
     

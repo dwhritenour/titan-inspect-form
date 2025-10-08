@@ -1,4 +1,4 @@
-simport anvil.files
+import anvil.files
 from anvil.files import data_files
 import anvil.email
 import anvil.tables as tables
@@ -7,7 +7,6 @@ from anvil.tables import app_tables
 import anvil.server
 
 @anvil.server.callable
-def print_tables():
-  results = app_tables.inspect_head.search(id_head="INS-319")
-  for row in results:
-    print(row['series'])
+def get_part_code(ins_id):
+  part_code = app_tables.inspect_head.get(id_head=ins_id)
+  return part_code
