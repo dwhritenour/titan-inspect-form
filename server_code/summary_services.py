@@ -6,4 +6,8 @@ import anvil.tables.query as q
 from anvil.tables import app_tables
 import anvil.server
 
-results = app_tables.inspect_head.search(i)
+@anvil.server.callable
+def print_tables():
+  results = app_tables.inspect_head.search(id_head="INS-319")
+  for row in results:
+    print(row['series'])

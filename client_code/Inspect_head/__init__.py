@@ -365,5 +365,9 @@ class Inspect_head(Inspect_headTemplate):
     """This method is called when an item is selected"""
     pass
 
+  def btn_servertest_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    anvil.server.call("print_tables")
+
 
     
