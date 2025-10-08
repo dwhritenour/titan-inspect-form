@@ -224,7 +224,7 @@ class Inspect_head(Inspect_headTemplate):
   def btn_import_click(self, **event_args):
     try:
       # First, show what headers are in the CSV
-      csv_info = anvil.server.call('show_csv_headers', 'ystrainer_import.csv')
+      csv_info = anvil.server.call('show_csv_headers', 'basket_import.csv')
       print("CSV Headers:", csv_info['headers'])
       print("Sample Row:", csv_info['sample_row'])
 
@@ -236,7 +236,7 @@ class Inspect_head(Inspect_headTemplate):
       )
 
       if confirm:
-        result = anvil.server.call('import_from_data_files', 'ystrainer_import.csv')
+        result = anvil.server.call('import_from_data_files', 'basket_import.csv')
         alert(result)
     except Exception as e:
       alert(f"Error: {str(e)}")
