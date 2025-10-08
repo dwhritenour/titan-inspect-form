@@ -233,7 +233,7 @@ class Inspect_head(Inspect_headTemplate):
       # Show loading notification
       with Notification("Checking CSV file..."):
         # First, show what headers are in the CSV
-        csv_info = anvil.server.call('show_csv_headers', 'basket_import.csv')
+        csv_info = anvil.server.call('show_csv_headers', 'all_import.csv')
   
       print("CSV Headers:", csv_info['headers'])
       print("Sample Row:", csv_info['sample_row'])
@@ -262,7 +262,7 @@ class Inspect_head(Inspect_headTemplate):
         # Show progress notification
         with Notification("Importing data... This may take a moment."):
           # Call the improved import function
-          result = anvil.server.call('import_from_data_files', 'basket_import.csv')
+          result = anvil.server.call('import_from_data_files', 'all_import.csv')
   
         # Show detailed results
         if result['success']:
