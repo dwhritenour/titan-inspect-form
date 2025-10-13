@@ -57,6 +57,55 @@ db_schema:
       type: datetime
     server: full
     title: dimension_results
+  document_questions:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: sort_no
+      type: number
+    - admin_ui: {order: 1, width: 200}
+      name: question_id
+      type: string
+    - admin_ui: {order: 2, width: 200}
+      name: product_series
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: question_text
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: is_active
+      type: bool
+    server: full
+    title: document_questions
+  document_results:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: inspection_id
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: sample_number
+      type: number
+    - admin_ui: {order: 2, width: 200}
+      name: question_id
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: pass_fail
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: note
+      type: string
+    - admin_ui: {order: 5, width: 200}
+      name: photo_media
+      type: media
+    - admin_ui: {order: 6, width: 200}
+      name: inspected_by
+      type: string
+    - admin_ui: {order: 7, width: 200}
+      name: update_datetime
+      type: datetime
+    server: full
+    title: document_results
   files:
     client: none
     columns:
