@@ -18,8 +18,8 @@ components:
     properties: {item_template: inspect_doc.row_questions}
     type: RepeatingPanel
   - layout_properties: {grid_position: 'OZLZEL,CDSMYN'}
-    name: btn_complete
-    properties: {align: right, role: elevated-button, text: Complete}
+    name: btn_doc_complete
+    properties: {align: right, role: elevated-button, text: Complete Doc Check}
     type: Button
   layout_properties: {grid_position: 'TNERAC,COCLGH'}
   name: document_card
