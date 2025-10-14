@@ -103,7 +103,7 @@ class Inspect_head(Inspect_headTemplate):
     self.clear_header_fields()
     self.enable_header_fields(True)
     self.content_panel.clear()
-    
+
 
   def savehead_btn_click(self, **event_args):
     header = self.read_header_from_ui()
@@ -169,6 +169,10 @@ class Inspect_head(Inspect_headTemplate):
 
   # Loads the Visual Check Form
   def vis_chk_btn_click(self, **event_args):
+    # Check if we need to validate the current form before navigating
+    if not self._validate_current_form_before_navigation():
+      return  # Validation failed, don't navigate
+
     # Clear the current content panel
     self.content_panel.clear()
     self.visual_form = inspect_visual(
@@ -180,6 +184,10 @@ class Inspect_head(Inspect_headTemplate):
     self.content_panel.add_component(self.visual_form)
 
   def dim_chk_btn_click(self, **event_args):
+    # Check if we need to validate the current form before navigating
+    if not self._validate_current_form_before_navigation():
+      return  # Validation failed, don't navigate
+
     self.content_panel.clear()
     self.dimension_form = inspect_dimension(
       inspection_id=self.id_head_box.text,
@@ -189,6 +197,10 @@ class Inspect_head(Inspect_headTemplate):
     self.content_panel.add_component(self.dimension_form)
 
   def func_chk_btn_click(self, **event_args):
+    # Check if we need to validate the current form before navigating
+    if not self._validate_current_form_before_navigation():
+      return  # Validation failed, don't navigate
+
     self.content_panel.clear()
     self.functional_form = inspect_functional(
       inspection_id=self.id_head_box.text,
@@ -196,6 +208,37 @@ class Inspect_head(Inspect_headTemplate):
       sample_size=int(self.sam_qty_box.text or 1)
     )
     self.content_panel.add_component(self.functional_form)
+
+  def _validate_current_form_before_navigation(self):
+    """
+    Helper method to validate the current form before navigating away.
+    
+    This checks if the current form in the content_panel has a 
+    validate_before_navigation method and calls it if present.
+    
+    Returns:
+        True if validation passes or no validation needed
+        False if validation fails
+    """
+    # Get the current form from the content panel
+    if len(self.content_panel.get_components()) > 0:
+      current_form = self.content_panel.get_components()[0]
+
+      # Check if the form has a validate_before_navigation method
+      if hasattr(current_form, 'validate_before_navigation'):
+        print(f"Validating {type(current_form).__name__} before navigation...")
+
+        # Call the validation method
+        is_valid = current_form.validate_before_navigation()
+
+        if not is_valid:
+          print(f"Validation failed for {type(current_form).__name__}")
+          return False
+        else:
+          print(f"Validation passed for {type(current_form).__name__}")
+
+    # No validation needed or validation passed
+    return True
 
   def btn_marking_click(self, **event_args):
     """Opens the marking reference information in a pop-up alert"""
@@ -234,36 +277,36 @@ class Inspect_head(Inspect_headTemplate):
       with Notification("Checking CSV file..."):
         # First, show what headers are in the CSV
         csv_info = anvil.server.call('show_csv_headers', 'all_import.csv')
-  
+
       print("CSV Headers:", csv_info['headers'])
       print("Sample Row:", csv_info['sample_row'])
-  
+
       # Show preview and confirm import
       preview_message = (
         f"CSV File Preview:\n\n"
         f"Headers found: {', '.join(csv_info['headers'])}\n\n"
         f"Sample row:\n"
       )
-  
+
       # Format sample row nicely
       if csv_info['sample_row']:
         for header, value in csv_info['sample_row'].items():
           preview_message += f"  • {header}: {value or '(empty)'}\n"
-  
+
       preview_message += "\n\nProceed with import?"
-  
+
       confirm = alert(
         preview_message,
         title="CSV Import Preview",
         buttons=[("Yes, Import", True), ("Cancel", False)]
       )
-  
+
       if confirm:
         # Show progress notification
         with Notification("Importing data... This may take a moment."):
           # Call the improved import function
           result = anvil.server.call('import_from_data_files', 'all_import.csv')
-  
+
         # Show detailed results
         if result['success']:
           alert(
@@ -278,7 +321,7 @@ class Inspect_head(Inspect_headTemplate):
             title="⚠ Import Completed with Errors",
             buttons=[("OK", False), ("View Statistics", True)]
           )
-  
+
           if retry:
             # Show table statistics
             stats = anvil.server.call('get_import_statistics')
@@ -289,7 +332,7 @@ class Inspect_head(Inspect_headTemplate):
               f"Empty rows: {stats['empty_rows']}"
             )
             alert(stats_msg, title="Database Statistics")
-  
+
     except anvil.server.TimeoutError:
       # Handle timeout specifically
       error_msg = (
@@ -300,7 +343,7 @@ class Inspect_head(Inspect_headTemplate):
         "3. Checking the database - some rows may have been imported"
       )
       alert(error_msg, title="⏱ Operation Timed Out")
-  
+
     except Exception as e:
       # Handle other errors
       error_msg = f"An error occurred during import:\n\n{str(e)}"

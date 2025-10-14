@@ -205,3 +205,63 @@ class inspect_doc(inspect_docTemplate):
       # ===== ERROR HANDLING =====
       print(f"ERROR calling server: {str(e)}")
       alert(f"Error: {str(e)}")
+
+  def btn_doc_complete_click(self, **event_args):
+    """
+    Handle Complete Doc Check button click.
+    
+    This method:
+    1. Saves current results to memory (document_results)
+    2. Runs validation to ensure all questions are answered
+    3. Saves to database if validation passes
+    
+    This button serves as the primary completion action for the document check.
+    """
+    print("=== COMPLETE DOCUMENT CHECK BUTTON CLICKED ===")
+    print(f"Inspection ID: {self.inspection_id}")
+
+    # ===== SAVE AND VALIDATE =====
+    # Use the validation module's validate_before_complete which saves and validates
+    if not validation_doc.validate_before_complete(self):
+      # Validation failed - alerts are shown by the validation module
+      return
+
+    # ===== SAVE TO DATABASE =====
+    # At this point, validation passed, so save to database
+    inspector_name = "test_inspector"  # TODO: Get from logged-in user
+
+    try:
+      result = anvil.server.call(
+        'save_document_inspection_results',
+        self.inspection_id,
+        self.question_results,
+        inspector_name
+      )
+
+      print(f"Server response: {result}")
+
+      if result['success']:
+        alert(f"Document check completed: {result['message']}")
+      else:
+        alert(f"Save failed: {result['message']}")
+
+    except Exception as e:
+      print(f"ERROR calling server: {str(e)}")
+      alert(f"Error saving to database: {str(e)}")
+
+  def validate_before_navigation(self):
+    """
+    Validate the form before navigating away.
+    
+    This method is called by the parent form (Inspect_head) before loading
+    a different inspection form. It saves current results and validates them.
+    
+    Returns:
+        True if validation passes (safe to navigate away)
+        False if validation fails (should stay on this form)
+    """
+    print("=== VALIDATING BEFORE NAVIGATION ===")
+
+    # Use the validation module's validate_before_complete
+    # This will save current results and validate them
+    return validation_doc.validate_before_complete(self)
