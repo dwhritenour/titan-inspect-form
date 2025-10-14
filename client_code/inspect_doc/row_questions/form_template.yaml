@@ -7,7 +7,8 @@ components:
         margin: ['0', null, '0', null]
         padding: ['4', null, '4', null]
     type: Label
-  - layout_properties: {col_xs: 4, row: HGHCWZ, width_xs: 2}
+  - event_bindings: {clicked: radio_button_pass_clicked}
+    layout_properties: {col_xs: 4, row: HGHCWZ, width_xs: 2}
     name: radio_button_pass
     properties:
       spacing:
@@ -15,7 +16,8 @@ components:
         padding: ['4', '0', '4', null]
       text: Accept
     type: RadioButton
-  - layout_properties: {col_xs: 6, row: HGHCWZ, width_xs: 2}
+  - event_bindings: {clicked: radio_button_fail_clicked}
+    layout_properties: {col_xs: 6, row: HGHCWZ, width_xs: 2}
     name: radio_button_fail
     properties:
       spacing:
@@ -23,7 +25,8 @@ components:
         padding: ['4', '0', '4', null]
       text: Reject
     type: RadioButton
-  - layout_properties: {col_xs: 8, row: HGHCWZ, width_xs: 1}
+  - event_bindings: {clicked: radio_button_na_clicked}
+    layout_properties: {col_xs: 8, row: HGHCWZ, width_xs: 1}
     name: radio_button_na
     properties:
       spacing:

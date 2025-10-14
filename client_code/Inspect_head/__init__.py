@@ -165,7 +165,7 @@ class Inspect_head(Inspect_headTemplate):
   def doc_chk_btn_click(self, **event_args):
     # Immediately open the Documentation step, passing the header id
     self.content_panel.clear()
-    self.content_panel.add_component(inspect_doc(header_id=self.id_head_box.text))
+    self.content_panel.add_component(inspect_doc(inspection_id=self.id_head_box.text))
 
   # Loads the Visual Check Form
   def vis_chk_btn_click(self, **event_args):
