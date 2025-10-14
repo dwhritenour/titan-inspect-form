@@ -1,86 +1,207 @@
+# inspect_doc form - Document Check Interface
+# This form handles the document check process for incoming materials
+# It presents questions for the entire lot (not per sample) and collects pass/fail responses
+
 from ._anvil_designer import inspect_docTemplate
 from anvil import *
 import anvil.server
-import anvil.tables as tables
-import anvil.tables.query as q
-from anvil.tables import app_tables
-import validation_doc
+import validation_doc  # Custom validation module for form validation
 
 class inspect_doc(inspect_docTemplate):
-  def __init__(self, header_id=None, **properties):
+  """
+  Main form for conducting document checks on incoming shipments.
+  
+  This form:
+  - Displays document check questions specific to a product series
+  - Collects pass/fail responses, notes, and photos for each question
+  - Saves all document check results to the database when complete
+  
+  Note: Document checks apply to the entire lot, not individual samples,
+  so there is no sample cycling functionality.
+  """
+
+  def __init__(self, inspection_id=None, **properties):
+    """
+    Initialize the document check form with inspection details.
+    
+    Args:
+        inspection_id: Unique identifier for this inspection (e.g., 'INT-110')
+        properties: Additional properties (can also contain inspection_id)
+    
+    Note: Document check questions are universal (apply to all product series),
+    so product_series is not needed.
+    """
     self.init_components(**properties)
-    self.header_id = header_id
-    self.id_head_box.text = header_id
-    print("inspect_doc loaded. header_id =", self.header_id)
 
-    # Set radio defaults
-    self.inda_rad.value    = "ACCEPT"
-    self.indr_rad.value    = "REJECT"
-    self.indna_rad.value   = "NOT APPLICABLE"
-    self.counta_rad.value  = "ACCEPT"
-    self.countr_rad.value  = "REJECT"
-    self.countna_rad.value = "NOT APPLICABLE"
-    self.mtra_rad.value    = "ACCEPT"
-    self.mtrr_rad.value    = "REJECT"
-    self.mtrna_rad.value   = "NOT APPLICABLE"
-    self.hyda_rad.value    = "ACCEPT"
-    self.hydr_rad.value    = "REJECT"
-    self.hydrona_rad.value = "NOT APPLICABLE"
-    self.packa_rad.value    = "ACCEPT"
-    self.packr_rad.value    = "REJECT"
-    self.packna_rad.value = "NOT APPLICABLE"
+    # ===== INITIALIZATION SECTION =====
+    # Store the inspection metadata - can come from parameter or properties
+    self.inspection_id = inspection_id or properties.get('inspection_id')
 
-  def read_docs_from_ui(self) -> dict:
-    # NOTE: If your RadioButtons use group_name="radioIden"/etc.,
-    # anvil's group value getter is the module-level function:
-    #   from anvil import get_group_value
-    #   ident_val = get_group_value("radioIden")
-    # If self.inda_rad.get_group_value(...) throws, switch to get_group_value(...)
-    return {
-      # Gets the radio button selected in a radio group
-      "id_head":    self.id_head_box.text,
-      "pack_chk":   self.packa_rad.get_group_value("radioPack"),
-      "ident_chk":  self.inda_rad.get_group_value("radioIden"),
-      "count_chk":  self.counta_rad.get_group_value("radioCount"),
-      "mtr_chk":    self.mtra_rad.get_group_value("radioMTR"),
-      "hydro_chk":  self.hyda_rad.get_group_value("radioHydro"),
-      "pack_img":   self.pack_fl.file,
-      "comments":   self.comment_area.text.strip()
-    }
+    # Display ID in the form
+    if self.inspection_id:
+      self.id_head_box.text = self.inspection_id
 
-  def save_btn_click(self, **event_args):
-    documents = self.read_docs_from_ui()
+    print(f"inspect_doc loaded. inspection_id = {self.inspection_id}")
 
-    # Call validation_doc module
-    if not validation_doc.validate_doc(documents):
+    # ===== STATE MANAGEMENT =====
+    self.questions = []      # Will hold the list of questions from database
+    self.question_results = {}  # Dictionary to store all document check results
+    # Structure: {'Q001': {'pass_fail': 'Pass', 'note': '', 'photo_media': None}}
+
+    # Load questions and set up the form
+    self.setup_inspection()
+
+  def setup_inspection(self):
+    """
+    Initial setup: Load questions from database and prepare the form.
+    
+    This method:
+    1. Fetches all active document check questions
+    2. Loads the questions into the repeating panel
+    
+    Note: Document questions are universal (not product-specific)
+    """
+    # ===== LOAD QUESTIONS FROM DATABASE =====
+    # Server call to get all active document check questions
+    self.questions = anvil.server.call('get_document_questions')
+
+    # Check if questions were found
+    if not self.questions:
+      alert(f"No document check questions found in the database.")
       return
 
-    # Used to determine Save or Update
-    if anvil.server.call("if_exist",(documents["id_head"])):
-      anvil.server.call(
-        "update_docs",
-        documents["id_head"],
-        documents["pack_chk"],
-        documents["ident_chk"],
-        documents["count_chk"],
-        documents["mtr_chk"],
-        documents["hydro_chk"],
-        documents["pack_img"],
-        documents["comments"]
+    # ===== INITIALIZE UI =====
+    self.load_questions()  # Display questions
+
+  def load_questions(self):
+    """
+    Load questions into the repeating panel.
+    
+    This method:
+    1. Retrieves any previously saved answers
+    2. Creates a list of question items with saved data (if any)
+    3. Updates the repeating panel to display the questions
+    """
+    # ===== RETRIEVE SAVED RESULTS =====
+    # Get previously saved results (empty dict if new)
+    saved_results = self.question_results
+
+    # ===== BUILD QUESTION ITEMS =====
+    question_items = []
+    for question in self.questions:
+      # Create item dictionary for each question
+      # This will be passed to the row_questions form
+      item = {
+        'question_id': question['question_id'],      # e.g., 'Q001'
+        'question_text': question['question_text'],  # e.g., 'Packaging acceptable?'
+
+        # Restore previous answers if they exist
+        'pass_fail': saved_results.get(question['question_id'], {}).get('pass_fail', None),
+        'note': saved_results.get(question['question_id'], {}).get('note', ''),
+        'photo_media': saved_results.get(question['question_id'], {}).get('photo_media', None)
+      }
+      question_items.append(item)
+
+    # ===== UPDATE UI =====
+    # Setting items triggers the repeating panel to create row_questions forms
+    self.repeating_panel_questions.items = question_items
+
+  def save_current_results(self):
+    """
+    Save all answers to memory.
+    
+    This method:
+    1. Iterates through all question rows
+    2. Collects results from each row
+    3. Stores in the question_results dictionary
+    
+    Note: This saves to memory only, not to database yet
+    """
+    # ===== PREPARE STORAGE =====
+    self.question_results = {}
+
+    # ===== DEBUG OUTPUT =====
+    print(f"=== SAVING DOCUMENT CHECK RESULTS ===")
+
+    # ===== COLLECT RESULTS FROM EACH QUESTION ROW =====
+    # Get all row components from the repeating panel
+    components = self.repeating_panel_questions.get_components()
+    print(f"Found {len(components)} document question components")
+
+    # Iterate through each question row
+    for row in components:
+      # Check if this row has the get_result method (it should)
+      if hasattr(row, 'get_result'):
+        # Get the result dictionary from the row
+        result = row.get_result()
+
+        # Debug output
+        print(f"  Q{result['question_id']}: {result['pass_fail']} - Note: {result.get('note', 'none')}")
+
+        # Store result indexed by question_id
+        self.question_results[result['question_id']] = result
+
+    # ===== SUMMARY OUTPUT =====
+    print(f"Total saved: {len(self.question_results)} questions")
+
+  def save_btn_click(self, **event_args):
+    """
+    Handle Save button click - save all document check results.
+    
+    This method:
+    1. Collects all current answers from the form
+    2. Validates that all questions are answered
+    3. Calls server function to save results to database
+    4. Displays success/failure message to user
+    """
+    print("=== SAVE DOCUMENT CHECK BUTTON CLICKED ===")
+    print(f"Inspection ID: {self.inspection_id}")
+
+    # ===== SAVE CURRENT STATE =====
+    self.save_current_results()
+
+    # ===== VALIDATION =====
+    # Call validation_doc module to ensure all required fields are filled
+    if not validation_doc.validate_doc(self.question_results):
+      return
+
+    # Check if we have results to save
+    if not self.question_results:
+      print("ERROR: No results to save!")
+      alert("No results to save!")
+      return
+
+    # ===== DEBUG OUTPUT =====
+    print(f"Saving {len(self.question_results)} questions")
+
+    # ===== PREPARE FOR DATABASE SAVE =====
+    # TODO: Get actual inspector name from logged-in user
+    inspector_name = "test_inspector"  # Hard-coded for testing
+
+    print(f"  - inspection_id: {self.inspection_id}")
+    print(f"  - inspector: {inspector_name}")
+    print(f"  - questions: {list(self.question_results.keys())}")
+
+    # ===== SAVE TO DATABASE =====
+    try:
+      # Call server function to save all results
+      result = anvil.server.call(
+        'save_document_inspection_results',  # Server function name
+        self.inspection_id,                  # Unique inspection ID
+        self.question_results,               # All question data
+        inspector_name                       # Inspector who performed check
       )
-      Notification("Update Saved").show()
-    else:          
-      # You probably want to associate docs to header_id here as well:
-      # anvil.server.call("save_docs", self.header_id, ...)
-      anvil.server.call(
-        "save_docs",
-        documents["id_head"],
-        documents["pack_chk"],
-        documents["ident_chk"],
-        documents["count_chk"],
-        documents["mtr_chk"],
-        documents["hydro_chk"],
-        documents["pack_img"],
-        documents["comments"]
-      )
-      Notification("Documents Saved").show()
+
+      print(f"Server response: {result}")
+
+      # ===== HANDLE RESPONSE =====
+      if result['success']:
+        alert(f"Document check saved: {result['message']}")
+        # TODO: Navigate back to main menu or next inspection step
+      else:
+        alert(f"Save failed: {result['message']}")
+
+    except Exception as e:
+      # ===== ERROR HANDLING =====
+      print(f"ERROR calling server: {str(e)}")
+      alert(f"Error: {str(e)}")

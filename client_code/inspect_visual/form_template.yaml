@@ -5,7 +5,7 @@ components:
       name: vishead_lbl
       properties: {bold: true, role: title, text: Visual Check}
       type: Label
-    - layout_properties: {col_xs: 10, row: NDBWRX, width_xs: 2}
+    - layout_properties: {col_xs: 9, row: NDBWRX, width_xs: 3}
       name: id_head_box
       properties: {align: right, enabled: false}
       type: TextBox

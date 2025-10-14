@@ -46,7 +46,7 @@ components:
         padding: ['0', null, '0', null]
     type: Label
   - layout_properties: {col_xs: 0, row: AVXRCC, width_xs: 12}
-    name: text_area_notes
+    name: text_area_note
     properties:
       margin: ['0', null, '0', null]
     type: TextArea
