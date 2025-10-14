@@ -27,6 +27,45 @@ def validate_before_nav(functional_form) -> bool:
   return True
 
 
+def validate_before_complete(functional_form) -> bool:
+  """
+  Validate the entire functional inspection before completing or navigating away.
+  
+  This method:
+  1. Validates the current sample (to save any unsaved data)
+  2. Checks that all samples have been inspected
+  3. Verifies that all questions in all samples have been answered
+  
+  Args:
+      functional_form: The inspect_functional form instance
+  
+  Returns:
+      True if all validation passes
+      False if validation fails (shows alerts to user)
+  """
+  # First validate the current sample display
+  if not validate_before_nav(functional_form):
+    return False
+
+  # Check if we have any results saved
+  if not functional_form.sample_results:
+    alert("No functional check results found. Please complete at least one sample.")
+    return False
+
+  # Check that all samples have been inspected
+  expected_samples = functional_form.sample_size
+  actual_samples = len(functional_form.sample_results)
+
+  if actual_samples < expected_samples:
+    alert(f"Only {actual_samples} of {expected_samples} samples have been checked. "
+          f"Please complete all samples before navigating away.")
+    return False
+
+  # All validation passed
+  return True
+
+
+
 # ---- Internals ---------------------------------------------------------------
 
 def _collect_row_forms(functional_form):

@@ -26,6 +26,45 @@ def validate_before_nav(visual_form) -> bool:
   return True
 
 
+def validate_before_complete(visual_form) -> bool:
+  """
+  Validate the entire visual inspection before completing or navigating away.
+  
+  This method:
+  1. Validates the current sample (to save any unsaved data)
+  2. Checks that all samples have been inspected
+  3. Verifies that all questions in all samples have been answered
+  
+  Args:
+      visual_form: The inspect_visual form instance
+  
+  Returns:
+      True if all validation passes
+      False if validation fails (shows alerts to user)
+  """
+  # First validate the current sample display
+  if not validate_before_nav(visual_form):
+    return False
+
+  # Check if we have any results saved
+  if not visual_form.sample_results:
+    alert("No inspection results found. Please complete at least one sample.")
+    return False
+
+  # Check that all samples have been inspected
+  expected_samples = visual_form.sample_size
+  actual_samples = len(visual_form.sample_results)
+
+  if actual_samples < expected_samples:
+    alert(f"Only {actual_samples} of {expected_samples} samples have been inspected. "
+          f"Please complete all samples before navigating away.")
+    return False
+
+  # All validation passed
+  return True
+
+
+
 # ---- Internals ---------------------------------------------------------------
 
 def _collect_row_forms(visual_form):

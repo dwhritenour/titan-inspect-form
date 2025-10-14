@@ -286,4 +286,24 @@ class inspect_functional(inspect_functionalTemplate):
       # ===== ERROR HANDLING =====
       print(f"ERROR calling server: {str(e)}")
       alert(f"Error: {str(e)}")
+
+  def validate_before_navigation(self):
+    """
+    Validate the form before navigating away.
+    
+    This method is called by the parent form (Inspect_head) before loading
+    a different inspection form. It saves current results and validates them.
+    
+    Returns:
+        True if validation passes (safe to navigate away)
+        False if validation fails (should stay on this form)
+    """
+    print("=== VALIDATING FUNCTIONAL INSPECTION BEFORE NAVIGATION ===")
+
+    # Save current sample data before validation
+    self.save_current_sample()
+
+    # Use the validation module's validate_before_complete
+    # This will validate all saved sample results
+    return validation_functional.validate_before_complete(self)
  

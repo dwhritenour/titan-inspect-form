@@ -5,6 +5,18 @@ components:
     properties: {bold: true, role: headline, text: Incoming Inspection Form}
     type: Label
   - components:
+    - data_bindings: []
+      event_bindings: {click: newhead_btn_click}
+      layout_properties: {grid_position: 'KENXZL,QBDQRB'}
+      name: newhead_btn
+      properties:
+        align: right
+        role: elevated-button
+        spacing:
+          margin: ['4', null, null, '0']
+          padding: [null, '30', null, '30']
+        text: New
+      type: Button
     - components:
       - components:
         - layout_properties: {col_xs: 0, row: XQIBIC, width_xs: 2}
@@ -172,21 +184,11 @@ components:
       properties: {role: outlined-card}
       type: ColumnPanel
     - components:
-      - data_bindings: []
-        event_bindings: {click: newhead_btn_click}
-        layout_properties: {col_xs: 8, row: CKGLZP, width_xs: 2}
-        name: newhead_btn
-        properties:
-          role: elevated-button
-          spacing:
-            margin: ['4', null, null, '0']
-            padding: [null, '30', null, '30']
-          text: New
-        type: Button
       - event_bindings: {click: savehead_btn_click}
         layout_properties: {col_xs: 10, row: CKGLZP, width_xs: 2}
         name: savehead_btn
         properties:
+          align: right
           role: elevated-button
           spacing:
             padding: [null, '30', null, '30']
