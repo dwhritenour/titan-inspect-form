@@ -1,0 +1,65 @@
+components:
+- components:
+  - layout_properties: {col_xs: 0, row: HGHCWZ, width_xs: 4}
+    name: label_question
+    properties:
+      spacing:
+        margin: ['0', null, '0', null]
+        padding: ['4', null, '4', null]
+    type: Label
+  - layout_properties: {col_xs: 4, row: HGHCWZ, width_xs: 2}
+    name: radio_button_pass
+    properties:
+      spacing:
+        margin: ['0', null, '0', null]
+        padding: ['4', '0', '4', null]
+      text: Accept
+    type: RadioButton
+  - layout_properties: {col_xs: 6, row: HGHCWZ, width_xs: 2}
+    name: radio_button_fail
+    properties:
+      spacing:
+        margin: ['0', null, '0', null]
+        padding: ['4', '0', '4', null]
+      text: Reject
+    type: RadioButton
+  - layout_properties: {col_xs: 8, row: HGHCWZ, width_xs: 1}
+    name: radio_button_na
+    properties:
+      spacing:
+        margin: ['0', null, '0', null]
+        padding: ['4', '0', '4', null]
+      text: N/A
+    type: RadioButton
+  - layout_properties: {col_xs: 9, row: HGHCWZ, width_xs: 2}
+    name: image_fl
+    properties:
+      spacing:
+        margin: ['0', null, '0', null]
+        padding: ['8', '0', '4', '0']
+    type: FileLoader
+  - layout_properties: {col_xs: 11, row: HGHCWZ, width_xs: 1}
+    name: label_photo_status
+    properties:
+      spacing:
+        margin: ['5', null, '0', null]
+        padding: ['0', null, '0', null]
+    type: Label
+  - layout_properties: {col_xs: 0, row: AVXRCC, width_xs: 12}
+    name: text_area_notes
+    properties:
+      margin: ['0', null, '0', null]
+    type: TextArea
+  layout_properties: {grid_position: 'XGDPYU,QLOXKK'}
+  name: gp_panel
+  properties:
+    spacing:
+      margin: ['0', null, '0', null]
+  type: GridPanel
+container:
+  properties:
+    spacing:
+      margin: ['0', null, null, null]
+      padding: [null, null, null, null]
+  type: ColumnPanel
+is_package: true
