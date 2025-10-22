@@ -413,5 +413,87 @@ class Inspect_head(Inspect_headTemplate):
     result = anvil.server.call('get_part_code','INS-391')
     print(result['prod_code'])
 
+  def btn_complete_click(self, **event_args):
+    """
+    Complete the inspection and create summary record.
+    
+    This method:
+    1. Validates all inspection sections are complete
+    2. Calculates rejection metrics (unit_rejects and all_rejects)
+    3. Creates summary record in inspect_summary table
+    4. Marks all result records as complete (sets complete flag to True)
+    5. Displays confirmation to user
+    """
+    print("=== COMPLETE INSPECTION BUTTON CLICKED ===")
+
+    inspection_id = self.id_head_box.text
+
+    if not inspection_id:
+      alert("No inspection ID found. Please save the header first.")
+      return
+
+    # Confirm with user
+    user_confirmed = confirm(
+      f"Complete inspection {inspection_id}?\n\n"
+      "This will:\n"
+      "• Lock all inspection data (no further edits)\n"
+      "• Create a summary record\n"
+      "• Calculate rejection metrics\n\n"
+      "Continue?"
+    )
+
+    if not user_confirmed:
+      return
+
+    # Show progress
+    with Notification("Validating inspection data...", style='info'):
+      # Validate that all sections have been completed
+      validation_result = anvil.server.call('validate_inspection_complete', inspection_id)
+
+    if not validation_result['valid']:
+      alert(
+        f"Cannot complete inspection. Missing data:\n\n{validation_result['message']}\n\n"
+        "Please complete all inspection sections before finalizing."
+      )
+      return
+
+    # Complete the inspection
+    try:
+      with Notification("Creating summary and locking data...", style='info'):
+        result = anvil.server.call(
+          'complete_inspection',
+          inspection_id,
+          self.ins_date_box.date,
+          self.po_numb_box.text,
+          self.rel_numb_box.text,
+          self.prod_code_box.selected_value
+        )
+
+      if result['success']:
+        # Show success with metrics
+        alert(
+          f"✓ Inspection {inspection_id} completed successfully!\n\n"
+          f"Summary:\n"
+          f"• Unit Rejects: {result['unit_rejects']}\n"
+          f"• Total Rejects: {result['all_rejects']}\n"
+          f"• Disposition: {result['disposition']}\n\n"
+          "All data has been locked and summary created."
+        )
+
+        # Disable editing and complete button
+        self.enable_header_fields(False)
+        self.btn_complete.enabled = False
+        self.status_box.text = "Completed"
+
+        # Optionally show summary form
+        # self.show_summary_form(inspection_id)
+
+      else:
+        alert(f"Error completing inspection: {result['message']}")
+
+    except Exception as e:
+      print(f"ERROR completing inspection: {str(e)}")
+      alert(f"Error completing inspection:\n\n{str(e)}")
+
 
     

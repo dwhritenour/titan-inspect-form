@@ -259,7 +259,8 @@ components:
         padding: [null, '40', null, '40']
       text: Functional
     type: Button
-  - layout_properties: {grid_position: 'THDNNQ,RQWIPI'}
+  - event_bindings: {click: btn_complete_click}
+    layout_properties: {grid_position: 'THDNNQ,RQWIPI'}
     name: btn_complete
     properties:
       role: elevated-button
