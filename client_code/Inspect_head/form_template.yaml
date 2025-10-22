@@ -268,6 +268,15 @@ components:
         padding: [null, '40', null, '40']
       text: Complete
     type: Button
+  - event_bindings: {click: btn_summary_click}
+    layout_properties: {grid_position: 'ZWGPFD,KKOVTB'}
+    name: btn_summary
+    properties:
+      role: elevated-button
+      spacing:
+        padding: [null, '40', null, '40']
+      text: Summary
+    type: Button
   - layout_properties: {grid_position: 'CGLMXX,RWWXKM'}
     name: label_1
     properties: {bold: true, text: Reference Data}

@@ -9,6 +9,7 @@ from ..inspect_functional import inspect_functional
 import validation_head
 from ..ref_marking import ref_marking
 from ..ref_sample import ref_sample
+from ..summary import summary
 
 """VARIABLES"""
 STATUS_IN_PROGRESS = "In Progress"
@@ -466,7 +467,8 @@ class Inspect_head(Inspect_headTemplate):
           self.ins_date_box.date,
           self.po_numb_box.text,
           self.rel_numb_box.text,
-          self.prod_code_box.selected_value
+          self.prod_code_box.selected_value,
+          self.sam_qty_box.text
         )
 
       if result['success']:
@@ -494,6 +496,12 @@ class Inspect_head(Inspect_headTemplate):
     except Exception as e:
       print(f"ERROR completing inspection: {str(e)}")
       alert(f"Error completing inspection:\n\n{str(e)}")
+
+  def btn_summary_click(self, **event_args):
+    
+    self.content_panel.clear()
+    
+    self.content_panel.add_component(self.summary_form)
 
 
     

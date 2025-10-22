@@ -4,62 +4,108 @@ components:
     name: dochead_lbl_copy
     properties: {bold: true, role: title, text: Inspection Summary}
     type: Label
-  - layout_properties: {grid_position: 'NBFDJR,OUNYBH'}
-    name: samp_qty_vw
-    properties: {text: Sample Quantity, visible: true}
-    type: Label
-  - layout_properties: {grid_position: 'NBFDJR,LVXEZQ'}
-    name: unitaccept_vw
-    properties: {text: Total Units Accepted}
-    type: Label
-  - layout_properties: {grid_position: 'NBFDJR,ENVGRI'}
-    name: unitregject_vw
-    properties: {text: Total Units Rejected}
-    type: Label
-  - layout_properties: {grid_position: 'NBFDJR,WEELHL'}
-    name: totrejects_vw
-    properties: {text: Total Number of Rejects}
-    type: Label
-  - layout_properties: {grid_position: 'WUKFKA,HUFGWD ORSWPS,TFSEFJ'}
-    name: sampsum_box
-    properties: {}
-    type: TextBox
-  - layout_properties: {grid_position: 'WUKFKA,HUFGWD EYTEKC,DTJTKJ'}
-    name: sumid_lbl
-    properties: {text: 'ID Number:'}
-    type: Label
-  - layout_properties: {grid_position: 'WUKFKA,HUFGWD VSNHBO,VPULXY'}
-    name: sumid_box
-    properties: {}
-    type: TextBox
-  - layout_properties: {grid_position: 'WUKFKA,WDYGFV'}
-    name: taunits_box
-    properties: {}
-    type: TextBox
-  - layout_properties: {grid_position: 'WUKFKA,WDYGFV EOTBGY,ASBFFY'}
-    name: inspectlink_lbl
-    properties: {text: 'Inspection Link:'}
-    type: Label
-  - layout_properties: {grid_position: 'WUKFKA,WDYGFV FQZSXN,WALZGQ'}
-    name: inspectlink_box
-    properties: {}
-    type: TextBox
-  - layout_properties: {grid_position: 'WUKFKA,RKDPZG YMXGRY,BKMGEA'}
-    name: trunits_box
-    properties: {}
-    type: TextBox
-  - layout_properties: {grid_position: 'WUKFKA,RKDPZG SVIRYR,ZZPFYR'}
-    name: sumdate_lbl
-    properties: {text: 'Completed Date:'}
-    type: Label
-  - layout_properties: {grid_position: 'WUKFKA,RKDPZG ZCFCIE,CLCDZV'}
-    name: sumdate_box
-    properties: {}
-    type: TextBox
-  - layout_properties: {grid_position: 'WUKFKA,SVSYGT'}
-    name: tnrejects_box
-    properties: {}
-    type: TextBox
+  - components:
+    - layout_properties: {grid_position: 'FWSOXG,VYEWDY GNCWLR,JOZXBF'}
+      name: lbl_inspect_id
+      properties: {role: null, text: 'Inspection Number:'}
+      type: Label
+    - layout_properties: {grid_position: 'FWSOXG,VYEWDY UDWCCL,JHOZOO'}
+      name: sumdate_lbl
+      properties: {role: null, text: 'Completion Date:'}
+      type: Label
+    - layout_properties: {grid_position: 'FWSOXG,FDUFTU MOXIWI,VDXRVP'}
+      name: box_inspection_id
+      properties: {}
+      type: TextBox
+    - layout_properties: {grid_position: 'FWSOXG,FDUFTU ZDBDHI,RRQRPY'}
+      name: box_complete_date
+      properties: {}
+      type: TextBox
+    layout_properties: {grid_position: 'DCHQJB,YAOFYX'}
+    name: outlined_card_4
+    properties: {role: outlined-card}
+    type: ColumnPanel
+  - components:
+    - layout_properties: {grid_position: 'PWQSGL,OKACRR'}
+      name: lbl_po_numb
+      properties: {text: 'PO Number:'}
+      type: Label
+    - layout_properties: {grid_position: 'PWQSGL,YWDXDG'}
+      name: box_po_numb
+      properties: {}
+      type: TextBox
+    - layout_properties: {grid_position: 'CXJDWD,TAVCPY'}
+      name: lbl_rel_numb
+      properties: {text: 'Release Number:'}
+      type: Label
+    - layout_properties: {grid_position: 'CXJDWD,NRSWTT'}
+      name: box_rel_numb
+      properties: {}
+      type: TextBox
+    layout_properties: {grid_position: 'DCHQJB,MNBLIY'}
+    name: outlined_card_5
+    properties: {role: outlined-card}
+    type: ColumnPanel
+  - components:
+    - layout_properties: {grid_position: 'PMSVXQ,CSTUTJ'}
+      name: lbl_series
+      properties: {text: 'Series:'}
+      type: Label
+    - layout_properties: {grid_position: 'PMSVXQ,OZKQRX'}
+      name: box_series
+      properties: {}
+      type: TextBox
+    - layout_properties: {grid_position: 'RWZUGB,OBFDZW'}
+      name: lbl_prod_code
+      properties: {text: 'Product Code:'}
+      type: Label
+    - layout_properties: {grid_position: 'RWZUGB,CGABXS'}
+      name: box_prod_code
+      properties: {}
+      type: TextBox
+    layout_properties: {grid_position: 'DCHQJB,ICUXPG'}
+    name: outlined_card_6
+    properties: {role: outlined-card}
+    type: ColumnPanel
+  - components:
+    - layout_properties: {grid_position: 'IMWEGG,GWRRZA'}
+      name: samp_qty_vw
+      properties: {role: input-prompt, text: Sample Quantity, visible: true}
+      type: Label
+    - layout_properties: {grid_position: 'ALPQAO,SZLCIU'}
+      name: box_samp_qty
+      properties: {}
+      type: TextBox
+    layout_properties: {grid_position: 'TXSQWB,BXUOYE'}
+    name: outlined_card_1
+    properties: {role: outlined-card}
+    type: ColumnPanel
+  - components:
+    - layout_properties: {grid_position: 'LPTMIC,AXWCHD'}
+      name: unitregject_vw
+      properties: {role: input-prompt, text: Total Units Rejected}
+      type: Label
+    - layout_properties: {grid_position: 'SOEXAQ,ESRUSI'}
+      name: box_unit_reject
+      properties: {}
+      type: TextBox
+    layout_properties: {grid_position: 'TXSQWB,MBIHMA'}
+    name: outlined_card_2
+    properties: {role: outlined-card}
+    type: ColumnPanel
+  - components:
+    - layout_properties: {grid_position: 'WABVNX,EYJBJR'}
+      name: totrejects_vw
+      properties: {role: input-prompt, text: Total Number of Rejects}
+      type: Label
+    - layout_properties: {grid_position: 'EUCQHX,FZXKWR'}
+      name: box_total_reject
+      properties: {}
+      type: TextBox
+    layout_properties: {grid_position: 'TXSQWB,YSTIZF'}
+    name: outlined_card_3
+    properties: {role: outlined-card}
+    type: ColumnPanel
   layout_properties: {grid_position: 'PFMVUC,FRWMKN'}
   name: summary_card
   properties: {role: outlined-card}

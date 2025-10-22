@@ -59,7 +59,7 @@ def validate_inspection_complete(inspection_id):
 
 
 @anvil.server.callable
-def complete_inspection(inspection_id, inspection_date, po_numb, rel_numb, prod_code):
+def complete_inspection(inspection_id, inspection_date, po_numb, rel_numb, prod_code, sample_qty):
   """
   Complete an inspection by creating summary record and marking all results as complete.
   
@@ -75,6 +75,7 @@ def complete_inspection(inspection_id, inspection_date, po_numb, rel_numb, prod_
       po_numb: Purchase order number
       rel_numb: Release number
       prod_code: Product code
+      sample_qty: Sample quantity inspected
   
   Returns:
       dict: {'success': bool, 'message': str, 'unit_rejects': int, 'all_rejects': int, 'disposition': str}
@@ -100,6 +101,7 @@ def complete_inspection(inspection_id, inspection_date, po_numb, rel_numb, prod_
       po_numb=po_numb,
       rel_numb=rel_numb,
       prod_code=prod_code,
+      sample_qty=sample_qty,
       unit_rejects=unit_rejects,
       all_rejects=all_rejects,
       completed_date=datetime.now()
@@ -176,40 +178,43 @@ def calculate_rejection_metrics(inspection_id):
       details['document']['rejects'] += 1
 
   # Check Visual Results (sample-based)
+  # FIXED: Changed from sample_id to sample_number
   visual_results = app_tables.visual_results.search(inspection_id=inspection_id)
   for result in visual_results:
-    sample_id = result['sample_id']
+    sample_number = result['sample_number']
     pass_fail = result['pass_fail']
 
     if pass_fail and pass_fail.upper() in ['FAIL', 'REJECT']:
       total_rejects += 1
-      samples_with_rejects.add(f"visual_{sample_id}")
+      samples_with_rejects.add(f"visual_{sample_number}")
       details['visual']['rejects'] += 1
-      details['visual']['samples'].add(sample_id)
+      details['visual']['samples'].add(sample_number)
 
   # Check Dimension Results (sample-based)
+  # FIXED: Changed from sample_id to sample_number
   dimension_results = app_tables.dimension_results.search(inspection_id=inspection_id)
   for result in dimension_results:
-    sample_id = result['sample_id']
+    sample_number = result['sample_number']
     pass_fail = result['pass_fail']
 
     if pass_fail and pass_fail.upper() in ['FAIL', 'REJECT']:
       total_rejects += 1
-      samples_with_rejects.add(f"dimension_{sample_id}")
+      samples_with_rejects.add(f"dimension_{sample_number}")
       details['dimension']['rejects'] += 1
-      details['dimension']['samples'].add(sample_id)
+      details['dimension']['samples'].add(sample_number)
 
   # Check Functional Results (sample-based)
+  # FIXED: Changed from sample_id to sample_number
   functional_results = app_tables.functional_results.search(inspection_id=inspection_id)
   for result in functional_results:
-    sample_id = result['sample_id']
+    sample_number = result['sample_number']
     pass_fail = result['pass_fail']
 
     if pass_fail and pass_fail.upper() in ['FAIL', 'REJECT']:
       total_rejects += 1
-      samples_with_rejects.add(f"functional_{sample_id}")
+      samples_with_rejects.add(f"functional_{sample_number}")
       details['functional']['rejects'] += 1
-      details['functional']['samples'].add(sample_id)
+      details['functional']['samples'].add(sample_number)
 
   # Calculate unit_rejects (count of unique samples with at least one reject)
   # Note: A sample might have rejects in multiple inspection types (visual, dimension, functional)
@@ -314,6 +319,7 @@ def get_inspection_summary(inspection_id):
       'po_numb': summary['po_numb'],
       'rel_numb': summary['rel_numb'],
       'prod_code': summary['prod_code'],
+      'sample_qty': summary['sample_qty'],
       'unit_rejects': summary['unit_rejects'],
       'all_rejects': summary['all_rejects'],
       'completed_date': summary['completed_date']
@@ -340,6 +346,7 @@ def get_all_completed_inspections():
       'inspection_date': s['inspection_date'],
       'po_numb': s['po_numb'],
       'prod_code': s['prod_code'],
+      'sample_qty': s['sample_qty'],
       'unit_rejects': s['unit_rejects'],
       'all_rejects': s['all_rejects'],
       'completed_date': s['completed_date']

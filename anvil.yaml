@@ -3,7 +3,7 @@ db_schema:
   counter:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: count
       type: number
     server: full
@@ -11,51 +11,51 @@ db_schema:
   dimension_questions:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
-      name: product_series
-      type: string
-    - admin_ui: {order: -0.5, width: 200}
-      name: question_id
-      type: string
-    - admin_ui: {order: 2, width: 200}
-      name: question_text
-      type: string
-    - admin_ui: {order: 3, width: 200}
-      name: is_active
-      type: bool
-    - admin_ui: {order: -1, width: 200}
+    - admin_ui: {width: 200}
       name: sort_no
       type: number
+    - admin_ui: {width: 200}
+      name: question_id
+      type: string
+    - admin_ui: {width: 200}
+      name: product_series
+      type: string
+    - admin_ui: {width: 200}
+      name: question_text
+      type: string
+    - admin_ui: {width: 200}
+      name: is_active
+      type: bool
     server: full
     title: dimension_questions
   dimension_results:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: inspection_id
       type: string
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: sample_number
       type: number
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: question_id
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: pass_fail
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {width: 200}
       name: notes
       type: string
-    - admin_ui: {order: 5, width: 200}
+    - admin_ui: {width: 200}
       name: photo
       type: media
-    - admin_ui: {order: 6, width: 200}
+    - admin_ui: {width: 200}
       name: inspected_by
       type: string
-    - admin_ui: {order: 7, width: 200}
+    - admin_ui: {width: 200}
       name: update_datetime
       type: datetime
-    - admin_ui: {order: 8, width: 200}
+    - admin_ui: {width: 200}
       name: complete
       type: bool
     server: full
@@ -63,19 +63,19 @@ db_schema:
   document_questions:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: sort_no
       type: number
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: question_id
       type: string
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: product_series
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: question_text
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {width: 200}
       name: is_active
       type: bool
     server: full
@@ -83,28 +83,28 @@ db_schema:
   document_results:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: inspection_id
       type: string
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: question_id
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: pass_fail
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {width: 200}
       name: note
       type: string
-    - admin_ui: {order: 5, width: 200}
+    - admin_ui: {width: 200}
       name: photo_media
       type: media
-    - admin_ui: {order: 6, width: 200}
+    - admin_ui: {width: 200}
       name: inspected_by
       type: string
-    - admin_ui: {order: 7, width: 200}
+    - admin_ui: {width: 200}
       name: update_datetime
       type: datetime
-    - admin_ui: {order: 8, width: 200}
+    - admin_ui: {width: 200}
       name: complete
       type: bool
     server: full
@@ -112,13 +112,13 @@ db_schema:
   files:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 350}
+    - admin_ui: {width: 350}
       name: path
       type: string
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: file
       type: media
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: file_version
       type: string
     server: full
@@ -126,19 +126,19 @@ db_schema:
   functional_questions:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: sort_no
       type: number
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: question_id
       type: string
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: product_series
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: question_text
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {width: 200}
       name: is_active
       type: bool
     server: full
@@ -146,31 +146,31 @@ db_schema:
   functional_results:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: inspection_id
       type: string
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: sample_number
       type: number
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: question_id
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: pass_fail
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {width: 200}
       name: notes
       type: string
-    - admin_ui: {order: 5, width: 238}
+    - admin_ui: {width: 238}
       name: photo
       type: media
-    - admin_ui: {order: 6, width: 200}
+    - admin_ui: {width: 200}
       name: inspected_by
       type: string
-    - admin_ui: {order: 7, width: 200}
+    - admin_ui: {width: 200}
       name: update_datetime
       type: datetime
-    - admin_ui: {order: 8, width: 200}
+    - admin_ui: {width: 200}
       name: complete
       type: bool
     server: full
@@ -178,92 +178,98 @@ db_schema:
   inspect_head:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
+      name: id_head
+      type: string
+    - admin_ui: {width: 200}
       name: ins_date
       type: date
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: po_numb
       type: string
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: rel_numb
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: series
       type: string
-    - admin_ui: {order: 7.5, width: 200}
-      name: update_dt
-      type: datetime
-    - admin_ui: {order: 3.5, width: 200}
+    - admin_ui: {width: 200}
       name: prod_code
       type: string
-    - admin_ui: {order: 5.5, width: 200}
+    - admin_ui: {width: 200}
       name: ord_qty
       type: number
-    - admin_ui: {order: 6.5, width: 200}
+    - admin_ui: {width: 200}
       name: lot_qty
       type: number
-    - admin_ui: {order: 9.5, width: 200}
-      name: status
-      type: string
-    - admin_ui: {order: 7, width: 200}
+    - admin_ui: {width: 200}
       name: sam_qty
       type: number
-    - admin_ui: {order: -1, width: 200}
-      name: id_head
+    - admin_ui: {width: 200}
+      name: update_dt
+      type: datetime
+    - admin_ui: {width: 200}
+      name: status
       type: string
     server: full
     title: inspect_head
   inspect_summary:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: inspection_id
       type: string
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: inspection_date
       type: date
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: po_numb
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: rel_numb
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {width: 200}
+      name: sample_qty
+      type: string
+    - admin_ui: {width: 200}
       name: prod_code
       type: string
-    - admin_ui: {order: 5, width: 200}
+    - admin_ui: {width: 200}
       name: unit_rejects
       type: number
-    - admin_ui: {order: 6, width: 200}
+    - admin_ui: {width: 200}
       name: all_rejects
       type: number
+    - admin_ui: {width: 200}
+      name: completed_date
+      type: datetime
     server: full
     title: inspect_summary
   part_mstr:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: line
       type: string
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: series
       type: string
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: model
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: part_code
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {width: 200}
       name: body_mat
       type: string
-    - admin_ui: {order: 5, width: 200}
+    - admin_ui: {width: 200}
       name: asme_class
       type: string
-    - admin_ui: {order: 6, width: 200}
+    - admin_ui: {width: 200}
       name: end_connect
       type: string
-    - admin_ui: {order: 7, width: 200}
+    - admin_ui: {width: 200}
       name: size
       type: string
     server: full
@@ -271,45 +277,45 @@ db_schema:
   vendor_tier:
     client: search
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: tier
       type: string
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
+      name: tier_desc
+      type: string
+    - admin_ui: {width: 200}
       name: lot_size
       type: string
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: samp_size
       type: string
-    - admin_ui: {order: 3, width: 200}
+    - admin_ui: {width: 200}
       name: accept<=
       type: string
-    - admin_ui: {order: 4, width: 200}
+    - admin_ui: {width: 200}
       name: regect>=
       type: string
-    - admin_ui: {order: 5, width: 200}
+    - admin_ui: {width: 200}
       name: steps
-      type: string
-    - admin_ui: {order: 0.5, width: 200}
-      name: tier_desc
       type: string
     server: full
     title: vendor_tier
   visual_questions:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
-      name: product_series
-      type: string
-    - admin_ui: {order: -0.5, width: 200}
-      name: question_id
-      type: string
-    - admin_ui: {order: 0.28125, width: 200}
-      name: question_text
-      type: string
-    - admin_ui: {order: -1, width: 200}
+    - admin_ui: {width: 200}
       name: sort_no
       type: number
-    - admin_ui: {order: 0.375, width: 200}
+    - admin_ui: {width: 200}
+      name: question_id
+      type: string
+    - admin_ui: {width: 200}
+      name: product_series
+      type: string
+    - admin_ui: {width: 200}
+      name: question_text
+      type: string
+    - admin_ui: {width: 200}
       name: is_active
       type: bool
     server: full
@@ -317,31 +323,31 @@ db_schema:
   visual_results:
     client: none
     columns:
-    - admin_ui: {order: 0, width: 200}
+    - admin_ui: {width: 200}
       name: inspection_id
       type: string
-    - admin_ui: {order: 1, width: 200}
+    - admin_ui: {width: 200}
       name: sample_number
       type: number
-    - admin_ui: {order: 3, width: 200}
-      name: pass_fail
-      type: string
-    - admin_ui: {order: 4, width: 200}
-      name: notes
-      type: string
-    - admin_ui: {order: 5, width: 200}
-      name: inspected_by
-      type: string
-    - admin_ui: {order: 6, width: 200}
-      name: update_datetime
-      type: datetime
-    - admin_ui: {order: 2, width: 200}
+    - admin_ui: {width: 200}
       name: question_id
       type: string
-    - admin_ui: {order: 4.5, width: 200}
+    - admin_ui: {width: 200}
+      name: pass_fail
+      type: string
+    - admin_ui: {width: 200}
+      name: notes
+      type: string
+    - admin_ui: {width: 200}
       name: photo
       type: media
-    - admin_ui: {order: 7, width: 200}
+    - admin_ui: {width: 200}
+      name: inspected_by
+      type: string
+    - admin_ui: {width: 200}
+      name: update_datetime
+      type: datetime
+    - admin_ui: {width: 200}
       name: complete
       type: bool
     server: full
