@@ -59,7 +59,7 @@ def validate_inspection_complete(inspection_id):
 
 
 @anvil.server.callable
-def complete_inspection(inspection_id, inspection_date, po_numb, rel_numb, prod_code, sample_qty):
+def complete_inspection(inspection_id, inspection_date, po_numb, rel_numb, series, prod_code, sample_qty):
   """
   Complete an inspection by creating summary record and marking all results as complete.
   
@@ -74,6 +74,7 @@ def complete_inspection(inspection_id, inspection_date, po_numb, rel_numb, prod_
       inspection_date: Date of inspection
       po_numb: Purchase order number
       rel_numb: Release number
+      series: Product series
       prod_code: Product code
       sample_qty: Sample quantity inspected
   
@@ -100,6 +101,7 @@ def complete_inspection(inspection_id, inspection_date, po_numb, rel_numb, prod_
       inspection_date=inspection_date,
       po_numb=po_numb,
       rel_numb=rel_numb,
+      series=series,
       prod_code=prod_code,
       sample_qty=sample_qty,
       unit_rejects=unit_rejects,
@@ -318,6 +320,7 @@ def get_inspection_summary(inspection_id):
       'inspection_date': summary['inspection_date'],
       'po_numb': summary['po_numb'],
       'rel_numb': summary['rel_numb'],
+      'series': summary['series'],
       'prod_code': summary['prod_code'],
       'sample_qty': summary['sample_qty'],
       'unit_rejects': summary['unit_rejects'],
@@ -345,6 +348,8 @@ def get_all_completed_inspections():
       'inspection_id': s['inspection_id'],
       'inspection_date': s['inspection_date'],
       'po_numb': s['po_numb'],
+      'rel_numb': s['rel_numb'],
+      'series': s['series'],
       'prod_code': s['prod_code'],
       'sample_qty': s['sample_qty'],
       'unit_rejects': s['unit_rejects'],

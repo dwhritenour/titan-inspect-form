@@ -243,6 +243,9 @@ db_schema:
     - admin_ui: {width: 200}
       name: completed_date
       type: datetime
+    - admin_ui: {order: 3.75, width: 200}
+      name: series
+      type: string
     server: full
     title: inspect_summary
   part_mstr:

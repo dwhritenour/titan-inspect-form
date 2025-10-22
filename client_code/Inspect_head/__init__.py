@@ -467,10 +467,11 @@ class Inspect_head(Inspect_headTemplate):
           self.ins_date_box.date,
           self.po_numb_box.text,
           self.rel_numb_box.text,
+          self.series_box.selected_value,
           self.prod_code_box.selected_value,
           self.sam_qty_box.text
         )
-
+      
       if result['success']:
         # Show success with metrics
         alert(
