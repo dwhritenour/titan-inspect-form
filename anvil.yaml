@@ -55,6 +55,9 @@ db_schema:
     - admin_ui: {order: 7, width: 200}
       name: update_datetime
       type: datetime
+    - admin_ui: {order: 8, width: 200}
+      name: complete
+      type: bool
     server: full
     title: dimension_results
   document_questions:
@@ -101,6 +104,9 @@ db_schema:
     - admin_ui: {order: 7, width: 200}
       name: update_datetime
       type: datetime
+    - admin_ui: {order: 8, width: 200}
+      name: complete
+      type: bool
     server: full
     title: document_results
   files:
@@ -164,6 +170,9 @@ db_schema:
     - admin_ui: {order: 7, width: 200}
       name: update_datetime
       type: datetime
+    - admin_ui: {order: 8, width: 200}
+      name: complete
+      type: bool
     server: full
     title: functional_results
   inspect_head:
@@ -204,6 +213,32 @@ db_schema:
       type: string
     server: full
     title: inspect_head
+  inspect_summary:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: inspection_id
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: inspection_date
+      type: date
+    - admin_ui: {order: 2, width: 200}
+      name: po_numb
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: rel_numb
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: prod_code
+      type: string
+    - admin_ui: {order: 5, width: 200}
+      name: unit_rejects
+      type: number
+    - admin_ui: {order: 6, width: 200}
+      name: all_rejects
+      type: number
+    server: full
+    title: inspect_summary
   part_mstr:
     client: none
     columns:
@@ -306,6 +341,9 @@ db_schema:
     - admin_ui: {order: 4.5, width: 200}
       name: photo
       type: media
+    - admin_ui: {order: 7, width: 200}
+      name: complete
+      type: bool
     server: full
     title: visual_results
 dependencies: []
