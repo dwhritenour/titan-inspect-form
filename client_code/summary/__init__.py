@@ -44,7 +44,7 @@ class summary(summaryTemplate):
         # Format completion date
         completed_date = summary_data.get('completed_date')
         if completed_date:
-          self.box_complete_date.text = completed_date.strftime('%m/%d/%Y %I:%M %p')
+          self.box_complete_date.text = completed_date.strftime('%m/%d/%Y')
         else:
           self.box_complete_date.text = ''
 

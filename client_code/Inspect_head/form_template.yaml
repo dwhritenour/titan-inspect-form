@@ -263,6 +263,7 @@ components:
     layout_properties: {grid_position: 'THDNNQ,RQWIPI'}
     name: btn_complete
     properties:
+      enabled: false
       role: elevated-button
       spacing:
         padding: [null, '40', null, '40']
@@ -272,6 +273,7 @@ components:
     layout_properties: {grid_position: 'ZWGPFD,KKOVTB'}
     name: btn_summary
     properties:
+      enabled: false
       role: elevated-button
       spacing:
         padding: [null, '40', null, '40']

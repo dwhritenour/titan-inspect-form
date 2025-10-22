@@ -140,6 +140,7 @@ class Inspect_head(Inspect_headTemplate):
       self.func_chk_btn.enabled = True
       self.btn_marking.enabled = True
       self.btn_sampling.enabled = True
+      self.btn_complete.enabled = True
 
       '''' I took this out because I wanted sidebar buttons to handle the flow
           I added to method: def doc_chk_btn_click(self, **event_args):
@@ -428,6 +429,7 @@ class Inspect_head(Inspect_headTemplate):
     print("=== COMPLETE INSPECTION BUTTON CLICKED ===")
 
     inspection_id = self.id_head_box.text
+    
 
     if not inspection_id:
       alert("No inspection ID found. Please save the header first.")
@@ -471,7 +473,7 @@ class Inspect_head(Inspect_headTemplate):
           self.prod_code_box.selected_value,
           self.sam_qty_box.text
         )
-      
+
       if result['success']:
         # Show success with metrics
         alert(
@@ -486,10 +488,15 @@ class Inspect_head(Inspect_headTemplate):
         # Disable editing and complete button
         self.enable_header_fields(False)
         self.btn_complete.enabled = False
+        self.btn_summary.enabled = True
         self.status_box.text = "Completed"
+        self.doc_chk_btn.enabled = False
+        self.vis_chk_btn.enabled = False
+        self.dim_chk_btn.enabled = False
+        self.func_chk_btn.enabled = False
 
-        # Optionally show summary form
-        # self.show_summary_form(inspection_id)
+        # Show summary form automatically after completion
+        self.show_summary_form(inspection_id)
 
       else:
         alert(f"Error completing inspection: {result['message']}")
@@ -499,10 +506,25 @@ class Inspect_head(Inspect_headTemplate):
       alert(f"Error completing inspection:\n\n{str(e)}")
 
   def btn_summary_click(self, **event_args):
-    
-    self.content_panel.clear()
-    
-    self.content_panel.add_component(self.summary_form)
+    """
+    Load the summary form for the current inspection.
+    """
+    inspection_id = self.id_head_box.text
 
+    if not inspection_id:
+      alert("No inspection loaded. Please create or load an inspection first.")
+      return
+
+    self.show_summary_form(inspection_id)
+
+  def show_summary_form(self, inspection_id):
+    """
+    Display the summary form for a specific inspection in the content panel.
+    
+    Args:
+        inspection_id: The inspection ID to display summary for
+    """
+    self.content_panel.clear()
+    self.content_panel.add_component(summary(inspection_id=inspection_id))
 
     
