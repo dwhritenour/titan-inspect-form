@@ -439,7 +439,7 @@ class Inspect_head(Inspect_headTemplate):
     user_confirmed = confirm(
       f"Complete inspection {inspection_id}?\n\n"
       "This will:\n"
-      "• Lock all inspection data (no further edits)\n"
+      "• Lock all inspection data\n"
       "• Create a summary record\n"
       "• Calculate rejection metrics\n\n"
       "Continue?"

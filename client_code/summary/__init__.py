@@ -95,3 +95,16 @@ class summary(summaryTemplate):
     self.box_samp_qty.text = ''
     self.box_unit_reject.text = ''
     self.box_total_reject.text = ''
+
+  def btn_email_click(self, **event_args):
+    anvil.server.call("email_summary", 
+                     self.box_inspection_id.text, 
+                     self.box_complete_date.text,
+                     self.box_po_numb.text,
+                     self.box_rel_numb.text,
+                     self.box_series.text,
+                     self.box_prod_code.text,
+                     self.box_samp_qty.text,
+                     self.box_unit_reject.text,
+                     self.box_total_reject.text,
+                     self.txt_message.text)
