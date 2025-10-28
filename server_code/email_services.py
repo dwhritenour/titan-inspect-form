@@ -8,10 +8,11 @@ import anvil.server
 
 @anvil.server.callable
 def email_summary(ins_id, ins_date, po_num, rel_num, series, prod_code, samp_qty, unit_reject, tot_reject, message):
-  addresses=["dwhritenour@titanfci.com", "cbolton@titanfci.com", "mgreene@titanfci.com"]
+  addresses=["dwhritenour@titanfci.com"]
   anvil.email.send(to=addresses, 
-                   from_address="HubInspections@hubinspections.anvil.app",
-                   subject="Hub Inspection",
+                   from_address="hubinspections@titanfci.com",
+                   from_name="Hub Inspections",
+                   subject="Incoming Inspection",
                    text=f"""
   Inspection Number:  {ins_id}
   Inspection Date:  {ins_date}

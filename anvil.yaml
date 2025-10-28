@@ -377,6 +377,6 @@ services:
 - client_config: {}
   server_config: {file_table: files}
   source: /runtime/services/anvil/files.yml
-startup: {module: Inspect_head, type: form}
+startup: {module: summary, type: form}
 startup_form: null
 uplink_visible: true
