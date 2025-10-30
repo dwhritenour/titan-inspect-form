@@ -107,20 +107,32 @@ components:
     properties: {role: outlined-card}
     type: ColumnPanel
   - components:
-    - layout_properties: {col_xs: 0, row: JQHUFQ, width_xs: 10}
-      name: txt_message
-      properties: {italic: false, text: Enter email message here...}
-      type: TextArea
+    - layout_properties: {col_xs: 0, row: DVIALR, width_xs: 2}
+      name: lbl_to
+      properties: {role: input-prompt, text: 'Email(s) To:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: DVIALR, width_xs: 8}
+      name: box_to
+      properties: {}
+      type: TextBox
     - event_bindings: {click: btn_email_click}
-      layout_properties: {col_xs: 10, row: JQHUFQ, width_xs: 2}
+      layout_properties: {col_xs: 10, row: DVIALR, width_xs: 2}
       name: btn_email
       properties:
         align: center
         role: elevated-button
         spacing:
           padding: [null, '30', null, '30']
-        text: Email
+        text: Send
       type: Button
+    - layout_properties: {col_xs: 0, row: NNTJRL, width_xs: 2}
+      name: lbl_message
+      properties: {role: input-prompt, text: 'Message:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: NNTJRL, width_xs: 10}
+      name: txt_message
+      properties: {italic: false, text: ''}
+      type: TextArea
     layout_properties: {grid_position: 'GRDCCD,GVVUDQ'}
     name: grid_panel_1
     properties: {}

@@ -107,4 +107,5 @@ class summary(summaryTemplate):
                      self.box_samp_qty.text,
                      self.box_unit_reject.text,
                      self.box_total_reject.text,
+                     self.box_to.text,
                      self.txt_message.text)

@@ -5,11 +5,12 @@ import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
 import anvil.server
+import re
 
 @anvil.server.callable
-def email_summary(ins_id, ins_date, po_num, rel_num, series, prod_code, samp_qty, unit_reject, tot_reject, message):
-  addresses=["dwhritenour@titanfci.com"]
-  anvil.email.send(to=addresses, 
+def email_summary(ins_id, ins_date, po_num, rel_num, series, prod_code, samp_qty, unit_reject, tot_reject, emails, message):
+  email_list = [e.strip() for e in re.split(r'[;,]\s*', emails) if e.strip()]
+  anvil.email.send(to=email_list, 
                    from_address="hubinspections@titanfci.com",
                    from_name="Hub Inspections",
                    subject="Incoming Inspection",
