@@ -411,10 +411,20 @@ class Inspect_head(Inspect_headTemplate):
     pass
 
   def btn_servertest_click(self, **event_args):
-    """This method is called when the button is clicked"""
-    result = anvil.server.call('get_part_code','INS-391')
-    print(result['prod_code'])
+    """Test SQL connection"""
+    with anvil.server.no_loading_indicator:
+      print("Testing SQL connection...")
+      result = anvil.server.call('test_connection')
 
+      if result['success']:
+        print("✓ SUCCESS!")
+        print(f"SQL Version: {result['sql_version']}")
+        alert(f"Connection successful!\n\n{result['message']}", title="✓ SQL Test")
+      else:
+        print("✗ FAILED")
+        print(f"Error: {result['message']}")
+        alert(f"Connection failed!\n\n{result['message']}", title="✗ SQL Test", large=True)
+      
   def btn_complete_click(self, **event_args):
     """
     Complete the inspection and create summary record.
